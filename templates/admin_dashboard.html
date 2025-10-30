@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container">
+      <h1>Hotel Admin</h1>
+      <div class="right">
+        <span>Signed in as {{ username }}</span>
+        <a class="btn" href="{{ url_for('admin_logout') }}">Logout</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container admin-grid">
+    <section class="panel">
+      <h2>Bookings</h2>
+      <p>List bookings here (placeholder)</p>
+    </section>
+
+    <section class="panel">
+      <h2>Rooms</h2>
+      <p>Room management goes here (placeholder)</p>
+    </section>
+  </main>
+</body>
+</html>

@@ -22,4 +22,4 @@ def create_admin(username, password):
     print("Created admin", username)
 
 if __name__ == '__main__':
-    create_admin('admin3', 'Admin@123')  # change password immediately
+    create_admin('admin4', 'Admin@123')  # change password immediately
