@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Admin Portal — Flash Hotel (Static Demo)</title>
+  <title>Admin Portal — Flash Hotel </title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -15,19 +15,22 @@
       <label>Password</label>
       <input id="password" type="password" required />
       <button type="submit">Login</button>
-      <p class="hint">Use <strong>admin</strong> / <strong>Admin@123</strong> (demo only)</p>
+      <p class="hint">Use <strong>admin</strong> / <strong>Admin@123</strong></p>
       <p id="login-error" class="error"></p>
     </form>
   </div>
 
   <div class="container" id="admin-screen" style="display:none;">
     <header class="hdr">
-      <h2>Flash Hotel — Admin Dashboard</h2>
-      <div>
-        <span id="admin-logged-as"></span>
-        <button onclick="logout()">Logout</button>
-      </div>
-    </header>
+  <h2>Admin Dashboard</h2>
+  <span id="admin-logged-as"></span>
+  </header>
+
+  <div class="logout-section">
+  <button onclick="logout()">Logout</button>
+  </div>
+
+
 
     <section class="controls">
       <button onclick="showNewBookingForm()">New Booking</button>
@@ -62,10 +65,6 @@
       </form>
     </section>
 
-    <footer class="footer">
-      <small>Static demo — not for production. For real deployments use a secure backend and HTTPS.</small>
-    </footer>
-  </div>
 
   <script src="scripts.js"></script>
 </body>

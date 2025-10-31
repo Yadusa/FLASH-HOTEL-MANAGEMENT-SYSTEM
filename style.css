@@ -6,8 +6,14 @@
 }
 *{box-sizing:border-box;font-family:Inter,Segoe UI,Arial,Helvetica,sans-serif}
 body{margin:0;background:var(--bg);color:#111}
-.container{max-width:980px;margin:48px auto;padding:24px;background:var(--card);border-radius:12px;box-shadow:0 6px 20px rgba(18,38,63,0.08)}
-h1,h2,h3{margin:0 0 12px}
+.container {
+  max-width: 980px;
+  padding: 24px;
+  background: var(--card);
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(18,38,63,0.08);
+  margin: 0; /* Remove margin to avoid conflict with flex centering */
+}
 form{display:flex;flex-direction:column;gap:10px}
 input[type=text],input[type=password],input[type=date],input[type=number],input{padding:10px;border:1px solid #e6e9ee;border-radius:8px}
 button{background:var(--accent);color:#fff;padding:10px 12px;border:none;border-radius:8px;cursor:pointer}
@@ -23,3 +29,14 @@ button[disabled]{opacity:.6}
 .footer{margin-top:18px;color:var(--muted);font-size:.85em}
 .action-btn{background:#e6eefc;color:#0b3aa6;padding:6px 8px;border-radius:6px;border:none;cursor:pointer}
 .action-btn.danger{background:#ffebe8;color:#b91c1c}
+html, body {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.logout-section {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
