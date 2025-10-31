@@ -1,58 +1,76 @@
-import mysql.connector
-import hashlib
-import argparse
-import csv
+# backend.py
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import json, urllib.parse, mysql.connector, configparser
 
-CONFIG = {
-    'user':'root',
-    'password':'your_mysql_password',
-    'host':'127.0.0.1',
-    'database':'flashhotel',
-    'raise_on_warnings': True
-}
+# Read MySQL credentials
+cfg = configparser.ConfigParser()
+cfg.read('config.ini')
+dbconf = cfg['mysql']
 
-def sha256_hex(s): return hashlib.sha256(s.encode('utf-8')).hexdigest()
+def get_db():
+    return mysql.connector.connect(
+        user=dbconf['user'],
+        password=dbconf['password'],
+        host=dbconf['host'],
+        database=dbconf['database']
+    )
 
-def connect():
-    return mysql.connector.connect(**CONFIG)
+class Handler(BaseHTTPRequestHandler):
+    def _set_headers(self, status=200):
+        self.send_response(status)
+        self.send_header("Content-type", "application/json")
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, DELETE")
+        self.end_headers()
 
-def add_admin(username, password, fullname=''):
-    conn = connect()
-    cur = conn.cursor()
-    h = sha256_hex(password)
-    cur.execute("INSERT INTO admins (username,password_hash,fullname) VALUES (%s,%s,%s) ON DUPLICATE KEY UPDATE password_hash=%s,fullname=%s",
-                (username,h,fullname,h,fullname))
-    conn.commit()
-    cur.close(); conn.close()
-    print("Admin added/updated.")
+    def do_OPTIONS(self):  # CORS preflight
+        self._set_headers()
 
-def list_bookings():
-    conn = connect(); cur = conn.cursor(dictionary=True)
-    cur.execute("SELECT * FROM bookings ORDER BY created_at DESC")
-    for r in cur.fetchall():
-        print(r)
-    cur.close(); conn.close()
+    def do_GET(self):
+        if self.path == "/api/bookings":
+            try:
+                conn = get_db()
+                cur = conn.cursor(dictionary=True)
+                cur.execute("SELECT * FROM bookings ORDER BY id DESC")
+                rows = cur.fetchall()
+                self._set_headers()
+                self.wfile.write(json.dumps(rows, default=str).encode())
+            except Exception as e:
+                self._set_headers(500)
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+            finally:
+                cur.close()
+                conn.close()
+        else:
+            self._set_headers(404)
+            self.wfile.write(b'{"error":"Not found"}')
 
-def export_bookings_csv(path='bookings_export.csv'):
-    conn = connect(); cur = conn.cursor()
-    cur.execute("SELECT id,guest_name,room_type,check_in,check_out,price FROM bookings")
-    rows = cur.fetchall()
-    with open(path,'w',newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(['id','guest_name','room_type','check_in','check_out','price'])
-        writer.writerows(rows)
-    print("Exported to", path)
-    cur.close(); conn.close()
+    def do_POST(self):
+        if self.path == "/api/bookings":
+            length = int(self.headers.get('Content-Length', 0))
+            data = json.loads(self.rfile.read(length))
+            try:
+                conn = get_db()
+                cur = conn.cursor()
+                cur.execute("""
+                    INSERT INTO bookings (guest_name, room_type, check_in, check_out, price)
+                    VALUES (%s, %s, %s, %s, %s)
+                """, (data["name"], data["room"], data["checkin"], data["checkout"], data["price"]))
+                conn.commit()
+                self._set_headers(201)
+                self.wfile.write(json.dumps({"message": "Booking added"}).encode())
+            except Exception as e:
+                self._set_headers(500)
+                self.wfile.write(json.dumps({"error": str(e)}).encode())
+            finally:
+                cur.close()
+                conn.close()
+        else:
+            self._set_headers(404)
+            self.wfile.write(b'{"error":"Not found"}')
 
-if __name__ == '__main__':
-    p = argparse.ArgumentParser()
-    p.add_argument('--add-admin', nargs=2, metavar=('username','password'))
-    p.add_argument('--list-bookings', action='store_true')
-    p.add_argument('--export-csv', action='store_true')
-    args = p.parse_args()
-    if args.add_admin:
-        add_admin(args.add_admin[0], args.add_admin[1])
-    if args.list_bookings:
-        list_bookings()
-    if args.export_csv:
-        export_bookings_csv()
+if __name__ == "__main__":
+    PORT = 8000
+    print(f"Backend running at http://127.0.0.1:{PORT}")
+    HTTPServer(("", PORT), Handler).serve_forever()
