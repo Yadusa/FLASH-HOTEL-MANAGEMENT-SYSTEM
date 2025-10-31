@@ -1,3 +1,10 @@
+"""
+backend_admin.py
+A simple CLI utility to perform basic admin operations on the MySQL database.
+This is NOT a web server — it's a script showing how to perform backend operations
+with python (mysql-connector). Install: pip install mysql-connector-python
+"""
+
 import mysql.connector
 import hashlib
 import argparse

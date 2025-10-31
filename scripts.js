@@ -54,34 +54,56 @@ window.onload = function(){
   if(admin) showAdminScreen(admin.username);
 }
 
-// --- Bookings CRUD using localStorage ---
-function getBookings(){
-  const raw = localStorage.getItem('flashhotel_bookings') || '[]';
-  return JSON.parse(raw);
-}
-function saveBookings(arr){ localStorage.setItem('flashhotel_bookings', JSON.stringify(arr)); }
+const API_BASE = "http://localhost/FLASH-HOTEL-MANAGEMENT-SYSTEM/api";
 
-function renderBookings(){
+async function getBookings() {
+  const res = await fetch(`${API_BASE}/get_bookings.php`);
+  return await res.json();
+}
+
+async function saveBooking(e){
+  e.preventDefault();
+  const data = {
+    name: document.getElementById('guest-name').value,
+    room: document.getElementById('room-type').value,
+    checkin: document.getElementById('check-in').value,
+    checkout: document.getElementById('check-out').value,
+    price: Number(document.getElementById('price').value)
+  };
+
+  const res = await fetch(`${API_BASE}/add_booking.php`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+
+  const result = await res.json();
+  if (result.message) {
+    alert("Booking saved to MySQL!");
+    hideBookingForm();
+    renderBookings();
+  } else {
+    alert("Error: " + result.error);
+  }
+}
+
+async function renderBookings(){
   const tbody = document.querySelector('#bookings-table tbody');
   tbody.innerHTML = '';
-  const all = getBookings();
-  const q = (document.getElementById('search').value || '').toLowerCase();
-  const filtered = all.filter(b => !q || JSON.stringify(b).toLowerCase().includes(q));
-  filtered.forEach(b=>{
+  const all = await getBookings();
+  all.forEach(b=>{
     const tr = document.createElement('tr');
     tr.innerHTML = `<td>${b.id}</td>
-                    <td>${escapeHtml(b.name)}</td>
-                    <td>${escapeHtml(b.room)}</td>
-                    <td>${b.checkin}</td>
-                    <td>${b.checkout}</td>
-                    <td>${b.price}</td>
-                    <td>
-                      <button class="action-btn" onclick="editBooking(${b.id})">Edit</button>
-                      <button class="action-btn danger" onclick="deleteBooking(${b.id})">Delete</button>
-                    </td>`;
+                    <td>${b.guest_name}</td>
+                    <td>${b.room_type}</td>
+                    <td>${b.check_in}</td>
+                    <td>${b.check_out}</td>
+                    <td>${b.price}</td>`;
     tbody.appendChild(tr);
   });
 }
+// ----------------------------------------------------------
+
 
 // Simple HTML escape
 function escapeHtml(s){ return (s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
@@ -161,3 +183,5 @@ function exportCSV(){
   a.click();
   URL.revokeObjectURL(url);
 }
+
+
