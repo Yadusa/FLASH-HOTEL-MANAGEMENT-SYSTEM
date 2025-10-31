@@ -1,7 +1,4 @@
-/* cpp_mysql_example.cpp
-   Compile with MySQL C++ connector installed. This is a sample showing how to query bookings.
-   It's provided for reference — not required to run the static site.
-*/
+
 #include <mysqlx/xdevapi.h>
 #include <iostream>
 using namespace std;
