@@ -1,7 +1,7 @@
-const API_URL = "http://127.0.0.1:8000/api/bookings";
+const API_BASE = "http://localhost/FLASH-HOTEL-MANAGEMENT-SYSTEM/api";
 
 async function getBookings() {
-  const res = await fetch(API_URL);
+  const res = await fetch(`${API_BASE}/get_bookings.php`);
   return await res.json();
 }
 
@@ -15,19 +15,19 @@ async function saveBooking(e){
     price: Number(document.getElementById('price').value)
   };
 
-  const res = await fetch(API_URL, {
+  const res = await fetch(`${API_BASE}/add_booking.php`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data)
   });
 
-  if(res.ok){
+  const result = await res.json();
+  if (result.message) {
     alert("Booking saved to MySQL!");
     hideBookingForm();
     renderBookings();
   } else {
-    const err = await res.json();
-    alert("Error: " + err.error);
+    alert("Error: " + result.error);
   }
 }
 
