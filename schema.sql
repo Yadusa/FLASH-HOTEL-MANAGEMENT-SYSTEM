@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 31, 2025 at 05:22 PM
+-- Generation Time: Nov 01, 2025 at 08:38 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -62,8 +62,8 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`id`, `guest_name`, `room_type`, `check_in`, `check_out`, `price`, `created_at`) VALUES
-(1, 'Alice Tan', 'Deluxe', '2025-11-12', '2025-11-15', 300.00, '2025-10-31 12:45:22'),
-(2, 'Mohamed Ali', 'Standard', '2025-12-01', '2025-12-02', 120.00, '2025-10-31 12:45:22');
+(1, 'Alice Tan', 'Deluxe', '2025-11-12', '2025-11-15', 300.00, '2025-11-01 19:37:40'),
+(2, 'Mohamed Ali', 'Standard', '2025-12-01', '2025-12-02', 120.00, '2025-11-01 19:37:40');
 
 --
 -- Indexes for dumped tables
