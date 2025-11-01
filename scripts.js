@@ -91,14 +91,25 @@ async function renderBookings(){
   const tbody = document.querySelector('#bookings-table tbody');
   tbody.innerHTML = '';
   const all = await getBookings();
+  console.log("Fetched data:", all);
+
+  if (!Array.isArray(all)) {
+    tbody.innerHTML = `<tr><td colspan="7" style="color:red;">Error loading bookings</td></tr>`;
+    return;
+  }
+
   all.forEach(b=>{
     const tr = document.createElement('tr');
     tr.innerHTML = `<td>${b.id}</td>
-                    <td>${b.guest_name}</td>
-                    <td>${b.room_type}</td>
-                    <td>${b.check_in}</td>
-                    <td>${b.check_out}</td>
-                    <td>${b.price}</td>`;
+                 <td>${b.guest_name}</td>
+                 <td>${b.room_type}</td>
+                 <td>${b.check_in}</td>
+                 <td>${b.check_out}</td>
+                 <td>${b.price}</td>
+                 <td>
+                  <button class="action-btn" onclick="editBooking(${b.id})">Edit</button>
+                  <button class="action-btn danger" onclick="deleteBooking(${b.id})">Delete</button>
+                </td>`;
     tbody.appendChild(tr);
   });
 }
@@ -121,57 +132,73 @@ function hideBookingForm(){
   document.getElementById('bookings-section').style.display='block';
 }
 
-function saveBooking(e){
-  e && e.preventDefault();
+async function saveBookingToLocal(e){
+  e.preventDefault();
   const id = document.getElementById('booking-id').value;
   const name = document.getElementById('guest-name').value.trim();
   const room = document.getElementById('room-type').value.trim();
   const checkin = document.getElementById('check-in').value;
   const checkout = document.getElementById('check-out').value;
   const price = Number(document.getElementById('price').value);
-  // basic validation
+
   if(new Date(checkout) < new Date(checkin)){
     alert('Check-out must be after check-in.');
     return false;
   }
-  const arr = getBookings();
+
+  const arr = await getBookings();
   if(id){
-    const idx = arr.findIndex(x=>x.id==id);
-    if(idx>=0) arr[idx] = {id:Number(id),name,room,checkin,checkout,price};
+    const idx = arr.findIndex(x => x.id == id);
+    if(idx >= 0) arr[idx] = {id: Number(id), name, room, checkin, checkout, price};
   } else {
-    const newId = arr.reduce((m,x)=>Math.max(m,x.id||0),0)+1;
-    arr.push({id:newId,name,room,checkin,checkout,price});
+    const newId = arr.reduce((m, x) => Math.max(m, x.id || 0), 0) + 1;
+    arr.push({id: newId, name, room, checkin, checkout, price});
   }
+
   saveBookings(arr);
   hideBookingForm();
   renderBookings();
   return false;
 }
 
-function editBooking(id){
-  const arr = getBookings();
-  const b = arr.find(x=>x.id==id);
-  if(!b) return alert('Not found');
+async function editBooking(id) {
+  const all = await getBookings();
+  const b = all.find(x => x.id == id);
+  if (!b) return;
+
   document.getElementById('booking-id').value = b.id;
-  document.getElementById('guest-name').value = b.name;
-  document.getElementById('room-type').value = b.room;
-  document.getElementById('check-in').value = b.checkin;
-  document.getElementById('check-out').value = b.checkout;
+  document.getElementById('guest-name').value = b.guest_name;
+  document.getElementById('room-type').value = b.room_type;
+  document.getElementById('check-in').value = b.check_in;
+  document.getElementById('check-out').value = b.check_out;
   document.getElementById('price').value = b.price;
-  document.getElementById('form-title').textContent='Edit Booking';
-  document.getElementById('booking-form-section').style.display='block';
-  document.getElementById('bookings-section').style.display='none';
+
+  document.getElementById('form-title').textContent = 'Edit Booking';
+  document.getElementById('booking-form-section').style.display = 'block';
+  document.getElementById('bookings-section').style.display = 'none';
 }
 
-function deleteBooking(id){
+
+async function deleteBooking(id){
   if(!confirm('Delete booking #' + id + '?')) return;
-  const arr = getBookings().filter(x=>x.id!=id);
-  saveBookings(arr);
+  const arr = await getBookings();
+  const updated = arr.filter(x => x.id != id);
+  saveBookings(updated);
   renderBookings();
 }
 
-function exportCSV(){
-  const arr = getBookings();
+async function getBookings() {
+  try {
+    const res = await fetch(`${API_BASE}/get_bookings.php`);
+    return await res.json();
+  } catch (err) {
+    console.error("Fetch error:", err);
+    return [];
+  }
+}
+
+async function exportCSV(){
+  const arr = await getBookings();
   if(arr.length===0) return alert('No bookings to export');
   const header = ['id','name','room','checkin','checkout','price'];
   const csv = [header.join(',')].concat(arr.map(r=>header.map(h => `"${(r[h]||'').toString().replace(/"/g,'""')}"`).join(','))).join('\r\n');
