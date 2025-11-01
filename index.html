@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -69,3 +70,91 @@
   <script src="scripts.js"></script>
 </body>
 </html>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title> 
+            The Obsidian Kuala Lumpur
+        </title>
+
+          <link rel="stylesheet" href="style.css"> 
+       
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+    </head>
+
+<body>
+   
+        <header class="top-header">
+               <div class="header-left"></div>
+<div class="header-center">
+        <div class="logo">
+            <h1> The Obsidian </h1>
+            <p> KUALA LUMPUR </p>
+        </div>
+</div>
+         <div class="header-right">
+        <div class="top-links">
+            <a href="#"> Sign in</a> | 
+         <a href="#">Join Now</a> | 
+              🌐 English | MYR
+    
+        </div>
+         
+    </div>
+    
+ <img src="menuIcon.png" alt="Menu icon" class="menu-icon" onclick="toggleMenu()" />
+        <span></span>
+          <span></span>
+            <span></span>
+              
+     </div>
+     
+</header>
+
+ <nav class="side-menu" id="sideMenu">
+     <div class="menu-icon-wrapper"></div>
+    <ul>
+        <li><a href="#">STAY -></a></li>
+        <li><a href="#">SHOP -></a></li>
+        <li><a href="#">WHAT'S ON -></a></li>
+    </ul>
+    </nav>
+
+
+
+<section class="restaurant-section">
+    <div class="restaurant-content">
+       <div class="restaurant-image"></div>
+       <img src="restaurant-image.jpg"alt="Plated dish at the Obsidian" />
+
+    </div>
+    <div class="restaurant-text">
+        <h2>Restaurant & Bar</h2>
+        <h3> Fine dine at The waves</h3>
+    <p>Discover bold flavors and elegant dining at our signature restaurant and bar.
+        Whether you're craving local delicacies or international cuisine, we serve up
+        unforgettable experiences in the heart of Kuala Lumpur.</p>
+    </div>
+    </div>
+</section>
+
+<script>
+    function toggleMenu() {
+      const menu = document.getElementById("sideMenu");
+      const menuText = document.querySelector(".menu-text");
+      const closeText = document.querySelector(".close-text");
+
+      menu.classList.toggle("open");
+      menuText.style.display = menu.classList.contains("open") ? "none" : "inline";
+      closeText.style.display = menu.classList.contains("open") ? "inline" : "none";
+    }
+</script>
+</body>
+
