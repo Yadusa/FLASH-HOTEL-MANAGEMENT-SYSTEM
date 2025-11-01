@@ -13,22 +13,23 @@ include 'db.php'; // Your DB connection file
 
 $data = json_decode(file_get_contents("php://input"), true);
 
+$id = intval($data['id'] ?? 0);
 $guest_name = $data['guest_name'] ?? '';
 $room_type = $data['room_type'] ?? '';
 $check_in = $data['check_in'] ?? '';
 $check_out = $data['check_out'] ?? '';
 $price = floatval($data['price'] ?? 0);
 
-if ($guest_name && $room_type && $check_in && $check_out && $price > 0) {
-    $stmt = $conn->prepare("INSERT INTO bookings (guest_name, room_type, check_in, check_out, price) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssd", $guest_name, $room_type, $check_in, $check_out, $price);
+if ($id > 0 && $guest_name && $room_type && $check_in && $check_out && $price > 0) {
+    $stmt = $conn->prepare("UPDATE bookings SET guest_name=?, room_type=?, check_in=?, check_out=?, price=? WHERE id=?");
+    $stmt->bind_param("ssssdi", $guest_name, $room_type, $check_in, $check_out, $price, $id);
 
     if ($stmt->execute()) {
-        echo json_encode(["message" => "Booking added successfully"]);
+        echo json_encode(["message" => "Booking updated successfully"]);
     } else {
-        echo json_encode(["error" => "Failed to add booking"]);
+        echo json_encode(["error" => "Failed to update booking"]);
     }
 } else {
-    echo json_encode(["error" => "Invalid input data"]);
+    echo json_encode(["error" => "Invalid booking ID or data"]);
 }
 ?>
