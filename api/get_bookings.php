@@ -6,7 +6,7 @@ header("Access-Control-Allow-Headers: Content-Type");
 
 $servername = "localhost";
 $username = "root";
-$password = ""; // your MySQL password if any
+$password = ""; 
 $dbname = "flashhotel";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
