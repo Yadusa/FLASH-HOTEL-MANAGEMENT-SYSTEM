@@ -1,0 +1,84 @@
+:root {
+  --bg: #f4f6fb;
+  --card: #ffffff;
+  --accent: #2b6cff;
+  --muted: #6b7280;
+  --border: #e6e9ee;
+  --shadow: 0 6px 20px rgba(18, 38, 63, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: url('img/about.jpg') center/cover no-repeat fixed;
+  color: #111;
+}
+
+header {
+  background: rgba(255, 255, 255, 0.85);
+  border-bottom: 4px solid var(--accent);
+  padding: 15px 0;
+}
+
+header .header-container {
+  width: 85%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header .logo img {
+  width: 80px;
+  height: 80px;
+}
+
+header nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 25px;
+}
+
+header nav a {
+  color: #333;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+header nav a:hover {
+  color: var(--accent);
+}
+
+.container {
+  width: 85%;
+  max-width: 980px;
+  margin: 40px auto;
+  background: rgba(255, 255, 255, 0.92);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.login-section {
+  text-align: center;
+}
+
+.login-section h1 {
+  color: var(--accent);
+  margin-bottom: 20px;
+}
+
+form {
+  max-width: 400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;

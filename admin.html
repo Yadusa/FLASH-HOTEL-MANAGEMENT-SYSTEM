@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flash Hotel - Admin Portal</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+  <header>
+    <div class="container header-container">
+      <div class="logo">
+        <a href="#"><img src="Hotel_logo.png" alt="Flash Hotel Logo"></a>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="rooms.html">Rooms</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" id="login-screen">
+    <section class="login-section">
+      <h1>Admin Sign In</h1>
+      <form id="loginForm" onsubmit="return login(event)">
+        <label for="username">Username:</label>
+        <input id="username" type="text" required>
+
+        <label for="password">Password:</label>
+        <input id="password" type="password" required>
+
+        <button type="submit">Login</button>
+        <p class="register-text">Don't have an account? 
+          <a href="admin_register.html">Register here</a>
+        </p>
+        <p id="login-error" class="error"></p>
+      </form>
+    </section>
+  </main>
+
+  <main class="container" id="admin-screen" style="display:none;">
+    <header class="admin-header">
+      <h2>Admin Dashboard</h2>
+      <span id="admin-logged-as"></span>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </header>
+
+    <section class="admin-controls">
+      <button onclick="showNewBookingForm()">+ New Booking</button>
+      <button onclick="exportCSV()">Export Bookings (CSV)</button>
+      <input id="search" placeholder="Search bookings..." oninput="renderBookings()">
+    </section>
+
+    <section class="bookings">
+      <h3>All Bookings</h3>
+      <table id="bookings-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Guest Name</th>
+            <th>Room Type</th>
+            <th>Check-in</th>
+            <th>Check-out</th>
+            <th>Price</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <section id="booking-form-section" style="display:none;">
+      <h3 id="form-title">New Booking</h3>
+      <form id="bookingForm" onsubmit="return saveBooking(event)">
+        <input id="booking-id" type="hidden">
+
+        <label for="guest-name">Guest Name:</label>
+        <input id="guest-name" required>
+
+        <label for="room-type">Room Type:</label>
+        <input id="room-type" required>
+
+        <label for="check-in">Check-in:</label>
+        <input id="check-in" type="date" required>
+
+        <label for="check-out">Check-out:</label>
+        <input id="check-out" type="date" required>
+
+        <label for="price">Price (MYR):</label>
+        <input id="price" type="number" min="0" required>
+
+        <div class="form-actions">
+          <button type="submit">Save</button>
+          <button type="button" onclick="hideBookingForm()">Cancel</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 Flash Hotel Admin Portal. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
