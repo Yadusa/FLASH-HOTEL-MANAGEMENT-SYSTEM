@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title> 
+            The Obsidian Kuala Lumpur
+        </title>
+
+          <link rel="stylesheet" href="hotelpage.css"> 
+          <link rel="stylesheet" href="sliding.css">
+       
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+    </head>
+
+<body>
+   
+  <div id="hotel-page">
+        <header class="top-header">
+               <div class="header-left"></div>
+<div class="header-center">
+        <div class="logo">
+            <h1> The Obsidian </h1>
+            <p> KUALA LUMPUR </p>
+        </div>
+</div>
+         <div class="header-right">
+        <div class="top-links">
+            <a href="#" onclick="showAdminLogin()"> Sign in</a> | 
+         <a href="#">Join Now</a> | 
+              🌐 English | MYR
+    
+        </div>
+         
+    </div>
+    
+ <img src="menuIcon.png" alt="Menu icon" class="menu-icon" onclick="toggleMenu()" />
+        <span></span>
+          <span></span>
+            <span></span>
+              
+     </div>
+     
+</header>
+
+ <nav class="side-menu" id="sideMenu">
+     <div class="menu-icon-wrapper"></div>
+    <ul>
+        <li><a href="#">STAY -></a></li>
+        <li><a href="#">SHOP -></a></li>
+        <li><a href="#">WHAT'S ON -></a></li>
+    </ul>
+    </nav>
+
+<body>
+    <section aria-label="Newest photos"></section>
+    <div class="carousell" data-carousell >
+        <button class="carousell-button prev" data-carousell-button="prev">&#8678;</button>
+         <button class="carousell-button next" data-carousell-button="next">&#8680;</button>
+    <ul data-slides>
+        <li class=" slide" data-active>
+            <img src="carousell-1.jpg" alt="Music_fest">
+        </li>
+        <li class=" slide">
+            <img src="carousell2.jpg" alt="Gala_night">
+        </li>
+        <li class=" slide">
+            <img src="carousell-3.jpg" alt="Movie_night">
+        </li>
+    </ul>
+     </div>
+
+<section class="restaurant-section">
+    <div class="restaurant-content">
+       <div class="restaurant-image">
+    <img src="restaurant-image.jpg" alt="Plated dish at the Obsidian">
+</div>
+
+    </div>
+    <div class="restaurant-text">
+        <h2>Restaurant & Bar</h2>
+        <h3> Fine dine at The waves</h3>
+    <p>Discover bold flavors and elegant dining at our signature restaurant and bar.
+        Whether you're craving local delicacies or international cuisine, we serve up
+        unforgettable experiences in the heart of Kuala Lumpur.</p>
+    </div>
+   
+</section>
+
+
+<script>
+    function toggleMenu() {
+      const menu = document.getElementById("sideMenu");
+      const menuText = document.querySelector(".menu-text");
+      const closeText = document.querySelector(".close-text");
+
+      menu.classList.toggle("open");
+      menuText.style.display = menu.classList.contains("open") ? "none" : "inline";
+      closeText.style.display = menu.classList.contains("open") ? "inline" : "none";
+    }
+</script>
+</body>
+
+
+     <script src="landing.js" defer></script>
+</body>
