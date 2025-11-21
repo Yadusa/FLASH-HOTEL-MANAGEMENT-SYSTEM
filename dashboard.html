@@ -1,0 +1,163 @@
+
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Admin Portal — Flash Hotel </title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="admin-page" style="display:none;">
+  <div class="container" id="login-screen">
+    <h1>Admin Portal</h1>
+    <form id="loginForm" onsubmit="return login(event)">
+      <label>Username</label>
+      <input id="username" required />
+      <label>Password</label>
+      <input id="password" type="password" required />
+      <button type="submit">Login</button>
+      <p class="hint">Use <strong>admin</strong> / <strong>Admin@123</strong></p>
+      <p id="login-error" class="error"></p>
+    </form>
+  </div>
+
+  <div class="container" id="admin-screen" style="display:none;">
+    <header class="hdr">
+  <h2>Admin Dashboard</h2>
+  <span id="admin-logged-as"></span>
+  </header>
+
+  <div class="logout-section">
+  <button onclick="logout()">Logout</button>
+  </div>
+
+
+
+    <section class="controls">
+      <button onclick="showNewBookingForm()">New Booking</button>
+      <button onclick="exportCSV()">Export Bookings (CSV)</button>
+      <input id="search" placeholder="Search bookings..." oninput="renderBookings()" />
+    </section>
+
+    <section id="bookings-section">
+      <table id="bookings-table">
+        <thead>
+          <tr>
+            <th>ID</th><th>Name</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Price</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <section id="booking-form-section" style="display:none;">
+      <h3 id="form-title">New Booking</h3>
+      <form id="bookingForm" onsubmit="return saveBooking(event)">
+        <input id="booking-id" type="hidden" />
+        <label>Guest Name</label><input id="guest-name" required />
+        <label>Room Type</label><input id="room-type" required />
+        <label>Check-in</label><input id="check-in" type="date" required />
+        <label>Check-out</label><input id="check-out" type="date" required />
+        <label>Price (MYR)</label><input id="price" type="number" min="0" required />
+        <div class="form-actions">
+          <button type="submit">Save</button>
+          <button type="button" onclick="hideBookingForm()">Cancel</button>
+        </div>
+      </form>
+    </section>
+</div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title> 
+            The Obsidian Kuala Lumpur
+        </title>
+
+          <link rel="stylesheet" href="style.css"> 
+       
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+    </head>
+
+<body>
+   
+        <header class="top-header">
+               <div class="header-left"></div>
+<div class="header-center">
+        <div class="logo">
+            <h1> The Obsidian </h1>
+            <p> KUALA LUMPUR </p>
+        </div>
+</div>
+         <div class="header-right">
+        <div class="top-links">
+            <a href="#"> Sign in</a> | 
+         <a href="#">Join Now</a> | 
+              🌐 English | MYR
+    
+        </div>
+         
+    </div>
+    
+ <img src="menuIcon.png" alt="Menu icon" class="menu-icon" onclick="toggleMenu()" />
+        <span></span>
+          <span></span>
+            <span></span>
+              
+     </div>
+     
+</header>
+
+ <nav class="side-menu" id="sideMenu">
+     <div class="menu-icon-wrapper"></div>
+    <ul>
+        <li><a href="#">STAY -></a></li>
+        <li><a href="#">SHOP -></a></li>
+        <li><a href="#">WHAT'S ON -></a></li>
+    </ul>
+    </nav>
+
+
+
+<section class="restaurant-section">
+    <div class="restaurant-content">
+       <div class="restaurant-image"></div>
+       <img src="restaurant-image.jpg"alt="Plated dish at the Obsidian" />
+
+    </div>
+    <div class="restaurant-text">
+        <h2>Restaurant & Bar</h2>
+        <h3> Fine dine at The waves</h3>
+    <p>Discover bold flavors and elegant dining at our signature restaurant and bar.
+        Whether you're craving local delicacies or international cuisine, we serve up
+        unforgettable experiences in the heart of Kuala Lumpur.</p>
+    </div>
+    </div>
+</section>
+
+<script>
+    function toggleMenu() {
+      const menu = document.getElementById("sideMenu");
+      const menuText = document.querySelector(".menu-text");
+      const closeText = document.querySelector(".close-text");
+
+      menu.classList.toggle("open");
+      menuText.style.display = menu.classList.contains("open") ? "none" : "inline";
+      closeText.style.display = menu.classList.contains("open") ? "inline" : "none";
+    }
+</script>
+</body>
+

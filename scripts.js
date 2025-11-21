@@ -65,17 +65,21 @@ async function getBookings() {
   return await res.json();
 }
 
-async function saveBooking(e){
+async function saveBooking(e) {
   e.preventDefault();
+  const id = document.getElementById('booking-id').value;
   const data = {
-    name: document.getElementById('guest-name').value,
-    room: document.getElementById('room-type').value,
-    checkin: document.getElementById('check-in').value,
-    checkout: document.getElementById('check-out').value,
+    id: id ? Number(id) : null,
+    guest_name: document.getElementById('guest-name').value,
+    room_type: document.getElementById('room-type').value,
+    check_in: document.getElementById('check-in').value,
+    check_out: document.getElementById('check-out').value,
     price: Number(document.getElementById('price').value)
   };
 
-  const res = await fetch(`${API_BASE}/add_booking.php`, {
+  const endpoint = id ? "update_booking.php" : "add_booking.php";
+
+  const res = await fetch(`${API_BASE}/${endpoint}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data)
@@ -83,7 +87,7 @@ async function saveBooking(e){
 
   const result = await res.json();
   if (result.message) {
-    alert("Booking saved to MySQL!");
+    alert(id ? "Booking updated!" : "Booking saved!");
     hideBookingForm();
     renderBookings();
   } else {
@@ -136,6 +140,7 @@ function hideBookingForm(){
   document.getElementById('bookings-section').style.display='block';
 }
 
+
 async function saveBookingToLocal(e){
   e.preventDefault();
   const id = document.getElementById('booking-id').value;
@@ -151,19 +156,40 @@ async function saveBookingToLocal(e){
   }
 
   const arr = await getBookings();
-  if(id){
+  
+  if (id) {
     const idx = arr.findIndex(x => x.id == id);
-    if(idx >= 0) arr[idx] = {id: Number(id), name, room, checkin, checkout, price};
+    if (idx >= 0) {
+      arr[idx] = {
+        id: Number(id),
+        guest_name: name,
+        room_type: room,
+        check_in: checkin,
+        check_out: checkout,
+        price
+      };
+    }
   } else {
     const newId = arr.reduce((m, x) => Math.max(m, x.id || 0), 0) + 1;
-    arr.push({id: newId, name, room, checkin, checkout, price});
+    arr.push({
+      id: newId,
+      guest_name: name,
+      room_type: room,
+      check_in: checkin,
+      check_out: checkout,
+      price
+    });
   }
 
-  saveBookings(arr);
+  
+  function saveBookings(arr) {
+  localStorage.setItem('flashhotel_bookings', JSON.stringify(arr));
+}
   hideBookingForm();
   renderBookings();
   return false;
 }
+
 
 async function editBooking(id) {
   const all = await getBookings();
