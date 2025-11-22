@@ -237,4 +237,49 @@ async function exportCSV(){
   URL.revokeObjectURL(url);
 }
 
+async function renderBookings() {
+  const response = await fetch('get_bookings.php');
+  const bookings = await response.json();
+  const tbody = document.querySelector('#bookings-table tbody');
+  tbody.innerHTML = '';
+  bookings.forEach(b => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${b.id}</td>
+        <td>${b.guest_name}</td>
+        <td>${b.room_type}</td>
+        <td>${b.check_in}</td>
+        <td>${b.check_out}</td>
+        <td>${b.price}</td>
+        <td>
+          <button onclick="editBooking(${b.id})">Edit</button>
+          <button onclick="deleteBooking(${b.id})">Delete</button>
+        </td>
+      </tr>`;
+  });
+}
 
+async function saveBooking(event) {
+  event.preventDefault();
+  const booking = {
+    id: document.getElementById('booking-id').value,
+    guest_name: document.getElementById('guest-name').value,
+    room_type: document.getElementById('room-type').value,
+    check_in: document.getElementById('check-in').value,
+    check_out: document.getElementById('check-out').value,
+    price: document.getElementById('price').value
+  };
+
+  const url = booking.id ? 'update_booking.php' : 'add_booking.php';
+  await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(booking)
+  });
+  renderBookings();
+}
+
+async function deleteBooking(id) {
+  await fetch(`delete_booking.php?id=${id}`);
+  renderBookings();
+}

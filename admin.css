@@ -10,6 +10,240 @@
 * {
   box-sizing: border-box;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}:root {
+  --bg: #f4f6fb;
+  --card: #ffffff;
+  --accent: #2b6cff;
+  --accent-hover: #1f4fcf;
+  --muted: #6b7280;
+  --border: #e6e9ee;
+  --shadow: 0 6px 20px rgba(18, 38, 63, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: url('img/about.jpg') center/cover no-repeat fixed;
+  color: #111;
+}
+
+/* HEADER */
+header {
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 4px solid var(--accent);
+  padding: 15px 0;
+}
+
+header .header-container {
+  width: 85%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header .logo img {
+  width: 80px;
+  height: 80px;
+}
+
+/* MAIN CONTAINER */
+.container {
+  width: 85%;
+  max-width: 980px;
+  margin: 40px auto;
+  background: var(--card);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+/* LOGIN SECTION */
+.login-section {
+  text-align: center;
+}
+
+.login-section h1 {
+  color: var(--accent);
+  margin-bottom: 20px;
+  font-size: 2rem;
+}
+
+form {
+  max-width: 400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+form label {
+  text-align: left;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+form input {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+form input:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+form button {
+  background: var(--accent);
+  color: #fff;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+form button:hover {
+  background: var(--accent-hover);
+}
+
+.error {
+  color: red;
+  font-size: 0.9rem;
+}
+
+/* ADMIN DASHBOARD */
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.admin-header h2 {
+  color: var(--accent);
+}
+
+.logout-btn {
+  background: #ff4d4d;
+  color: #fff;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.logout-btn:hover {
+  background: #e63939;
+}
+
+/* ADMIN CONTROLS */
+.admin-controls {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.admin-controls button {
+  background: var(--accent);
+  color: #fff;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.admin-controls button:hover {
+  background: var(--accent-hover);
+}
+
+.admin-controls input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+/* BOOKINGS TABLE */
+.bookings table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.bookings th, .bookings td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.bookings th {
+  background: var(--accent);
+  color: #fff;
+}
+
+.bookings tr:hover {
+  background: #f9f9f9;
+}
+
+/* BOOKING FORM */
+#booking-form-section {
+  margin-top: 20px;
+}
+
+#bookingForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+#bookingForm input {
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.form-actions button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.form-actions button[type="submit"] {
+  background: var(--accent);
+  color: #fff;
+}
+
+.form-actions button[type="button"] {
+  background: #ccc;
+  color: #333;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  border-top: 1px solid var(--border);
+  font-size: 0.9rem;
+  color: var(--muted);
 }
 
 body {
@@ -82,3 +316,4 @@ form {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+}
