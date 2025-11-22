@@ -35,10 +35,14 @@ async function login(e){
   }
 }
 
+function showAdminLogin() {
+    document.getElementById('hotel-page').style.display = 'none';
+    document.getElementById('admin-page').style.display = 'block';
+  }
 function logout(){
   localStorage.removeItem('flashhotel_admin');
   document.getElementById('admin-screen').style.display = 'none';
-  document.getElementById('login-screen').style.display = 'block';
+  document.getElementById('hotel-screen').style.display = 'block';
 }
 
 // --- Page state ---
