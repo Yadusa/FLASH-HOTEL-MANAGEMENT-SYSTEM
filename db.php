@@ -1,12 +1,15 @@
 <?php
-$host = "localhost";
-$user = "root"; // your DB username
-$pass = "";     // your DB password
-$dbname = "flashhotel";
+include 'db.php';
 
-$conn = new mysqli($host, $user, $pass, $dbname);
+$username = $_POST['username'];
+$password = $_POST['password'];
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+$sql = "SELECT * FROM admin WHERE username='$username' AND password='$password'";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    echo "success";
+} else {
+    echo "invalid";
 }
 ?>

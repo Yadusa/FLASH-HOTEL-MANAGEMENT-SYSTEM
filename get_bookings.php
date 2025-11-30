@@ -1,14 +1,12 @@
 <?php
 include 'db.php';
 
-$sql = "SELECT * FROM bookings ORDER BY created_at DESC";
-$result = $conn->query($sql);
+$result = $conn->query("SELECT * FROM bookings");
+$data = [];
 
-$bookings = [];
 while ($row = $result->fetch_assoc()) {
-    $bookings[] = $row;
+    $data[] = $row;
 }
 
-header('Content-Type: application/json');
-echo json_encode($bookings);
+echo json_encode($data);
 ?>

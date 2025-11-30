@@ -2,20 +2,28 @@ async function sha256(str) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
   return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
 }
+async function login(e){
+  e.preventDefault();
 
-const DEMO_ADMIN = { username: 'admin', pwHash: null };
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
 
-(async ()=>{
-  DEMO_ADMIN.pwHash = await sha256('Admin@123'); // demo password, computed
-  // initialize storage if empty
-  if(!localStorage.getItem('flashhotel_bookings')) {
-    const sample = [
-      {id:1,name:'Alice Tan',room:'Deluxe',checkin:'2025-11-12',checkout:'2025-11-15',price:300},
-      {id:2,name:'Mohamed Ali',room:'Standard',checkin:'2025-12-01',checkout:'2025-12-02',price:120}
-    ];
-    localStorage.setItem('flashhotel_bookings', JSON.stringify(sample));
+  let formData = new FormData();
+  formData.append("username", username);
+  formData.append("password", password);
+
+  const res = await fetch("admin_login.php", {
+    method: "POST",
+    body: formData
+  });
+
+  const result = await res.text();
+  if(result.trim() === "success"){
+      showAdminScreen(username);
+  } else {
+      document.getElementById('login-error').textContent = "Invalid username or password";
   }
-})();
+}
 
 // --- Auth ---
 async function login(e){
@@ -35,14 +43,9 @@ async function login(e){
   }
 }
 
-function showAdminLogin() {
-    document.getElementById('hotel-page').style.display = 'none';
-    document.getElementById('admin-page').style.display = 'block';
-  }
 function logout(){
-  localStorage.removeItem('flashhotel_admin');
   document.getElementById('admin-screen').style.display = 'none';
-  document.getElementById('hotel-screen').style.display = 'block';
+  document.getElementById('login-screen').style.display = 'block';
 }
 
 // --- Page state ---
@@ -64,18 +67,6 @@ async function getBookings() {
   const res = await fetch(`${API_BASE}/get_bookings.php`);
   return await res.json();
 }
-
-async function saveBooking(e) {
-  e.preventDefault();
-  const id = document.getElementById('booking-id').value;
-  const data = {
-    id: id ? Number(id) : null,
-    guest_name: document.getElementById('guest-name').value,
-    room_type: document.getElementById('room-type').value,
-    check_in: document.getElementById('check-in').value,
-    check_out: document.getElementById('check-out').value,
-    price: Number(document.getElementById('price').value)
-  };
 
   const endpoint = id ? "update_booking.php" : "add_booking.php";
 
@@ -208,15 +199,6 @@ async function editBooking(id) {
   document.getElementById('bookings-section').style.display = 'none';
 }
 
-
-async function deleteBooking(id){
-  if(!confirm('Delete booking #' + id + '?')) return;
-  const arr = await getBookings();
-  const updated = arr.filter(x => x.id != id);
-  saveBookings(updated);
-  renderBookings();
-}
-
 async function getBookings() {
   try {
     const res = await fetch(`${API_BASE}/get_bookings.php`);
@@ -263,8 +245,36 @@ async function renderBookings() {
   });
 }
 
-async function saveBooking(event) {
-  event.preventDefault();
+async function getBookings() {
+  const res = await fetch("api/get_bookings.php");
+  return await res.json();
+}
+
+async function renderBookings(){
+  const tbody = document.querySelector('#bookings-table tbody');
+  tbody.innerHTML = '';
+  const all = await getBookings();
+
+  all.forEach(b=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${b.id}</td>
+      <td>${b.guest_name}</td>
+      <td>${b.room_type}</td>
+      <td>${b.check_in}</td>
+      <td>${b.check_out}</td>
+      <td>${b.price}</td>
+      <td>
+        <button onclick="editBooking(${b.id})">Edit</button>
+        <button onclick="deleteBooking(${b.id})">Delete</button>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+async function saveBooking(e) {
+  e.preventDefault();
+
   const booking = {
     id: document.getElementById('booking-id').value,
     guest_name: document.getElementById('guest-name').value,
@@ -273,6 +283,26 @@ async function saveBooking(event) {
     check_out: document.getElementById('check-out').value,
     price: document.getElementById('price').value
   };
+
+  const url = booking.id ? 'api/update_booking.php' : 'api/add_booking.php';
+
+  await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(booking)
+  });
+
+  hideBookingForm();
+  renderBookings();
+}
+
+async function deleteBooking(id){
+  if(!confirm('Delete booking #' + id + '?')) return;
+
+  await fetch(`api/delete_booking.php?id=${id}`);
+
+  renderBookings();
+}
 
   const url = booking.id ? 'update_booking.php' : 'add_booking.php';
   await fetch(url, {
