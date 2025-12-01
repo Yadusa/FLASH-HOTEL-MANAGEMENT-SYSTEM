@@ -8,9 +8,10 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/vanne/OneDrive/Documents/hotel_booking_system/FLASH-HOTEL-MANAGEMENT-SYSTEM",
-      "program": "c:/Users/vanne/OneDrive/Documents/hotel_booking_system/FLASH-HOTEL-MANAGEMENT-SYSTEM/build/Debug/outDebug",
+      "cwd": "${workspaceFolder}/FLASH-HOTEL-MANAGEMENT-SYSTEM",
+      "program": "${workspaceFolder}/FLASH-HOTEL-MANAGEMENT-SYSTEM/build/Debug/outDebug",
       "MIMode": "gdb",
+
       "miDebuggerPath": "gdb",
       "setupCommands": [
         {
