@@ -1,0 +1,19 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build Debug",
+      "type": "shell",
+      "command": "cmd",
+      "args": [
+        "/c",
+        "if not exist \"${workspaceFolder}\\build\\Debug\" mkdir \"${workspaceFolder}\\build\\Debug\" && g++ -g ${workspaceFolder}\\src\\*.cpp -I ${workspaceFolder}\\include -o ${workspaceFolder}\\build\\Debug\\outDebug.exe"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$gcc"]
+    }
+  ]
+}
