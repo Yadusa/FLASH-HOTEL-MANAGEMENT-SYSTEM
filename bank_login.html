@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bank Login</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="bank-login-bg">
+
+<div class="box">
+    <div class="bank-title" id="bankName"></div>
+    <h2>Online Banking Login</h2>
+    <label>User ID</label>
+    <input type="text" placeholder="Enter User ID" id="userId">
+    <label>Password</label>
+    <input type="password" placeholder="Enter Password" id="password">
+    <button onclick="goOTP()">Login</button>
+</div>
+
+<script>
+function getQuery(key) {
+    return new URLSearchParams(window.location.search).get(key);
+}
+document.getElementById("bankName").innerHTML =
+    "Selected Bank: <b>" + getQuery("bank") + "</b>";
+
+function goOTP() {
+    window.location.href = "bank_otp.html?bank=" + getQuery("bank");
+}
+</script>
+
+</body>
+</html>

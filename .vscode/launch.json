@@ -12,7 +12,7 @@
     {
       // PHP debugging with Xdebug
       "name": "PHP: Listen for Xdebug",
-      "type": "php",
+      "type": "chrome",
       "request": "launch",
       "port": 9003
     },

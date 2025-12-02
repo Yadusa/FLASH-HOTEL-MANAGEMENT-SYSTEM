@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Successful</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #44c57c, #1e9b61);
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+    .success-box {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 40px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      animation: fadeIn 0.8s ease-in-out;
+    }
+    .success-box img {
+      width: 130px;
+      margin-bottom: 20px;
+    }
+    .success-box h1 {
+      font-size: 38px;
+      margin-bottom: 10px;
+    }
+    .success-box p {
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+    .back-btn {
+      background: white;
+      color: #1e9b61;
+      font-weight: bold;
+      padding: 12px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s;
+      border: none;
+    }
+    .back-btn:hover {
+      opacity: 0.85;
+      transform: scale(1.05);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="success-box">
+    <img src="https://cdn-icons-png.flaticon.com/512/845/845646.png" alt="Success">
+    <h1>Payment Successful!</h1>
+    <p>Thank you — your transaction has been completed securely.</p>
+    <button class="back-btn" onclick="window.location.href='payment.html'">Back to Home</button>
+  </div>
+</body>
+</html>
