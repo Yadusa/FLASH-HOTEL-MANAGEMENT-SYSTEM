@@ -108,10 +108,12 @@
     formData.append("username", username);
     formData.append("password", password);
 
-    fetch("admin_login.php", {
-        method: "POST",
-        body: formData
-    })
+   fetch("api/admin.php", {
+    method: "POST",
+    body: formData
+   })
+
+
     .then(res => res.text())
     .then(data => {
         if (data.trim() === "success") {
