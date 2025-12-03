@@ -1,36 +1,41 @@
 <?php
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
 
-// Database connection
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(204);
+    exit;
+}
+
+// Database connection (optional for demo)
 $host = "localhost";
 $user = "root";
 $pass = "";
 $dbname = "flashhotel";
+$conn = @new mysqli($host, $user, $pass, $dbname);
 
-$conn = new mysqli($host, $user, $pass, $dbname);
-
-if ($conn->connect_error) {
+if ($conn && $conn->connect_error) {
     echo json_encode(["success" => false, "error" => "Database connection failed"]);
     exit;
 }
 
-// Read JSON input
-$data = json_decode(file_get_contents("php://input"), true);
+$raw = file_get_contents("php://input");
+$data = json_decode($raw, true);
 
 $username = $data["username"] ?? "";
 $password = $data["password"] ?? "";
 
-// Hardcoded admin (since your JS uses a demo admin)
+// Demo credentials
 $correctUsername = "admin";
 $correctPassword = "Admin@123";
 
-// Validate
 if ($username === $correctUsername && $password === $correctPassword) {
     echo json_encode(["success" => true, "username" => $username]);
 } else {
     echo json_encode(["success" => false, "error" => "Invalid username or password"]);
 }
 
-$conn->close();
+if ($conn) { $conn->close(); }
 ?>
