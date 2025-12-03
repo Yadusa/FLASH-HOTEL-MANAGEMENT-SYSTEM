@@ -5,34 +5,131 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OTP Verification</title>
 <link rel="stylesheet" href="style.css">
+
+<style>
+.otp-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 15px 0;
+}
+.otp-input {
+    width: 45px;
+    height: 55px;
+    font-size: 24px;
+    text-align: center;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+}
+.otp-input:focus {
+    border-color: #007bff;
+}
+#resendBtn {
+    display: none;
+    margin-top: 10px;
+}
+</style>
+
 </head>
 <body class="otp-bg">
 
 <div class="box">
     <h2>OTP Verification</h2>
     <p>A 6-digit OTP has been sent to your registered device</p>
-    <input type="text" id="otp" maxlength="6" placeholder="••••••">
-    <button onclick="verify()">Verify</button>
+
+    <div class="otp-container">
+        <input class="otp-input" type="text" maxlength="1" id="otp1">
+        <input class="otp-input" type="text" maxlength="1" id="otp2">
+        <input class="otp-input" type="text" maxlength="1" id="otp3">
+        <input class="otp-input" type="text" maxlength="1" id="otp4">
+        <input class="otp-input" type="text" maxlength="1" id="otp5">
+        <input class="otp-input" type="text" maxlength="1" id="otp6">
+    </div>
+
+    <button id="verifyBtn" onclick="verify()">Verify</button>
+
+    <button id="resendBtn" onclick="resendOTP()">Resend OTP</button>
+
     <div class="timer" id="timerMsg">OTP expires in <b>60</b> seconds</div>
 </div>
 
 <script>
+/* GLOBAL */
 let time = 60;
-const timer = setInterval(() => {
-    time--;
-    document.querySelector("#timerMsg b").textContent = time;
-    if (time == 0) {
-        clearInterval(timer);
-        alert("OTP expired! Request new OTP.");
-    }
-}, 1000);
+let timer;
 
+/* =========== START TIMER FUNCTION =========== */
+function startTimer() {
+    time = 60;
+    document.querySelector("#timerMsg b").textContent = time;
+
+    // Make sure buttons correct state
+    document.getElementById("verifyBtn").disabled = false;
+    document.getElementById("resendBtn").style.display = "none";
+
+    timer = setInterval(() => {
+        time--;
+        document.querySelector("#timerMsg b").textContent = time;
+
+        if (time === 0) {
+            clearInterval(timer);
+            document.getElementById("verifyBtn").disabled = true;
+            document.getElementById("resendBtn").style.display = "block";
+            alert("OTP expired! Please request a new OTP.");
+        }
+    }, 1000);
+}
+
+startTimer();
+
+
+/* =========== OTP INPUT MOVEMENT =========== */
+const inputs = document.querySelectorAll(".otp-input");
+
+inputs.forEach((input, index) => {
+    input.addEventListener("input", (e) => {
+        e.target.value = e.target.value.replace(/\D/g, '');
+        if (e.target.value && index < inputs.length - 1) {
+            inputs[index + 1].focus();
+        }
+    });
+
+    input.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace" && !input.value && index > 0) {
+            inputs[index - 1].focus();
+        }
+    });
+});
+
+
+/* =========== VERIFY BUTTON =========== */
 function verify() {
-    if (document.getElementById("otp").value.length === 6) {
+    let otp = "";
+    inputs.forEach(input => otp += input.value);
+
+    if (otp.length < 6) {
+        alert("Please enter the full 6-digit OTP.");
+        return;
+    }
+
+    if (/^\d{6}$/.test(otp)) {
         window.location.href = "payment_success.html";
     } else {
-        alert("Invalid OTP — must be 6 digits");
+        alert("Invalid OTP.");
     }
+}
+
+
+/* =========== RESEND OTP BUTTON =========== */
+function resendOTP() {
+    // Clear all OTP boxes
+    inputs.forEach(input => input.value = "");
+    inputs[0].focus();
+
+    alert("A new OTP has been sent!");
+
+    // Restart timer
+    startTimer();
 }
 </script>
 
