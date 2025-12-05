@@ -1,41 +1,41 @@
 <?php
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(204);
-    exit;
+    http_response_code(200);
+    exit();
 }
 
-// Database connection (optional for demo)
-$host = "localhost";
-$user = "root";
-$pass = "";
-$dbname = "flashhotel";
-$conn = @new mysqli($host, $user, $pass, $dbname);
+include 'db.php';
 
-if ($conn && $conn->connect_error) {
-    echo json_encode(["success" => false, "error" => "Database connection failed"]);
-    exit;
+$data = json_decode(file_get_contents("php://input"), true);
+
+if (!$data) {
+    echo json_encode(["error" => "No JSON received"]);
+    exit();
 }
 
-$raw = file_get_contents("php://input");
-$data = json_decode($raw, true);
+$guest_name = $data['guest_name'] ?? '';
+$room_type = $data['room_type'] ?? '';
+$check_in = $data['check_in'] ?? '';
+$check_out = $data['check_out'] ?? '';
+$price = floatval($data['price'] ?? 0);
 
-$username = $data["username"] ?? "";
-$password = $data["password"] ?? "";
+if ($guest_name && $room_type && $check_in && $check_out && $price > 0) {
 
-// Demo credentials
-$correctUsername = "admin";
-$correctPassword = "Admin@123";
+    $stmt = $conn->prepare("INSERT INTO bookings (guest_name, room_type, check_in, check_out, price) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssd", $guest_name, $room_type, $check_in, $check_out, $price);
 
-if ($username === $correctUsername && $password === $correctPassword) {
-    echo json_encode(["success" => true, "username" => $username]);
+    if ($stmt->execute()) {
+        echo json_encode(["message" => "Booking added successfully"]);
+    } else {
+        echo json_encode(["error" => "SQL Error: " . $stmt->error]);
+    }
+
 } else {
-    echo json_encode(["success" => false, "error" => "Invalid username or password"]);
+    echo json_encode(["error" => "Invalid input data"]);
 }
-
-if ($conn) { $conn->close(); }
 ?>
