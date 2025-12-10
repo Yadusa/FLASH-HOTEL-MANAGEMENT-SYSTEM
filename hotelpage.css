@@ -130,22 +130,6 @@ body {
 }
 
 
-.menu-icon-wrapper {
-  display: flex;
-  justify-content: center;
-  padding: 20px 0;
-}
-
-.menu-icon {
-  width: 40px;
-  height: auto;
-  cursor: pointer;
-  position: absolute;
-  top: 25px;
-  left: 20px;
-  z-index: 1001;
-}
-
 .close-text {
   font-size: 14px;
   letter-spacing: 1px;
@@ -155,37 +139,7 @@ body {
 }
 
 
-.side-menu {
-  position: fixed;
-  top: 0;
-  left: -100%;
-  width: 300px;
-  height: 100vh;
-  background-color: #fefefe;
-  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-  padding: 20px 20px;
-  transition: left 0.3s ease;
-  z-index: 999;
-}
 
-.side-menu.open {
-  left: 0;
-}
-
-.side-menu ul {
-  list-style: none;
-  padding: 0;
-}
-
-.side-menu li {
-  margin-bottom: 20px;
-}
-
-.side-menu a {
-  text-decoration: none;
-  color: #111;
-  font-size: 16px;
-}
 
 body {
   margin: 0;
