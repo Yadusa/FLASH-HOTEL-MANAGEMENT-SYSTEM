@@ -11,11 +11,17 @@
 <div class="box">
     <div class="bank-title" id="bankName"></div>
     <h2>Online Banking Login</h2>
-    <label>User ID</label>
-    <input type="text" placeholder="Enter User ID" id="userId">
-    <label>Password</label>
-    <input type="password" placeholder="Enter Password" id="password">
-    <button onclick="goOTP()">Login</button>
+
+    <!-- Wrap inputs in a form -->
+    <form id="loginForm">
+        <label>User ID</label>
+        <input type="text" id="userId" placeholder="Enter User ID" required>
+        
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Enter Password" required>
+        
+        <button type="submit">Login</button>
+    </form>
 </div>
 
 <script>
@@ -25,9 +31,12 @@ function getQuery(key) {
 document.getElementById("bankName").innerHTML =
     "Selected Bank: <b>" + getQuery("bank") + "</b>";
 
-function goOTP() {
+// Use form submit event to handle redirection
+document.getElementById("loginForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent actual form submission
+    // All required fields are already validated by browser
     window.location.href = "bank_otp.html?bank=" + getQuery("bank");
-}
+});
 </script>
 
 </body>

@@ -10,12 +10,19 @@
 <body>
 <div class="container center">
     <h2>Scan to Pay – Boost</h2>
+
     <canvas id="qr"></canvas>
+
     <p>Waiting for payment...</p>
+
+    <!-- Countdown text -->
+    <p id="countdown" style="font-size:20px; font-weight:bold; margin-top:10px;">
+        30 seconds remaining
+    </p>
 </div>
 
 <script>
-    // Data inside QR → you can change anything (ID, wallet ID, amount, name, etc.)
+    // QR payment data
     const paymentData = "WALLET=BOOST; AMOUNT=later add; ORDERID=later add";
 
     var qr = new QRious({
@@ -23,6 +30,20 @@
         size: 250,
         value: paymentData
     });
+
+    // Countdown 30 seconds
+    let timeLeft = 30;
+    const countdownEl = document.getElementById("countdown");
+
+    const timer = setInterval(() => {
+        timeLeft--;
+        countdownEl.textContent = timeLeft + " seconds remaining";
+
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            window.location.href = "payment_success.html"; // Go to success page
+        }
+    }, 1000);
 </script>
 
 </body>
