@@ -57,13 +57,13 @@ if (isset($_POST['submit'])) {
         <input type="text" name="staff_name" required>
 
         <label>Date of Birth:</label>
-        <input type="date" name="staff_dob" required>
+        <input type="date" name="staff_dob" required max="2006-12-31">
 
         <label>Salary:</label>
         <input type="number" step="0.01" name="staff_salary" required>
-
+        
         <label>Join Date:</label>
-        <input type="date" name="staff_join_date" required>
+        <input type="date" name="staff_join_date" required max="<?php echo date('Y-m-d'); ?>">
 
         <label>Position:</label>
         <input type="text" name="staff_position" required>
