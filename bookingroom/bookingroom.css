@@ -88,6 +88,24 @@ h5 {
     color: #241717;
 }
 
+.book-btn
+{
+    display:inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: rgb(46, 70, 201);
+    color: white;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: 0.3s;
+
+}
+
+.book-btn:hover
+{
+    background-color: #555;
+}
+
 /* MOBILE */
 @media (max-width: 768px) {
     .box.flex {
