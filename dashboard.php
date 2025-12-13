@@ -21,7 +21,7 @@ $adminRole = $_SESSION["admin_role"];
 <div class="sidebar">
     <div class="brand">
         <h2> FLASH Hotel Admin</h2>
-        <p class="role"><?php echo ucfirst($adminRole); ?></p>
+        <br><p class="role"><?php echo ucfirst($adminRole); ?></p>
     </div>
 
     <a href="dashboard.php" class="active"> Dashboard</a>
