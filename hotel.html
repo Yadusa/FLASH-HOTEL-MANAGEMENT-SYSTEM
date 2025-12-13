@@ -4,82 +4,109 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title> 
-            The Obsidian Kuala Lumpur
+            The Obsidian Kuala Lumpur | Luxury Hotel
         </title>
 
-          <link rel="stylesheet" href="hotelpage.css"> 
-          <link rel="stylesheet" href="sliding.css">
+        <link rel="stylesheet" href="hotelpage.css"> 
        
         <link rel="preconnect" href="https://fonts.googleapis.com">
-         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     </head>
 
 <body>
    
   <div id="hotel-page">
-        <header class="top-header">
-               <div class="header-left"></div>
-<div class="header-center">
+    <header class="main-header">
+       <div class="header-content">
+        <div class="header-left-links">
+            <a href="#" class="nav-link">Our Story</a>
+            <a href="#" class="nav-link special-offer-link"> Special Offers</a>
+            <a href="#" class="nav-link Gallery">Gallery</a>
+        </div>
+        
         <div class="logo">
             <h1> The Obsidian </h1>
             <p> KUALA LUMPUR </p>
         </div>
-</div>
-         <div class="header-right">
-        <div class="top-links">
-            <a href="#" onclick="showAdminLogin()"> Sign in</a> | 
-         <a href="#">Join Now</a> | 
-              🌐 English 
-            <a href="bookingroom/roompage.html"> ROOMS -></a>
+
+        <div class="header-right-actions">
+            <div class="auth-links">
+                <a href="#" onclick="showAdminLogin()" class="nav-link">Sign In</a> 
+                <span>|</span>
+                <a href="#" class="nav-link">Join Now</a> 
+            </div>
+            
+            <a href="bookingroom/roompage.html" class="cta-button book-now-button">BOOK NOW</a>
         </div>
-         
-    </div>
-    
-
-</header>
+       </div>
+   </header>
 
 
+        <section class="hero-carousel-section" aria-label="Hotel Image Gallery">
+            <div class="carousell" data-carousell>
+                <button class="carousell-button prev" data-carousell-button="prev">&#8249;</button> <button class="carousell-button next" data-carousell-button="next">&#8250;</button> <ul data-slides>
+                    <li class="slide" data-active>
+                        <img src="images/carousell-1.jpg" alt="Hotel exterior or lobby view">
+                    </li>
+                    <li class="slide">
+                        <img src="images/carousell-2.jpg" alt="Luxury suite interior">
+                    </li>
+                    <li class="slide">
+                        <img src="images/carousell-3.jpg" alt="Poolside area">
+                    </li>
+                </ul>
+                <div class="carousell-overlay">
+                    <h2>Experience Timeless Luxury</h2>
+                    <p>A sanctuary of elegance in the heart of Kuala Lumpur.</p>
+                </div>
+            </div>
+        </section>
 
-<body>
-    <section aria-label="Newest photos"></section>
-    <div class="carousell" data-carousell >
-        <button class="carousell-button prev" data-carousell-button="prev">&#8678;</button>
-         <button class="carousell-button next" data-carousell-button="next">&#8680;</button>
-    <ul data-slides>
-        <li class=" slide" data-active>
-            <img src="images/carousell-1.jpg" alt="Music_fest">
-        </li>
-        <li class=" slide">
-            <img src="images/carousell-2.jpg" alt="Gala_night">
-        </li>
-        <li class=" slide">
-            <img src="images/carousell-3.jpg" alt="Movie_night">
-        </li>
-    </ul>
-     </div>
+        <section class="facility-section restaurant-section">
+            <div class="facility-image">
+                <img src="images/restaurant-image.jpg" alt="Plated dish at the Obsidian fine dining">
+            </div>
+            <div class="facility-text restaurant-text">
+                <p class="tagline">Gourmet Dining</p>
+                <h2>Restaurant & Bar</h2>
+                <h3>Fine Dine at 'The Waves'</h3>
+                <p>Discover bold, sophisticated flavors and elegant dining at our signature restaurant and bar. Whether you're craving exquisite local delicacies or world-class international cuisine, we serve up unforgettable culinary experiences in a breathtaking setting.</p>
+                <a href="#" class="learn-more-link">View Menu →</a>
+            </div>
+        </section>
 
-<section class="restaurant-section">
-    <div class="restaurant-content">
-       <div class="restaurant-image">
-    <img src="images/restaurant-image.jpg" alt="Plated dish at the Obsidian">
-</div>
+        <footer class="main-footer">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h4>The Obsidian</h4>
+                    <p>KUALA LUMPUR</p>
+                </div>
+                <div class="footer-links">
+                    <h5>Hotel</h5>
+                    <a href="#">About Us</a>
+                    <a href="#">Contact</a>
+                    <a href="#">Careers</a>
+                </div>
+                <div class="footer-links">
+                    <h5>Services</h5>
+                    <a href="#">Meetings & Events</a>
+                    <a href="#">Wellness & Spa</a>
+                    <a href="#">Gallery</a>
+                </div>
+                <div class="footer-contact">
+                    <h5>Contact Us</h5>
+                    <p>123 Obsidian Tower, KLCC, 50088 Kuala Lumpur, Malaysia</p>
+                    <p>+60 3-1234 5678</p>
+                    <p>reservations@obsidiankl.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2025 The Obsidian Kuala Lumpur. All Rights Reserved.
+            </div>
+        </footer>
 
-    </div>
-    <div class="restaurant-text">
-        <h2>Restaurant & Bar</h2>
-        <h3> Fine dine at The waves</h3>
-    <p>Discover bold flavors and elegant dining at our signature restaurant and bar.
-        Whether you're craving local delicacies or international cuisine, we serve up
-        unforgettable experiences in the heart of Kuala Lumpur.</p>
-    </div>
-   
-</section>
-
-
-
-</body>
-
-
+   </div>
      <script src="landing.js" defer></script>
 </body>
+</html>
