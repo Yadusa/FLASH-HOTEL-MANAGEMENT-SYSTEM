@@ -1,219 +1,469 @@
+/* --- Global Styles & Variables --- */
+:root {
+    --color-primary: #1a1a1a; /* Deep Obsidian Black */
+    --color-secondary: #0a0a0a; /* Even Darker Backgrounds */
+    --color-accent: #b8860b; /* Dark Goldenrod/Gold Accent */
+    --color-text-light: #f5f5f5;
+    --color-text-dark: #333333;
+    --font-serif: 'Playfair Display', serif;
+    --font-sans: 'Poppins', sans-serif;
+}
+
 body {
-  margin: 0;
-  font-family: "Poppins", sans-serif;
-  background-color: #f5f5f5;
+    margin: 0;
+    font-family: var(--font-sans);
+    background-color: var(--color-text-light);
+    color: var(--color-text-dark);
 }
 
-/* Logo */
+/* --- Header Section (Revised) --- */
+.main-header {
+    background-color: var(--color-text-light); /* White/light background */
+    border-bottom: 1px solid #e0e0e0;
+    padding: 15px 0; /* Slightly reduced padding for a sleeker look */
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1300px; /* Slightly wider header */
+    margin: 0 auto;
+    padding: 0 30px;
+}
+
+/* --- Navigation Links (Left Side) --- */
+.header-left-links {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--color-text-dark);
+    font-size: 15px;
+    font-weight: 400;
+    transition: color 0.3s;
+}
+
+.nav-link:hover {
+    color: var(--color-accent);
+}
+
+.special-offer-link {
+    font-weight: 600;
+    background-color: var(--color-primary);
+    color: var(--color-text-light) !important;
+    border: 1px solid var(--color-primary);
+    padding: 5px 10px;
+    border-radius: 20px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.special-offer-link:hover {
+    background-color: #333;
+    transform: translateY(-1px);
+}
+
+/* --- Logo Styling (Center) --- */
+.logo {
+    text-align: center;
+}
+
 .logo h1 {
-  font-family: "Playfair Display", serif;
-  font-size: 28px;
-  letter-spacing: 2px;
-  color: rgb(5, 5, 5);
-  margin: 30px;
-}
-
-.logo span {
-  font-weight: 600;
-  color: #111;
+    font-family: var(--font-serif);
+    font-size: 30px; /* Adjusted size */
+    letter-spacing: 4px;
+    color: var(--color-primary);
+    margin: 0;
+    line-height: 1;
 }
 
 .logo p { 
-  font-size: 15px;
-  color: #111;
-  letter-spacing: 2px;
-  margin-top: -20px;
+    font-size: 11px;
+    color: var(--color-primary);
+    letter-spacing: 4px;
+    margin-top: 5px;
+    font-weight: 300;
+    text-transform: uppercase;
 }
 
-/* Header */
-.top-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 30px 40px;
-  background-color: #eff3b3;
-  border-bottom: 1px solid #ccc;
-  position: relative;
+/* --- Action Buttons (Right Side) --- */
+.header-right-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
-.header-center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
+.auth-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
 }
 
-.header-right {
-  flex: 1;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
+.auth-links span {
+    color: #ccc;
 }
 
-.top-links {
-  display: flex;
-  gap: 15px;
-  font-size: 15px;
+/* CTA Button - Book Now */
+.cta-button {
+    background-color: var(--color-primary);
+    color: var(--color-text-light) !important;
+    padding: 10px 20px;
+    border-radius: 2px;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
-.top-links a {
-  text-decoration: none;
-  color: rgb(14, 11, 11);
-  font-size: 15px;
-}
-
-
-.dropdown {
-  position: relative;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  left: 0;
-  background-color: aqua;
-  min-width: 160px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  z-index: 1;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-.dropdown-content li {
-  padding: 10px;
-}
-
-.dropdown-content a {
-  text-decoration: none;
-  color: #111;
-  font-size: 15px;
+.cta-button:hover {
+    background-color: #333;
+    transform: translateY(-1px);
 }
 
 
+/* --- Media Queries Update --- */
+@media (max-width: 950px) {
+    /* Stack elements on smaller screens */
+    .header-content {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
 
+    .logo {
+        order: -1; 
+        width: 100%;
+        margin-bottom: 10px;
+    }
 
-.restaurant-section {
-  padding: 40px;
-  background-color: #fff;
+    .header-left-links,
+    .header-right-actions {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .header-left-links {
+        order: 1; /* Special Offers row below the logo */
+    }
+
+    .header-right-actions {
+        order: 2; /* Auth/Book Now row */
+    }
+
+    .cta-button.book-now-button {
+        padding: 10px 20px;
+    }
 }
 
-.restaurant-content {
-  display: flex;
-  flex-direction: column;
-  max-width: 900px;
-  margin: auto;
+/* --- Carousel Section (Hero) --- */
+.hero-carousel-section {
+    position: relative;
 }
 
-.restaurant-text h2 {
-  font-size: 24px;
-  margin-bottom: 10px;
+.carousell {
+    width: 100%;
+    height: 80vh; /* Taller hero section */
+    position: relative;
+    overflow: hidden;
+    background: var(--color-primary);
 }
 
-.restaurant-image img {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
+.carousell > ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
-.restaurant-text h3 {
-  font-size: 20px;
-  margin-bottom: 10px;
-  color: #111;
+.slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 800ms ease-in-out; /* Slower transition for drama */
 }
 
-.restaurant-text p {
-  font-size: 16px;
-  line-height: 1.6;
-  color: black;
+.slide > img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: brightness(70%); /* Darken image slightly for text readability */
+}
+
+.slide[data-active] {
+    opacity: 1;
+    z-index: 1;
+}
+
+/* Carousel Overlay Text */
+.carousell-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    text-align: center;
+    color: var(--color-text-light);
+}
+
+.carousell-overlay h2 {
+    font-family: var(--font-serif);
+    font-size: 55px;
+    margin-bottom: 10px;
+    letter-spacing: 5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.carousell-overlay p {
+    font-size: 20px;
+    font-weight: 300;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 
-.close-text {
-  font-size: 14px;
-  letter-spacing: 1px;
-  color: #161313;
-  margin-top: 5px;
-  display: none;
-}
-
-
-
-
-body {
-  margin: 0;
-}
-.carousell 
-{ width: 100%;
-  height:70vh;
-  position: relative;
-  overflow: hidden;
-  background: #000;
-}
-
-.carousell >ul{
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.slide 
-{
-  position: absolute;
-  inset: 0;
-  opacity:0;
-  transition : 200,s opacity ease ease-in-out;
-  transition-delay: 200ms;
-}
-
-.slide >img {
-  display:block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-
-}
-
-.slide[data-active]
-{
-  opacity:1;
-  z-index: 1;
-  transition-delay: 0ms;
-}
-
-.carousell-button
-{
-  position: absolute;
-  z-index:2;
-  background: none;
-  border: none;
-  font-size: 15px;
-  top: 50%;
-  transform: translate(-50%);
-  color:antiquewhite;
-  cursor: pointer;
-  border-radius: 50%;
-  padding: 12px 18px;
-  background-color:#161313;
+.carousell-button {
+    position: absolute;
+    z-index: 10;
+    background: none;
+    border: none;
+    font-size: 30px; /* Larger arrows */
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.7); /* Lighter on dark background */
+    cursor: pointer;
+    padding: 0 15px;
+    transition: color 0.3s;
 }
 
 .carousell-button:hover,
-.carousell-button:focus{
-  color:white;
-  background-color: #161313;
-
+.carousell-button:focus {
+    color: var(--color-text-light);
+    outline: none;
 }
 
-.carousell-button:focus 
-{
-  outline: 1px solid black;
-
+.carousell-button.prev {
+    left: 20px;
+}
+.carousell-button.next {
+    right: 20px;
 }
 
-.carousell-button.prev{
-  left:20px;
+/* --- Facility Sections (Restaurant) --- */
+.facility-section {
+    display: flex;
+    max-width: 1200px;
+    margin: 80px auto;
+    padding: 0 40px;
+    align-items: center;
+    gap: 60px;
 }
-.carousell-button.next{
-  right:20px;
+
+.facility-image {
+    flex: 1;
+    min-width: 50%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.facility-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.facility-text {
+    flex: 1;
+}
+
+.tagline {
+    font-size: 14px;
+    color: var(--color-accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.facility-text h2 {
+    font-family: var(--font-serif);
+    font-size: 38px;
+    color: var(--color-primary);
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.facility-text h3 {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    color: var(--color-text-dark);
+    margin-bottom: 20px;
+    font-weight: 400;
+}
+
+.facility-text p {
+    font-size: 16px;
+    line-height: 1.7;
+    margin-bottom: 30px;
+    color: #666;
+}
+
+.learn-more-link {
+    display: inline-block;
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 2px solid var(--color-accent);
+    padding-bottom: 3px;
+    transition: all 0.3s;
+}
+
+.learn-more-link:hover {
+    color: var(--color-accent);
+    border-color: var(--color-primary);
+}
+
+/* --- Footer Section --- */
+.main-footer {
+    background-color: var(--color-secondary);
+    color: var(--color-text-light);
+    padding: 60px 0 20px;
+    margin-top: 40px;
+    font-weight: 300;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px 40px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-logo h4 {
+    font-family: var(--font-serif);
+    font-size: 28px;
+    letter-spacing: 2px;
+    margin: 0 0 5px 0;
+    color: var(--color-text-light);
+}
+
+.footer-logo p {
+    font-size: 10px;
+    letter-spacing: 2px;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.footer-links,
+.footer-contact {
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-links h5,
+.footer-contact h5 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    font-weight: 600;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    margin-bottom: 8px;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover {
+    color: var(--color-text-light);
+}
+
+.footer-contact p {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 20px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* --- Media Queries for Responsiveness --- */
+@media (max-width: 900px) {
+    .facility-section {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .facility-image {
+        min-width: 100%;
+        margin-bottom: 30px;
+    }
+
+    .learn-more-link {
+        display: block;
+        width: fit-content;
+        margin: 0 auto;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        gap: 30px;
+        text-align: center;
+    }
+
+    .footer-logo,
+    .footer-links,
+    .footer-contact {
+        align-items: center;
+    }
+}
+
+@media (max-width: 600px) {
+    .header-content {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .header-left-links,
+    .header-right-links {
+        gap: 15px;
+    }
+
+    .logo {
+        order: -1; /* Move logo to the top on small screens */
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .carousell {
+        height: 60vh;
+    }
+    
+    .carousell-overlay h2 {
+        font-size: 40px;
+        letter-spacing: 3px;
+    }
+    
+    .carousell-overlay p {
+        font-size: 16px;
+    }
 }
