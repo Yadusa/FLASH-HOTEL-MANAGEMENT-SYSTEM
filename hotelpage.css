@@ -467,3 +467,258 @@ body {
         font-size: 16px;
     }
 }
+
+
+.story-hero {
+    position: relative;
+    height: 60vh;
+    background: linear-gradient(
+        rgba(0, 0, 0, 0.55),
+        rgba(0, 0, 0, 0.55)
+    ),
+    url("images/oldkl.jpg") center / cover no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.story-hero h2 {
+    font-family: var(--font-serif);
+    font-size: 52px;
+    letter-spacing: 5px;
+    margin-bottom: 10px;
+    color: var(--color-text-light);
+}
+
+.story-hero p {
+    font-size: 18px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+
+.story-section {
+    max-width: 100%;
+    padding: 100px 40px;
+    background-color: var(--color-text-light);
+}
+
+.story-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.story-container .tagline {
+    margin-bottom: 15px;
+}
+
+.story-container h2 {
+    font-family: var(--font-serif);
+    font-size: 40px;
+    color: var(--color-primary);
+    margin-bottom: 35px;
+    letter-spacing: 1px;
+}
+
+.story-container p {
+    font-size: 17px;
+    line-height: 1.9;
+    color: #555;
+    margin-bottom: 25px;
+    font-weight: 300;
+}
+
+.story-image img{
+
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius:4px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+.story-container p:last-child {
+    margin-bottom: 0;
+}
+
+
+@media (max-width: 900px) {
+    .story-section {
+        padding: 80px 30px;
+    }
+
+    .story-hero h2 {
+        font-size: 42px;
+        letter-spacing: 3px;
+    }
+
+    .story-container h2 {
+        font-size: 34px;
+    }
+}
+
+@media (max-width: 600px) {
+    .story-hero {
+        height: 50vh;
+    }
+
+    .story-hero h2 {
+        font-size: 34px;
+    }
+
+    .story-hero p {
+        font-size: 16px;
+    }
+
+    .story-container p {
+        font-size: 16px;
+    }
+}
+
+
+.hero {
+    background: url('hero-bg.jpg') no-repeat center center/cover;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.hero p {
+    font-size: 1.2rem;
+}
+
+/* Offers Card Section */
+.offers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 50px 200px;
+    display:block;
+}
+
+.offer-card {
+    background-color: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.offer-card img {
+    width:fit;
+    height: 400px;
+    object-fit: fill;
+}
+
+.offer-card h2 {
+    margin: 15px 0 10px;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.offer-card p {
+    padding: 0 15px 15px;
+    font-size: 1rem;
+    color: #666;
+}
+
+.offer-card .book-btn {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 10px 25px;
+    background-color: #fac069;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.offer-card .book-btn:hover {
+    background-color: #ff4757;
+}
+
+.offer-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+/* Gallery Layout */
+.gallery-container {
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 0 40px;
+    text-align: center;
+}
+
+.gallery-intro {
+    margin-bottom: 50px;
+}
+
+.photo-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2x2 Grid */
+    gap: 20px;
+}
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    height: 400px;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.05);
+}
+
+/* Hover Caption Effect */
+.caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.7));
+    color: white;
+    padding: 20px;
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.gallery-item:hover .caption {
+    opacity: 1;
+}
+
+/* Logo specific fix for link */
+.logo:hover h1 {
+    color: var(--color-accent);
+    transition: color 0.3s;
+}
+
+/* Responsive Grid */
+@media (max-width: 768px) {
+    .photo-grid {
+        grid-template-columns: 1fr; /* Stack on mobile */
+    }
+    .gallery-item {
+        height: 300px;
+    }
+}
