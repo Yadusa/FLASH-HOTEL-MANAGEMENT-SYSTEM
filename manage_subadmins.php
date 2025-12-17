@@ -28,7 +28,7 @@ $result = $conn->query("SELECT * FROM admins WHERE role='subadmin'");
 
     <h2>Subadmin List</h2>
 
-    <a href="add_subadmin.php" class="btn-add">+ Add Subadmin</a>
+    <a href="add_subadmin.php" class="btn">+ Add Subadmin</a>
 
     <table border="1" cellpadding="10" class="admin-table">
         <tr>

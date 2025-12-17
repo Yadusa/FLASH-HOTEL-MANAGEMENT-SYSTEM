@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Register | The Obsidian KL</title>
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+
+<div class="auth-card">
+    <h2>Create Account</h2>
+    <p class="subtitle">Register to book your perfect stay</p>
+
+    <form action="user_register.php" method="post">
+        <input type="text" name="username" placeholder="Username" required>
+
+        <input type="text" name="cust_name" placeholder="Full Name" required>
+
+        <input type="email" name="cust_email" placeholder="Email" required>
+
+        <input type="text" name="contact_numer" placeholder="Contact Number" required>
+
+        <input type="password" name="password" placeholder="Password" required>
+
+        <input type="hidden" name="room" value="<?php echo $_GET['room'] ?? ''; ?>">
+
+        <button type="submit">Register</button>
+    </form>
+
+    <div class="switch">
+        Already have an account?
+        <a href="user_login.html">Login</a>
+    </div>
+
+    <div class="back-home">
+        <a href="hotel.html">← Back to Main Page</a>
+    </div>
+</div>
+
+</body>
+</html>
+
