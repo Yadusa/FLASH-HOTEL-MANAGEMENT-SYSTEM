@@ -1,10 +1,6 @@
 <?php
 session_start();
-
-$conn = new mysqli("localhost", "root", "", "flashhotel");
-if ($conn->connect_error) {
-    die("Database connection failed");
-}
+require_once "../config/db.php";
 
 $username = $_POST['username'];
 $cust_name = $_POST['cust_name'];
@@ -34,3 +30,4 @@ if ($conn->query($sql)) {
 
 $conn->close();
 ?>
+
