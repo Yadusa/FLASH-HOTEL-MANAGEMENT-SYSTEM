@@ -1,10 +1,6 @@
 <?php
 session_start();
-
-$conn = new mysqli("localhost", "root", "", "flashhotel");
-if ($conn->connect_error) {
-    die("Database connection failed");
-}
+require_once "../config/db.php";
 
 $username = $_POST['username'];
 $password = $_POST['password'];
@@ -32,3 +28,4 @@ echo "<script>alert('Invalid username or password'); window.history.back();</scr
 
 $conn->close();
 ?>
+
