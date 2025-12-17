@@ -1,8 +1,5 @@
 <?php
-$conn = new mysqli("localhost", "root", "", "flashhotel");
-if ($conn->connect_error) {
-    die("Database connection failed");
-}
+require_once "../config/db.php";
 
 $sql = "SELECT COUNT(*) AS available_rooms
         FROM rooms
@@ -79,3 +76,4 @@ $available = $row['available_rooms'];
 
 </body>
 </html>
+
