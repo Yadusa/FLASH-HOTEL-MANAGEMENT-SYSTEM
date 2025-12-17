@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Login | The Obsidian KL</title>
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+
+<div class="auth-card">
+    <h2>Welcome Back</h2>
+    <p class="subtitle">Sign in to continue your booking</p>
+
+    <form action="login.php" method="post">
+
+        <input type="text" name="username" placeholder="Username" required>
+
+        <input type="password" name="password" placeholder="Password" required>
+
+        <input type="hidden" name="room" value="<?php echo $_GET['room'] ?? ''; ?>">
+
+        <button type="submit">Login</button>
+    </form>
+
+    <div class="switch">
+        Don’t have an account?
+        <a href="user_register.html">Register</a>
+    </div>
+
+    <div class="back-home">
+        <a href="hotel.html">← Back to Main Page</a>
+    </div>
+</div>
+
+</body>
+</html>
