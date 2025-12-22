@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require_once "config/db.php";
+require_once "db.php";
 
 $username = $_POST['username'];
 $cust_name = $_POST['cust_name'];
