@@ -1,10 +1,10 @@
 <?php
 session_start();
 
-require_once "config/db.php";
+require_once "db.php";
 
-$username = $_POST['username'];
-$cust_name = $_POST['cust_name'];
+$username = $_POST['userncust_nameame'];
+$ = $_POST['cust_name'];
 $cust_email = $_POST['cust_email'];
 $contact = $_POST['contact_numer'];
 $dob = $_POST['dob'];
