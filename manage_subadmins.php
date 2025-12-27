@@ -9,6 +9,7 @@ if (!isset($_SESSION["admin_id"]) || $_SESSION["admin_role"] !== "superadmin") {
 
 $result = $conn->query("SELECT * FROM admins WHERE role='subadmin'");
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,8 +26,17 @@ $result = $conn->query("SELECT * FROM admins WHERE role='subadmin'");
 </div>
 
 <div class="main-content">
-
     <h2>Subadmin List</h2>
+
+    <?php if(isset($_GET['msg']) && $_GET['msg'] == 'weak_password'): ?>
+        <p style="color: red; background: #fee; padding: 10px; border-radius: 5px;">
+            Error: Password must include uppercase, lowercase, a number, and a symbol.
+        </p>
+    <?php endif; ?>
+
+    <?php if(isset($_GET['msg']) && $_GET['msg'] == 'added'): ?>
+        <p style="color: green;">Subadmin added successfully!</p>
+    <?php endif; ?>
 
     <a href="add_subadmin.php" class="btn">+ Add Subadmin</a>
 
@@ -42,7 +52,7 @@ $result = $conn->query("SELECT * FROM admins WHERE role='subadmin'");
             <tr>
                 <td><?php echo $row["id"]; ?></td>
                 <td><?php echo $row["username"]; ?></td>
-                <td><?php echo $row["password"]; ?></td>
+                <td><code style="color: #888;">**** (Hashed)</code></td>
 
                 <td>
                     <a href="edit_subadmins.php?id=<?php echo $row['id']; ?>" class="btn-edit">Edit</a>
@@ -54,7 +64,6 @@ $result = $conn->query("SELECT * FROM admins WHERE role='subadmin'");
                 </td>
             </tr>
         <?php } ?>
-
     </table>
 </div>
 
