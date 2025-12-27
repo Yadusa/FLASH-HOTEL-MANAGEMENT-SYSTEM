@@ -69,9 +69,9 @@ $available = $row['available_rooms'];
                     <?php echo $available; ?> Executive Suite(s) Available
                 </div>
             <?php else: ?>
-                <div class="availability-box full">
-                    Fully Booked
-                </div>
+                        <div class="cta-group">
+                            <a href="user_login.html" class="btn btn-primary">Book Now →</a>
+                        </div>
             <?php endif; ?>
 
         </div>
