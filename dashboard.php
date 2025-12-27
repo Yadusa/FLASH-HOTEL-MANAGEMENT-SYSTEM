@@ -30,7 +30,7 @@ $adminRole = $_SESSION["admin_role"];
         <a href="manage_subadmins.php"> Manage Subadmins</a>
         <a href="#"> Manage Rooms</a>
         <a href="#"> Bookings</a>
-        <a href="#"> Customers</a>
+        <a href="customers.php"> Customers</a>
         <a href="manage_staff.php"> Staff</a>
         <a href="#"> Reports</a>
     <?php } ?>

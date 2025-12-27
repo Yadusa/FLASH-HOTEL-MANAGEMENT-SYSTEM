@@ -27,24 +27,27 @@ body {
     position: relative;
 }
 
-.back-button {
-    position: absolute;
-    top: 20px;
-    left: 40px;
-    display: inline-block;
-    padding: 8px 15px;
-    background: transparent;
-    color: var(--color-text-dark);
-    text-decoration: none;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    font-size: 14px;
-    transition: 0.3s;
+.below-header-back {
+    max-width: 1300px;
+    margin: 12px auto 30px;
+    padding: 0 30px;
 }
 
-.back-button:hover {
-    background: #eee;
-    color: var(--color-primary);
+.back-btn {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--color-text-dark);
+    text-decoration: none;
+    display: inline-block;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 6px;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.back-btn:hover {
+    color: var(--color-accent);
+    transform: translateX(-4px);
 }
 
 .booking-header h1 {
@@ -55,9 +58,12 @@ body {
 }
 
 .booking-header p {
-    font-size: 18px;
-    color: #666;
+   font-size: 11px;
+    color: var(--color-primary);
+    letter-spacing: 4px;
+    margin-top: 5px;
     font-weight: 300;
+    text-transform: uppercase;
 }
 
 /* --- Content Layout --- */

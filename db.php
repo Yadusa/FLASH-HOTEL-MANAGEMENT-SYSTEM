@@ -2,7 +2,7 @@
 $host = "localhost";      // XAMPP default
 $user = "root";          // XAMPP default
 $pass = "";              // XAMPP default (no password)
-$dbname = "hotel_admin";    // Change to your actual database name
+$dbname = "flashhotel";    // Change to your actual database name
 
 // Create connection
 $conn = new mysqli($host, $user, $pass, $dbname);
