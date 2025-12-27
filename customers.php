@@ -18,7 +18,7 @@ if (isset($_GET['deleted'])) {
 }
 
 /* ✅ FIX 1: Added 'id' to the SELECT statement */
-$sql = "SELECT id, username, cust_name, cust_email, contact_numer, created_at 
+$sql = "SELECT id, username, cust_name, cust_email, contact_number, created_at 
         FROM customer
         ORDER BY created_at DESC";
 
@@ -75,7 +75,7 @@ $result = $conn->query($sql);
                     <td><?= htmlspecialchars($row['username']); ?></td>
                     <td><?= htmlspecialchars($row['cust_name']); ?></td>
                     <td><?= htmlspecialchars($row['cust_email']); ?></td>
-                    <td><?= htmlspecialchars($row['contact_numer']); ?></td>
+                    <td><?= htmlspecialchars($row['contact_number']); ?></td>
                     <td><?= $row['created_at']; ?></td>
                     <td>
                         <a href="edit_customer.php?id=<?php echo $row['id']; ?>" class="btn-edit">Edit</a>

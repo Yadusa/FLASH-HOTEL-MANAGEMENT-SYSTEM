@@ -33,6 +33,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['update_customer'])) {
         } else {
             echo "Error updating record: " . $conn->error;
         }
+
+        if ($stmt->execute()) {
+           if ($stmt->affected_rows > 0) {
+        // Success: Something actually changed
+           header("Location: customers.php?updated=1");
+         exit;
+        } else {
+        // No rows changed (maybe the data was the same as before?)
+          echo "No changes were made to the record.";
+        }
+       } else {
+          echo "SQL Error: " . $stmt->error;
+        }
     }
 }
 ?>
