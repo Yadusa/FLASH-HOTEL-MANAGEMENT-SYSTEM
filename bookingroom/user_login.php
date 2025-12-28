@@ -1,10 +1,10 @@
 <?php
 session_start();
-require_once "db.php";
+require "../db.php";
 
 $username = $_POST['username'];
 $password = $_POST['password'];
-$room = $_POST['room'];
+$room = $_POST['room'] ?? '';
 
 $stmt = $conn->prepare("SELECT * FROM customer WHERE username = ?");
 $stmt->bind_param("s", $username);
@@ -30,4 +30,5 @@ if ($result->num_rows === 1) {
 
 echo "Invalid username or password";
 $conn->close();
+exit;
 ?>
