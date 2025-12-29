@@ -49,8 +49,7 @@ body {
 .sidebar h2 {
     font-size: 24px;
     font-weight: 700;
-    background: var(--color-accent-gold);
-    color: var(--color-secondary-light); /* Highlight brand name */
+    color: #f39c12; /* Gold accent from image */
     margin-bottom: 5px;
 }
 

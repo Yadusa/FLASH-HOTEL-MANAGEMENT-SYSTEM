@@ -23,10 +23,14 @@ $result = $conn->query("SELECT * FROM admins WHERE role='subadmin'");
 <body>
 
 <div class="sidebar">
-    <h2>FLASH Hotel Admin</h2>
-    <a href="dashboard.php">Dashboard</a>
-    <a href="manage_subadmins.php" class="active">Manage Subadmins</a>
-    <a href="logout.php">Logout</a>
+    <div class="brand">
+        <h2>FLASH Hotel Admin</h2>
+        <p class="role">SuperAdmin</p>
+    </div>
+
+    <a href="dashboard.php"> Dashboard</a>
+    <a href="customers.php" class="active"> Customers</a>
+    <a href="logout.php" class="logout">Logout</a>
 </div>
 
 <div class="main-content">

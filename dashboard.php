@@ -28,7 +28,7 @@ $adminRole = $_SESSION["admin_role"];
 
     <?php if ($adminRole === "superadmin") { ?>
         <a href="manage_subadmins.php"> Manage Subadmins</a>
-        <a href="#"> Manage Rooms</a>
+        <a href="manage_rooms.php"> Manage Rooms</a>
         <a href="#"> Bookings</a>
         <a href="customers.php"> Customers</a>
         <a href="manage_staff.php"> Staff</a>

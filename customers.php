@@ -36,11 +36,10 @@ $result = $conn->query($sql);
 <div class="sidebar">
     <div class="brand">
         <h2>FLASH Hotel Admin</h2>
-        <p class="role">SuperAdmin</p>
+        <br><p class="role">SuperAdmin</p>
     </div>
 
     <a href="dashboard.php"> Dashboard</a>
-    <a href="manage_subadmins.php"> Manage Subadmins</a>
     <a href="customers.php" class="active"> Customers</a>
     <a href="logout.php" class="logout">Logout</a>
 </div>
