@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -9,10 +13,28 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
          <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    </head>
+        <style>
+        /* Top bar */
+        .top-bar { display: flex; justify-content: flex-end; align-items: center; padding: 15px 30px; background-color: #1f2933; color: #fff; }
+        .top-bar a { color: #fff; margin-left: 15px; text-decoration: none; font-weight: 500; }
+        .top-bar a:hover { text-decoration: underline; }
+        </style>
+         
+        </head>
 
     <body>
         <div id="room-selection-page">
+            <div class="top-bar">
+        <?php if(isset($_SESSION['customer_username'])): ?>
+            Welcome, <?php echo htmlspecialchars($_SESSION['customer_username']); ?> |
+            <a href="../customer_logout.php">Logout</a>
+        <?php else: ?>
+            <a href="../customer_login.php">Login</a>
+            <a href="../customer_register.php">Register</a>
+        <?php endif; ?>
+    </div>
+
+
             <header class="booking-header">
                 <div class="header-content-inner">
                     <h1>Our Rooms & Suites</h1>
@@ -20,7 +42,7 @@
                 </div>
             </header>
                 <div class="below-header-back">
-                  <a href="../hotel.html" class="back-btn">← Back to Main</a>
+                  <a href="../hotel.php" class="back-btn">← Back to Main</a>
                 </div>
             
             <div class="room-grid-container">
@@ -38,7 +60,12 @@
                             <p class="room-details-text">Luxury meets comfort in our elegantly designed spaces, complete with spacious living areas and modern amenities for a seamless, private stay.</p>
                             
                             <div class="cta-group">
-                                <a href="user_login.html" class="btn btn-primary">View & Book →</a>
+                                <?php if(isset($_SESSION['customer_username'])): ?>
+                                <a href="booking.php?room_name=Executive Suite&room_price=1000" class="btn btn-primary">View & Book →</a>
+                                <?php else: ?>
+                                <a href="../customer_login.php" class="btn btn-primary">View & Book →</a>
+                                <?php endif; ?>
+
                                 <a href="room-details-executive.php" class="btn btn-secondary">Room Details</a>
                             </div>
                         </div>
@@ -54,7 +81,10 @@
                             <p class="room-details-text">Rest in a comfortable king-size bed, featuring a private marble bathroom, work desk, and complimentary Wi-Fi for superior comfort.</p>
                             
                             <div class="cta-group">
-                                <a href="user_login.html" class="btn btn-primary">View & Book →</a>
+                                <?php if(isset($_SESSION['customer_username'])): ?>
+                                <a href="booking.php?room_name=Deluxe King Room&room_price=950" class="btn btn-primary">View & Book →</a>                                <?php else: ?>
+                                <a href="../customer_login.php" class="btn btn-primary">View & Book →</a>
+                                <?php endif; ?>
                                 <a href="room-details-executive.php" class="btn btn-secondary">Room Details</a>
                             </div>
                         </div>
@@ -75,7 +105,11 @@
                             <p class="room-details-text">Spacious and modern accommodations tailored for families, offering interconnected options and ample space for a relaxed holiday.</p>
                             
                             <div class="cta-group">
-                                <a href="user_login.html" class="btn btn-primary">View & Book →</a>
+                                <?php if(isset($_SESSION['customer_username'])): ?>
+<a href="booking.php?room_name=Family Room&room_price=500" class="btn btn-primary">View & Book →</a>
+                                <?php else: ?>
+                                <a href="../customer_login.php" class="btn btn-primary">View & Book →</a>
+                                <?php endif; ?>
                                 <a href="room-details-executive.php" class="btn btn-secondary">Room Details</a>
                             </div>
                         </div>
@@ -91,7 +125,11 @@
                             <p class="room-details-text">Pamper yourself with premium toiletries and cozy bathrobes. Unwind with in-room entertainment and exclusive executive lounge access.</p>
                             
                             <div class="cta-group">
-                                <a href="user_login.html" class="btn btn-primary">View & Book →</a>
+                                <?php if(isset($_SESSION['customer_username'])): ?>
+<a href="booking.php?room_name=Executive Deluxe King&room_price=420" class="btn btn-primary">View & Book →</a>
+                                <?php else: ?>
+                                <a href="../customer_login.php" class="btn btn-primary">View & Book →</a>
+                                <?php endif; ?>
                                 <a href="room-details-executive.php" class="btn btn-secondary">Room Details</a>
                             </div>
                         </div>
@@ -112,7 +150,11 @@
                             <p class="room-details-text">Cozy and affordable accommodation. Enjoy a practical lodging experience without compromising on essential comfort and free Wi-Fi.</p>
                             
                             <div class="cta-group">
-                                <a href="user_login.html" class="btn btn-primary">View & Book →</a>
+                                <?php if(isset($_SESSION['customer_username'])): ?>
+<a href="booking.php?room_name=Standard Double Room&room_price=150" class="btn btn-primary">View & Book →</a>
+                                <?php else: ?>
+                                <a href="../customer_login.php" class="btn btn-primary">View & Book →</a>
+                                <?php endif; ?>
                                 <a href="room-details-executive.php" class="btn btn-secondary">Room Details</a>
                             </div>
                         </div>
@@ -128,7 +170,11 @@
                             <p class="room-details-text">An economical choice offering clean twin beds, a private bathroom, and a work area, perfect for the efficient traveler.</p>
                             
                             <div class="cta-group">
-                                <a href="user_login.html" class="btn btn-primary">View & Book →</a>
+                                <?php if(isset($_SESSION['customer_username'])): ?>
+<a href="booking.php?room_name=Budget Twin Room&room_price=120" class="btn btn-primary">View & Book →</a>
+                                <?php else: ?>
+                                <a href="../customer_login.php" class="btn btn-primary">View & Book →</a>
+                                <?php endif; ?>
                                 <a href="room-details-executive.php" class="btn btn-secondary">Room Details</a>
                             </div>
                         </div>
