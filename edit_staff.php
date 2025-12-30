@@ -46,12 +46,13 @@ if (isset($_POST["submit"])) {
 <html>
 <head>
     <title>Edit Staff</title>
-    <link rel="stylesheet" href="staff.css">
+    <link rel="stylesheet" href="customer.css">
 </head>
 <body>
 
-<div class="form-container">
+<div class="main-content">
     <h2>Edit Staff Details</h2>
+
 
     <form method="POST">
 

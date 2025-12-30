@@ -29,7 +29,7 @@ $result = $conn->query("SELECT * FROM admins WHERE role='subadmin'");
     </div>
 
     <a href="dashboard.php"> Dashboard</a>
-    <a href="customers.php" class="active"> Customers</a>
+    <a href="manage_subadmi.php" class="active"> Manage Subadmin</a>
     <a href="logout.php" class="logout">Logout</a>
 </div>
 
