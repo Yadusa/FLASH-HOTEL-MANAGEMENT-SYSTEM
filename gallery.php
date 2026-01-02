@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -84,8 +87,8 @@
             <div class="footer-links">
                 <h5>Services</h5>
                 <a href="#">Meetings & Events</a>
-                <a href="#">Wellness & Spa</a>
-                <a href="gallery.html">Gallery</a>
+                <a href="https://forms.gle/J6sBpLRAp8hfJz9E8">Wellness & Spa</a>
+                <a href="gallery.php">Gallery</a>
             </div>
 
             <div class="footer-contact">

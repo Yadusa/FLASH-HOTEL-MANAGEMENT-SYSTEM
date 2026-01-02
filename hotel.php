@@ -170,7 +170,7 @@ session_start();
                     <h5>Services</h5>
                     <a href="#">Meetings & Events</a>
                     <a href="https://forms.gle/J6sBpLRAp8hfJz9E8">Wellness & Spa</a>
-                    <a href="gallery.html">Gallery</a>
+                    <a href="gallery.php">Gallery</a>
                 </div>
                 <div class="footer-contact">
                     <h5>Contact Us</h5>
