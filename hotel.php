@@ -26,7 +26,7 @@ session_start();
         <div class="header-left-links">
             <a href="ourStory.html" class="nav-link">Our Story</a>
             <a href="specialoffers.html" class="nav-link special-offer-link"> Special Offers</a>
-            <a href="#" class="nav-link Gallery">Gallery</a>
+            <a href="gallery.html" class="nav-link Gallery">Gallery</a>
         </div>
         
         <div class="logo">
@@ -140,8 +140,8 @@ session_start();
                 <div class="footer-links">
                     <h5>Services</h5>
                     <a href="#">Meetings & Events</a>
-                    <a href="#">Wellness & Spa</a>
-                    <a href="#">Gallery</a>
+                    <a href="https://forms.gle/J6sBpLRAp8hfJz9E8">Wellness & Spa</a>
+                    <a href="gallery.html">Gallery</a>
                 </div>
                 <div class="footer-contact">
                     <h5>Contact Us</h5>
