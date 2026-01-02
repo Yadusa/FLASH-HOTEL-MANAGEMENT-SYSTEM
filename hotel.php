@@ -1,40 +1,6 @@
 <?php
 session_start();
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>The Obsidian Hotel</title>
-    <style>
-        body { font-family: 'Poppins', sans-serif; margin: 0; padding: 0; background: #f3f4f6; }
-        .top-bar { display: flex; justify-content: flex-end; padding: 15px 30px; background-color: #1f2933; color: #fff; }
-        .top-bar a { color: #fff; margin-left: 15px; text-decoration: none; font-weight: 500; }
-        .top-bar a:hover { text-decoration: underline; }
-        .content { padding: 30px; text-align: center; }
-        h1 { color: #111827; }
-    </style>
-</head>
-<body>
-
-<div class="top-bar">
-    <?php if(isset($_SESSION['customer_username'])): ?>
-        Welcome, <?php echo htmlspecialchars($_SESSION['customer_username']); ?> |
-        <a href="customer_logout.php">Logout</a>
-    <?php else: ?>
-        <a href="customer_login.php">Login</a>
-        <a href="customer_register.php">Register</a>
-    <?php endif; ?>
-</div>
-
-<div class="content">
-    <h1>Welcome to The Obsidian Hotel</h1>
-</div>
-
-</body>
-</html>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -70,9 +36,14 @@ session_start();
 
         <div class="header-right-actions">
             <div class="auth-links">
-                <a href="customer_login.php" onclick="showAdminLogin()" class="nav-link">Sign In</a> 
-                <span>|</span>
-                <a href="customer_register.php" class="nav-link">Join Now</a> 
+                <?php if(isset($_SESSION['customer_username'])): ?>
+                    Welcome, <?php echo htmlspecialchars($_SESSION['customer_username']); ?> |
+                    <a href="customer_login.php" onclick="showAdminLogin()" class="nav-link">Logout</a>
+                <?php else: ?> 
+                    <a href="customer_login.php" onclick="showAdminLogin()" class="nav-link">Login</a>
+                    <span>|</span>
+                    <a href="customer_register.php" class="nav-link">Register</a>
+                <?php endif; ?> 
             </div>
             
             <a href="bookingroom/roombooking.php" class="cta-button book-now-button">BOOK NOW</a>

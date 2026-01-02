@@ -13,28 +13,10 @@ session_start();
         <link rel="preconnect" href="https://fonts.googleapis.com">
          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
          <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-        <style>
-        /* Top bar */
-        .top-bar { display: flex; justify-content: flex-end; align-items: center; padding: 15px 30px; background-color: #1f2933; color: #fff; }
-        .top-bar a { color: #fff; margin-left: 15px; text-decoration: none; font-weight: 500; }
-        .top-bar a:hover { text-decoration: underline; }
-        </style>
          
-        </head>
+    </head>
 
     <body>
-        <div id="room-selection-page">
-            <div class="top-bar">
-        <?php if(isset($_SESSION['customer_username'])): ?>
-            Welcome, <?php echo htmlspecialchars($_SESSION['customer_username']); ?> |
-            <a href="../customer_logout.php">Logout</a>
-        <?php else: ?>
-            <a href="../customer_login.php">Login</a>
-            <a href="../customer_register.php">Register</a>
-        <?php endif; ?>
-    </div>
-
-
             <header class="booking-header">
                 <div class="header-content-inner">
                     <h1>Our Rooms & Suites</h1>

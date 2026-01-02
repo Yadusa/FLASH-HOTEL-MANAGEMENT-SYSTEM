@@ -26,7 +26,7 @@ $available = $row['available_rooms'];
         </div>
 </header>
 <div class="below-header-back">
-         <a href="roombooking.html" class="back-button">← Back to Rooms</a>
+         <a href="roombooking.php" class="back-button">← Back to Rooms</a>
 </div>
 
 <div class="room-details-container">
@@ -70,7 +70,7 @@ $available = $row['available_rooms'];
                 </div>
             <?php else: ?>
                         <div class="cta-group">
-                            <a href="user_login.html" class="btn btn-primary">Book Now →</a>
+                            <a href=../customer_login.php class="btn btn-primary">Book Now →</a>
                         </div>
             <?php endif; ?>
 
