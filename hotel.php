@@ -1,5 +1,5 @@
 <?php
-die("HOTEL.PHP IS LOADING");
+
 session_start();
 ?>
 
