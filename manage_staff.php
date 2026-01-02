@@ -20,10 +20,14 @@ $result = $conn->query($sql);
 <body>
 
 <div class="sidebar">
-    <h2>FLASH Hotel Admin</h2>
-    <a href="dashboard.php">Dashboard</a>
-    <a href="manage_staff.php" class="active">Staffs</a>
+    <div class="brand">
+        <h2>FLASH Hotel Admin</h2>
+        <br><p class="role">SuperAdmin</p>
+    </div>
 
+    <a href="dashboard.php"> Dashboard</a>
+    <a href="manage_staff.php" class="active"> Staff</a>
+    <a href="logout.php" class="logout">Logout</a>
 </div>
 
 <div class="main-content">

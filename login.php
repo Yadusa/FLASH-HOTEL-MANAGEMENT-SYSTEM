@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "db.php"; // database connection
+include "db.php"; 
 
 $error = "";
 
@@ -8,18 +8,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST["username"]);
     $password = trim($_POST["password"]);
 
-    // Prepare statement
-    $stmt = $conn->prepare("SELECT * FROM admins WHERE username = ?");
+    $stmt = $conn->prepare("SELECT id, username, password, role FROM admins WHERE username = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    // Check user
     if ($result->num_rows === 1) {
         $admin = $result->fetch_assoc();
 
-        // Verify password
-        if ($password === $admin["password"]) {
+        // Verify the hashed password
+        if (password_verify($password, $admin["password"])) {
+            // Prevent Session Fixation
+            session_regenerate_id(true);
+
             $_SESSION["admin_id"] = $admin["id"];
             $_SESSION["admin_name"] = $admin["username"];
             $_SESSION["admin_role"] = $admin["role"];
@@ -27,10 +28,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: dashboard.php");
             exit;
         } else {
-            $error = "Invalid password!";
+            $error = "Invalid credentials!";
         }
     } else {
-        $error = "Admin not found!";
+        $error = "Invalid credentials!"; // Keep message vague for security
     }
 }
 ?>
@@ -38,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html>
 <head>
     <title>Admin Login</title>
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="login.css">
 </head>
 <body>
 

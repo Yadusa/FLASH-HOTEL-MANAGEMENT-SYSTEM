@@ -1,12 +1,15 @@
 <?php
 session_start();
-require_once "../config/db.php";
+require "../db.php";
 
 $username = $_POST['username'];
 $password = $_POST['password'];
+$room = $_POST['room'] ?? '';
 
-$sql = "SELECT * FROM customer WHERE username='$username'";
-$result = $conn->query($sql);
+$stmt = $conn->prepare("SELECT * FROM customer WHERE username = ?");
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$result = $stmt->get_result();
 
 if ($result->num_rows === 1) {
 
@@ -14,18 +17,18 @@ if ($result->num_rows === 1) {
 
     if (password_verify($password, $user['password_hash'])) {
 
-        // store login session
-        $_SESSION['customer'] = $user['cust_name'];
+        $_SESSION['customer'] = $user['username'];
 
-        // ALWAYS redirect to main page
-        header("Location: ../hotel.html");
+        if (!empty($room)) {
+            header("Location: booking-form.html?room=" . $room);
+        } else {
+            header("Location: ../hotel.html");
+        }
         exit;
     }
 }
 
-// login failed
-echo "<script>alert('Invalid username or password'); window.history.back();</script>";
-
+echo "Invalid username or password";
 $conn->close();
+exit;
 ?>
-

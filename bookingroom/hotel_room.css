@@ -1,0 +1,174 @@
+:root {
+    --color-primary: #1a1a1a; /* Deep Obsidian Black */
+    --color-secondary: #f5f5f5; /* Light Background */
+    --color-accent: #b8860b; /* Dark Goldenrod/Gold Accent */
+    --color-text-dark: #333333;
+    --color-text-light: #ffffff;
+    --font-serif: 'Playfair Display', serif;
+    --font-sans: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: var(--obsidian-black);
+    color: var(--light-grey);
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* Header Section */
+.booking-header {
+    height: 30vh;
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                url('luxury_suite.jpg') center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 2px solid var(--primary-gold);
+}
+
+.booking-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+/* Navigation */
+.below-header-back {
+    padding: 20px 5%;
+}
+
+.back-button {
+    color: var(--primary-gold);
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.back-button:hover {
+    letter-spacing: 1px;
+}
+
+/* Room Container */
+.room-details-container {
+    max-width: 1100px;
+    margin: 20px auto 60px;
+    padding: 0 20px;
+}
+
+.room-detail-hero {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 40px;
+    background: var(--dark-grey);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+}
+
+.room-detail-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.room-detail-content {
+    padding: 40px;
+}
+
+.room-detail-content h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    margin-top: 0;
+    color: var(--primary-gold);
+}
+
+.price-tag {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+}
+
+.section {
+    margin-top: 25px;
+}
+
+.section h3 {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    color: var(--primary-gold);
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.section ul li {
+    margin-bottom: 8px;
+    padding-left: 20px;
+    position: relative;
+}
+
+/* Custom Bullet Point */
+.section ul li::before {
+    content: "•";
+    color: var(--primary-gold);
+    position: absolute;
+    left: 0;
+}
+
+/* Availability Styling */
+.availability-box {
+    margin-top: 30px;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.cta-group {
+    display: flex;
+    gap: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.btn {
+    text-decoration: none;
+    font-size: 15px;
+    padding: 12px 20px;
+    border-radius: 3px;
+    font-weight: 600;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.btn-primary {
+    background-color: var(--color-accent);
+    color: var(--color-primary);
+    border: 1px solid var(--color-accent);
+    flex: 2; /* Primary button takes more space */
+}
+
+.btn-primary:hover {
+    background-color: #c99c23;
+    opacity: 0.95;
+}
+
+/* Responsive */
+@media (max-width: 850px) {
+    .room-detail-hero {
+        grid-template-columns: 1fr;
+    }
+    .room-detail-image {
+        height: 300px;
+    }
+}

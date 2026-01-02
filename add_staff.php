@@ -34,7 +34,7 @@ if (isset($_POST['submit'])) {
 <html>
 <head>
     <title>Add Staff</title>
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="subadmin.css">
 </head>
 <body>
 <div class="sidebar">
@@ -45,44 +45,72 @@ if (isset($_POST['submit'])) {
     <a href="logout.php">Logout</a>
 </div>
 
-<div class="form-container">
-    <h2>Add New Staff</h2>
+<div class="main-content">
+    <div class="form-container">
+        <div class="form-header">
+            <h2>Add New Staff</h2>
+            <p>Register a new hotel employee into the system.</p>
+        </div>
 
-    <form method="POST">
+        <form method="POST" class="admin-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Staff ID</label>
+                    <input type="text" name="staff_id" placeholder="e.g., STF001" required>
+                </div>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" name="staff_name" placeholder="John Doe" required>
+                </div>
+            </div>
 
-        <label>Staff ID:</label>
-        <input type="text" name="staff_id" required>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Date of Birth</label>
+                    <input type="date" name="staff_dob" required max="2006-12-31">
+                </div>
+                <div class="form-group">
+                    <label>Salary (Monthly)</label>
+                    <input type="number" step="0.01" name="staff_salary" placeholder="0.00" required>
+                </div>
+            </div>
 
-        <label>Full Name:</label>
-        <input type="text" name="staff_name" required>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Join Date</label>
+                    <input type="date" name="staff_join_date" required max="<?php echo date('Y-m-d'); ?>">
+                </div>
+                <div class="form-group">
+                    <label>Position</label>
+                    <input type="text" name="staff_position" placeholder="e.g., Receptionist" required>
+                </div>
+            </div>
 
-        <label>Date of Birth:</label>
-        <input type="date" name="staff_dob" required max="2006-12-31">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" name="staff_email" placeholder="email@hotel.com">
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" name="staff_phone" placeholder="+60...">
+                </div>
+            </div>
 
-        <label>Salary:</label>
-        <input type="number" step="0.01" name="staff_salary" required>
-        
-        <label>Join Date:</label>
-        <input type="date" name="staff_join_date" required max="<?php echo date('Y-m-d'); ?>">
+            <div class="form-group">
+                <label>Employment Status</label>
+                <select name="staff_status" class="form-select">
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
+            </div>
 
-        <label>Position:</label>
-        <input type="text" name="staff_position" required>
-
-        <label>Email:</label>
-        <input type="email" name="staff_email">
-
-        <label>Phone:</label>
-        <input type="text" name="staff_phone">
-
-        <label>Status:</label>
-        <select name="staff_status">
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
-        </select>
-
-        <button type="submit" name="submit" class="btn">Add Staff</button>
-
-    </form>
+            <div class="form-actions">
+                <button type="submit" name="submit" class="btn">Add Staff Member</button>
+                <a href="manage_staff.php" class="btn-link">Cancel and Go Back</a>
+            </div>
+        </form>
+    </div>
 </div>
 
 </body>
