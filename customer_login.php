@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $username = trim($_POST['username']);
     $password = $_POST['password'];
 
-    $stmt = $conn->prepare("SELECT id, password FROM customer WHERE username = ?");
+    $stmt = $conn->prepare("SELECT id, password_hash FROM customer WHERE username = ?");
     if (!$stmt) {
         die("Prepare failed: " . $conn->error);
     }
@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt->fetch();
 
         // Plain-text password comparison
-        if ($password === $dbPassword) {
+        if (password_verify($password, $dbPassword)) {
             $_SESSION['customer_id'] = $id;
             $_SESSION['customer_username'] = $username;
             header("Location: hotel.php");  // Redirect after successful login
