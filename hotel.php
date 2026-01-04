@@ -79,7 +79,7 @@ session_start();
                 <h2>Restaurant & Bar</h2>
                 <h3>Fine Dine at 'The Waves'</h3>
                 <p>Discover bold, sophisticated flavors and elegant dining at our signature restaurant and bar. Whether you're craving exquisite local delicacies or world-class international cuisine, we serve up unforgettable culinary experiences in a breathtaking setting.</p>
-                <a href="menu/menu.html" class="learn-more-link">View Menu →</a>
+                <a href="menu/menu.php" class="learn-more-link">View Menu →</a>
 
                 
             </div>
