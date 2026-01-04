@@ -47,7 +47,7 @@ session_start();
                 <?php endif; ?> 
             </div>
             
-            <a href="bookingroom/roombooking.php" class="cta-button book-now-button">BOOK NOW</a>
+            <a href="../bookingroom/roombooking.php" class="cta-button book-now-button">BOOK NOW</a>
         </div>
        </div>
    </header>
