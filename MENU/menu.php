@@ -56,7 +56,7 @@ session_start();
             font-family: var(--font-sans);
             font-size: 13px;
             font-weight: 400;
-            color: var(--color-text-dark);
+            color: white;
             text-decoration: none;
             display: inline-block;
             border-bottom: 1px solid #e0e0e0;
