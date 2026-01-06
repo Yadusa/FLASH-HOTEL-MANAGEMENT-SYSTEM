@@ -60,7 +60,7 @@ session_start();
                         <div class="room-details">
                             <h3 class="room-name">Deluxe King Room</h3>
                             <p class="room-price">From RM 950 / night</p>
-                            <p class="room-details-deluxe_king_room.php">Rest in a comfortable king-size bed, featuring a private marble bathroom, work desk, and complimentary Wi-Fi for superior comfort.</p>
+                            <p class="room-details-text">Rest in a comfortable king-size bed, featuring a private marble bathroom, work desk, and complimentary Wi-Fi for superior comfort.</p>
                             
                             <div class="cta-group">
                                 <?php if(isset($_SESSION['customer_username'])): ?>
@@ -92,7 +92,7 @@ session_start();
                                 <?php else: ?>
                                 <a href="../customer_login.php" class="btn btn-primary">View & Book →</a>
                                 <?php endif; ?>
-                                <a href="room-details-executive.php" class="btn btn-secondary">Room Details</a>
+                                <a href="room-details-family_room.php" class="btn btn-secondary">Room Details</a>
                             </div>
                         </div>
                     </div>
@@ -112,7 +112,7 @@ session_start();
                                 <?php else: ?>
                                 <a href="../customer_login.php" class="btn btn-primary">View & Book →</a>
                                 <?php endif; ?>
-                                <a href="room-details-executive.php" class="btn btn-secondary">Room Details</a>
+                                <a href="room-details-executive_deluxe_king.php" class="btn btn-secondary">Room Details</a>
                             </div>
                         </div>
                     </div>
@@ -137,7 +137,7 @@ session_start();
                                 <?php else: ?>
                                 <a href="../customer_login.php" class="btn btn-primary">View & Book →</a>
                                 <?php endif; ?>
-                                <a href="room-details-executive.php" class="btn btn-secondary">Room Details</a>
+                                <a href="room-details-standard_doubleroom.php" class="btn btn-secondary">Room Details</a>
                             </div>
                         </div>
                     </div>
@@ -157,7 +157,7 @@ session_start();
                                 <?php else: ?>
                                 <a href="../customer_login.php" class="btn btn-primary">View & Book →</a>
                                 <?php endif; ?>
-                                <a href="room-details-executive.php" class="btn btn-secondary">Room Details</a>
+                                <a href="room-details-budget_twinroom.php" class="btn btn-secondary">Room Details</a>
                             </div>
                         </div>
                     </div>

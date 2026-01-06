@@ -48,7 +48,8 @@ $available = $row['available_rooms'];
                 <h3>Beds & Occupancy</h3>
                 <ul>
                     <li>1 King Size Bed</li>
-                    <li>Max Occupancy: 2 Adults</li>
+                    <li>1 Sofa Bed</li>
+                    <li>Max Occupancy: 4 Adults</li>
                 </ul>
             </div>
 
@@ -57,10 +58,11 @@ $available = $row['available_rooms'];
                 <ul>
                     <li>Jacuzzi Bathtub</li>
                     <li>Hot Water Shower</li>
+                    <li>Private Balcony</li>
                     <li>Smart TV & Streaming</li>
                     <li>Free High-Speed Wi-Fi</li>
                     <li>Mini Bar</li>
-                    <li>Air Conditioning</li>
+                    <li>Executive Lounge Access</li>
                 </ul>
             </div>
 
