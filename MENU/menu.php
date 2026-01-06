@@ -17,7 +17,7 @@ session_start();
 
             .menu-container {
         max-width: 1100px;
-        margin: 60px auto;
+        margin: 10px auto;
         padding: 20px;
         text-align: center;
     }
