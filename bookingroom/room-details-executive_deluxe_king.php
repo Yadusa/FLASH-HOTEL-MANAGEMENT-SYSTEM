@@ -35,7 +35,7 @@ $available = $row['available_rooms'];
         <img src="executive-deluxe-king.jpg" class="room-detail-image" alt="Executive Suite">
 
         <div class="room-detail-content">
-            <h2>Family room</h2>
+            <h2>Executive Deluxe King Room</h2>
             <div class="price-tag">RM 500 / night</div>
 
             <p>
