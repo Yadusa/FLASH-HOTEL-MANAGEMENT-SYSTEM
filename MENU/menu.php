@@ -15,12 +15,13 @@ session_start();
             color: #fff;
         }
 
-        .menu-container {
-            max-width: 1100px;
-            margin: 40px auto;
-            padding: 20px;
-            text-align: center;
-        }
+            .menu-container {
+        max-width: 1100px;
+        margin: 60px auto;
+        padding: 20px;
+        text-align: center;
+    }
+
 
         .menu-container h1 {
             font-family: 'Playfair Display', serif;
