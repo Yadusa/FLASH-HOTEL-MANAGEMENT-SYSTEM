@@ -3,7 +3,7 @@
 // Database credentials
 // ---------------------------
 $host = "localhost";       // Usually localhost
-$dbname = "flash_hotel"; // Replace with your database name
+$dbname = "flashhotel"; // Replace with your database name
 $username = "root";        // Usually root
 $password = "";            // Usually empty in XAMPP
 
