@@ -17,14 +17,14 @@ session_start();
 
         .menu-container {
             max-width: 1100px;
-            margin: 60px auto;
+            margin: 40px auto;
             padding: 20px;
             text-align: center;
         }
 
         .menu-container h1 {
             font-family: 'Playfair Display', serif;
-            margin-bottom: 70px;
+            margin-bottom: 40px;
             font-size: 100px;
             font-weight: 600;
             letter-spacing: 1px;
