@@ -67,7 +67,7 @@ session_start();
                                 <a href="booking.php?room_name=Deluxe King Room&room_price=950" class="btn btn-primary">View & Book →</a>                                <?php else: ?>
                                 <a href="../customer_login.php" class="btn btn-primary">View & Book →</a>
                                 <?php endif; ?>
-                                <a href="room-details-executive.php" class="btn btn-secondary">Room Details</a>
+                                <a href="room-details-deluxe_king_room.php" class="btn btn-secondary">Room Details</a>
                             </div>
                         </div>
                     </div>
