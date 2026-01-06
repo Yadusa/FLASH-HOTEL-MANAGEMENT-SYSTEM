@@ -96,7 +96,7 @@ session_start();
                     treatments, therapeutic massages, and holistic wellness rituals
                     designed to relax, refresh, and restore balance.
                 </p>
-                <a href="Spa_reservation.php" class="learn-more-link">Explore Spa →</a>
+                <a href="Links/Spa_reservation.php" class="learn-more-link">Explore Spa →</a>
             </div>
 
             <div class="facility-image">
