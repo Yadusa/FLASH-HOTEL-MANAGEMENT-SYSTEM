@@ -136,7 +136,7 @@ session_start();
                     <h5>Hotel</h5>
                     <a href="ourStory.html">About Us</a>
                     <a href="#">Contact</a>
-                    <a href="Links/JobApplications.php">Careers</a>
+                    <a href="Links/JobApplication.php">Careers</a>
                 </div>
                 <div class="footer-links">
                     <h5>Services</h5>
