@@ -1,41 +1,53 @@
 <?php
-// Check if form is submitted
+// ---------------------------
+// Database credentials
+// ---------------------------
+$host = "localhost";       // Usually localhost
+$dbname = "your_database"; // Replace with your database name
+$username = "root";        // Usually root
+$password = "";            // Usually empty in XAMPP
+
+// Create connection
+$conn = new mysqli($host, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// ---------------------------
+// Handle form submission
+// ---------------------------
 $message = "";
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $full_name = htmlspecialchars($_POST['full_name']);
-    $contact_number = htmlspecialchars($_POST['contact_number']);
-    $email = htmlspecialchars($_POST['email']);
-    $room_number = htmlspecialchars($_POST['room_number']);
-    $appointment_date = htmlspecialchars($_POST['appointment_date']);
-    $time_slot = htmlspecialchars($_POST['time_slot']);
-    $service = htmlspecialchars($_POST['service']);
-    $duration = htmlspecialchars($_POST['duration']);
-    $guests = htmlspecialchars($_POST['guests']);
-    $concerns = htmlspecialchars($_POST['concerns']);
+    // Sanitize inputs to prevent SQL injection
+    $full_name       = $conn->real_escape_string($_POST['full_name']);
+    $contact_number  = $conn->real_escape_string($_POST['contact_number']);
+    $email           = $conn->real_escape_string($_POST['email']);
+    $room_number     = $conn->real_escape_string($_POST['room_number']);
+    $appointment_date= $conn->real_escape_string($_POST['appointment_date']);
+    $time_slot       = $conn->real_escape_string($_POST['time_slot']);
+    $service         = $conn->real_escape_string($_POST['service']);
+    $duration        = $conn->real_escape_string($_POST['duration']);
+    $guests          = (int)$_POST['guests'];
+    $concerns        = $conn->real_escape_string($_POST['concerns']);
 
-    // Example: Send email (replace with your email)
-    $to = "youremail@example.com";
-    $subject = "New Spa Reservation from $full_name";
-    $body = "
-    Name: $full_name\n
-    Contact Number: $contact_number\n
-    Email: $email\n
-    Room Number: $room_number\n
-    Preferred Date: $appointment_date\n
-    Time Slot: $time_slot\n
-    Service: $service\n
-    Duration: $duration\n
-    Number of Guests: $guests\n
-    Concerns: $concerns
-    ";
-    $headers = "From: $email";
+    // Insert data into database
+    $sql = "INSERT INTO Spa 
+        (full_name, contact_number, email, room_number, appointment_date, time_slot, service, duration, guests, concerns)
+        VALUES 
+        ('$full_name', '$contact_number', '$email', '$room_number', '$appointment_date', '$time_slot', '$service', '$duration', $guests, '$concerns')";
 
-    if (mail($to, $subject, $body, $headers)) {
+    if ($conn->query($sql) === TRUE) {
         $message = "Reservation submitted successfully!";
     } else {
-        $message = "Failed to submit reservation. Please try again.";
+        $message = "Error: " . $conn->error;
     }
 }
+
+// Close connection
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -45,11 +57,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Obsidian KL Spa Reservation</title>
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; background: #f7f7f7; }
-        form { max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; }
-        input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border-radius: 4px; border: 1px solid #ccc; }
-        button { padding: 10px 20px; background: #007bff; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+        h2 { text-align: center; color: #333; }
+        form { max-width: 600px; margin: auto; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);}
+        input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border-radius: 4px; border: 1px solid #ccc; box-sizing: border-box;}
+        button { padding: 12px 20px; background: #007bff; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
         button:hover { background: #0056b3; }
-        .message { text-align: center; margin-bottom: 20px; color: green; }
+        .message { text-align: center; margin-bottom: 20px; color: green; font-weight: bold; }
+        label { font-weight: bold; margin-top: 10px; display: block; }
     </style>
 </head>
 <body>
