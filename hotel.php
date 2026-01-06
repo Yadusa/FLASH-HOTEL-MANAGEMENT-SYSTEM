@@ -121,7 +121,7 @@ session_start();
                     interiors, and bespoke service to ensure every occasion is
                     exceptional.
                 </p>
-                <a href="https://forms.gle/y2YbSyyYPsdWAUdH8" class="learn-more-link">Plan an Event →</a>
+                <a href="Links/EventSpaceBooking.php" class="learn-more-link">Plan an Event →</a>
             </div>
         </section>
 
@@ -136,12 +136,12 @@ session_start();
                     <h5>Hotel</h5>
                     <a href="ourStory.html">About Us</a>
                     <a href="#">Contact</a>
-                    <a href="https://forms.gle/eEcVTb9yWuQCrWxq7">Careers</a>
+                    <a href="Links/JobApplications.php">Careers</a>
                 </div>
                 <div class="footer-links">
                     <h5>Services</h5>
-                    <a href="https://forms.gle/y2YbSyyYPsdWAUdH8">Meetings & Events</a>
-                    <a href="https://forms.gle/JpyNqZjbzF1aUswG9">Wellness & Spa</a>
+                    <a href="Links/EventSpaceBooking.php">Meetings & Events</a>
+                    <a href="Spa_resertation.php">Wellness & Spa</a>
                     <a href="gallery.php">Gallery</a>
                 </div>
                 <div class="footer-contact">
