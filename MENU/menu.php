@@ -11,7 +11,7 @@ session_start();
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background: #111;
+            background: #f8f6f6ff;
             color: #fff;
         }
 
@@ -24,7 +24,7 @@ session_start();
 
         .menu-container h1 {
             font-family: 'Playfair Display', serif;
-            margin-bottom: 40px;
+            margin-bottom: 70px;
         }
 
         .menu-grid {
@@ -48,7 +48,7 @@ session_start();
         /* === BACK BUTTON (MATCH FIRST PAGE) === */
         .below-header-back {
             max-width: 1300px;
-            margin: 12px auto 30px;
+            margin: 40px auto 30px;
             padding: 0 30px;
         }
 
