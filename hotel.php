@@ -121,7 +121,7 @@ session_start();
                     interiors, and bespoke service to ensure every occasion is
                     exceptional.
                 </p>
-                <a href="#" class="learn-more-link">Plan an Event →</a>
+                <a href="https://forms.gle/y2YbSyyYPsdWAUdH8" class="learn-more-link">Plan an Event →</a>
             </div>
         </section>
 
@@ -140,8 +140,8 @@ session_start();
                 </div>
                 <div class="footer-links">
                     <h5>Services</h5>
-                    <a href="#">Meetings & Events</a>
-                    <a href="https://forms.gle/J6sBpLRAp8hfJz9E8">Wellness & Spa</a>
+                    <a href="https://forms.gle/y2YbSyyYPsdWAUdH8">Meetings & Events</a>
+                    <a href="https://forms.gle/JpyNqZjbzF1aUswG9">Wellness & Spa</a>
                     <a href="gallery.php">Gallery</a>
                 </div>
                 <div class="footer-contact">
