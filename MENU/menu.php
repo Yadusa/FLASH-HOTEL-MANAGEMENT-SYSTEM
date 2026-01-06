@@ -25,7 +25,7 @@ session_start();
         .menu-container h1 {
             font-family: 'Playfair Display', serif;
             margin-bottom: 70px;
-            font-size: large;
+            font-size: 100px;
             font-weight: 600;
             letter-spacing: 1px;
         }
