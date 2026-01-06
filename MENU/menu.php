@@ -81,8 +81,7 @@ session_start();
             <img src="2.png" alt="Menu Page 2">
             <img src="3.png" alt="Menu Page 3">
             <img src="4.png" alt="Menu Page 4">
-            <img src="5.png" alt="Menu Page 5">
-            <img src="6.png" alt="Menu Page 6">
+            
         </div>
     </div>
 </body>
