@@ -77,7 +77,7 @@ session_start();
         <a href="../hotel.php" class="back-button"> Back to Main Page</a>
 
         <div class="menu-grid">
-            <img src="menu1.png" alt="Menu Page 1">
+            <img src="1.png" alt="Menu Page 1">
             <img src="2.png" alt="Menu Page 2">
             <img src="3.png" alt="Menu Page 3">
             <img src="4.png" alt="Menu Page 4">
