@@ -47,8 +47,13 @@ session_start();
         .menu-grid img:hover {
             transform: scale(1.05);
         }
+        .below-header-back {
+            max-width: 1300px;
+            margin: 12px auto 30px;
+            padding: 0 30px;
+        }
 
-            .back-btn {
+        .back-btn {
             font-family: var(--font-sans);
             font-size: 13px;
             font-weight: 400;
@@ -64,7 +69,7 @@ session_start();
             color: var(--color-accent);
             transform: translateX(-4px);
         }
-                
+        
     </style>
 </head>
 
