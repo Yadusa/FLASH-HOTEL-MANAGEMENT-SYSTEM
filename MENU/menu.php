@@ -1,6 +1,4 @@
-
 <?php
-
 session_start();
 ?>
 <!DOCTYPE html>
@@ -29,11 +27,10 @@ session_start();
             margin-bottom: 40px;
         }
 
-                .menu-grid {
+        .menu-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
             gap: 40px;
-
             max-width: 1100px;
             margin: 0 auto;
         }
@@ -47,6 +44,8 @@ session_start();
         .menu-grid img:hover {
             transform: scale(1.05);
         }
+
+        /* === BACK BUTTON (MATCH FIRST PAGE) === */
         .below-header-back {
             max-width: 1300px;
             margin: 12px auto 30px;
@@ -69,22 +68,26 @@ session_start();
             color: var(--color-accent);
             transform: translateX(-4px);
         }
-        
     </style>
 </head>
 
 <body>
+
+    <!-- Back button LEFT, below header -->
+    <div class="below-header-back">
+        <a href="../hotel.php" class="back-btn">← Back to Main</a>
+    </div>
+
     <div class="menu-container">
         <h1>Our Menu</h1>
-        <a href="../hotel.php" class="back-button"> Back to Main Page</a>
 
         <div class="menu-grid">
             <img src="1.png" alt="Menu Page 1">
             <img src="2.png" alt="Menu Page 2">
             <img src="3.png" alt="Menu Page 3">
             <img src="4.png" alt="Menu Page 4">
-            
         </div>
     </div>
+
 </body>
 </html>
