@@ -39,7 +39,7 @@ session_start();
             <div class="auth-links">
                 <?php if(isset($_SESSION['customer_username'])): ?>
                     Welcome, <?php echo htmlspecialchars($_SESSION['customer_username']); ?> |
-                    <a href="customer_login.php" onclick="showAdminLogin()" class="nav-link">Logout</a>
+                    <a href="customer_logout.php" onclick="showAdminLogin()" class="nav-link">Logout</a>
                 <?php else: ?> 
                     <a href="customer_login.php" onclick="showAdminLogin()" class="nav-link">Login</a>
                     <span>|</span>
