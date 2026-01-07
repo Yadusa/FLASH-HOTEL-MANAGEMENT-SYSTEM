@@ -63,8 +63,9 @@ session_start();
                             
                             <div class="cta-group">
                                 <?php if(isset($_SESSION['customer_username'])): ?>
-                                <a href="booking.php?room_name=Deluxe King Room&room_price=950" class="btn btn-primary">View & Book →</a>                                <?php else: ?>
-                                <a href="../customer_login.php" class="btn btn-primary">View & Book →</a>
+                                <a href="booking.php?room_name=Deluxe King Room&room_price=950" class="btn btn-primary">View & Book →</a>  
+                                <?php else: ?>
+                                <a href="../customer_login.php?redirect=bookingroom/booking.php&room_name=Deluxe King Room&room_price=950" class="btn btn-primary">View & Book →</a>
                                 <?php endif; ?>
                                 <a href="room-details-deluxe_king_room.php" class="btn btn-secondary">Room Details</a>
                             </div>
@@ -87,9 +88,9 @@ session_start();
                             
                             <div class="cta-group">
                                 <?php if(isset($_SESSION['customer_username'])): ?>
-<a href="booking.php?room_name=Family Room&room_price=500" class="btn btn-primary">View & Book →</a>
+                                 <a href="booking.php?room_name=Family Room&room_price=500" class="btn btn-primary">View & Book →</a>
                                 <?php else: ?>
-                                <a href="../customer_login.php" class="btn btn-primary">View & Book →</a>
+                                <a href="../customer_login.php?redirect=bookingroom/booking.php&room_name=Family Room&room_price=500" class="btn btn-primary">View & Book →</a>
                                 <?php endif; ?>
                                 <a href="room-details-family_room.php" class="btn btn-secondary">Room Details</a>
                             </div>
@@ -107,11 +108,11 @@ session_start();
                             
                             <div class="cta-group">
                                 <?php if(isset($_SESSION['customer_username'])): ?>
-<a href="booking.php?room_name=Executive Deluxe King&room_price=420" class="btn btn-primary">View & Book →</a>
+                                 <a href="booking.php?room_name=Executive Deluxe King&room_price=420" class="btn btn-primary">View & Book →</a>
                                 <?php else: ?>
-                                <a href="../customer_login.php" class="btn btn-primary">View & Book →</a>
+                                <a href="../customer_login.php?redirect=bookingroom/booking.php&room_name=Executive Deluxe King&room_price=420" class="btn btn-primary">View & Book →</a>
                                 <?php endif; ?>
-                                <a href="room-details-executive_deluxe_king.php" class="btn btn-secondary">Room Details</a>
+                                 <a href="room-details-executive_deluxe_king.php" class="btn btn-secondary">Room Details</a>
                             </div>
                         </div>
                     </div>
@@ -132,11 +133,11 @@ session_start();
                             
                             <div class="cta-group">
                                 <?php if(isset($_SESSION['customer_username'])): ?>
-<a href="booking.php?room_name=Standard Double Room&room_price=150" class="btn btn-primary">View & Book →</a>
+                                 <a href="booking.php?room_name=Standard Double Room&room_price=150" class="btn btn-primary">View & Book →</a>
                                 <?php else: ?>
-                                <a href="../customer_login.php" class="btn btn-primary">View & Book →</a>
+                                <a href="../customer_login.php?redirect=bookingroom/booking.php&room_name=Standard Double Room&room_price=150" class="btn btn-primary">View & Book →</a>
                                 <?php endif; ?>
-                                <a href="room-details-standard_doubleroom.php" class="btn btn-secondary">Room Details</a>
+                                 <a href="room-details-standard_doubleroom.php" class="btn btn-secondary">Room Details</a>
                             </div>
                         </div>
                     </div>
@@ -152,9 +153,9 @@ session_start();
                             
                             <div class="cta-group">
                                 <?php if(isset($_SESSION['customer_username'])): ?>
-<a href="booking.php?room_name=Budget Twin Room&room_price=120" class="btn btn-primary">View & Book →</a>
+                                 <a href="booking.php?room_name=Budget Twin Room&room_price=120" class="btn btn-primary">View & Book →</a>
                                 <?php else: ?>
-                                <a href="../customer_login.php" class="btn btn-primary">View & Book →</a>
+                                <a href="../customer_login.php?redirect=bookingroom/booking.php&room_name=Budget Twin Room&room_price=120" class="btn btn-primary">View & Book →</a>
                                 <?php endif; ?>
                                 <a href="room-details-budget_twinroom.php" class="btn btn-secondary">Room Details</a>
                             </div>
