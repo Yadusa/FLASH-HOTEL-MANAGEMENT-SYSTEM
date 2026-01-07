@@ -24,10 +24,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt->fetch();
 
         // Plain-text password comparison
-        if (password_verify($password, $dbPassword)) {
+           if (password_verify($password, $dbPassword)) {
             $_SESSION['customer_id'] = $id;
             $_SESSION['customer_username'] = $username;
-            header("Location: hotel.php");  // Redirect after successful login
+
+            // Determine destination
+            $redirect_url = "hotel.php"; // Default
+            if (isset($_GET['redirect'])) {
+                $target = $_GET['redirect'];
+                $params = $_GET;
+                unset($params['redirect']);
+                $queryString = http_build_query($params);
+                $redirect_url = $target . "?" . $queryString;
+            }
+
+            // Show success message and then redirect
+            echo "<script>
+                    alert('Login Successful! Welcome, " . htmlspecialchars($username) . ".');
+                    window.location.href = '$redirect_url';
+                  </script>";
             exit();
         } else {
             $error = "Incorrect password.";
@@ -74,7 +89,7 @@ body { margin: 0; height: 100vh; background: linear-gradient(135deg, #111827, #1
     if (isset($_GET['registered'])) echo "<div class='success'>Registration successful. Please log in.</div>"; 
     ?>
 
-    <form method="POST" novalidate>
+    <form method="POST" action="<?php echo htmlspecialchars($_SERVER['REQUEST_URI']); ?>" novalidate>
         <input type="text" name="username" placeholder="Username" required>
         <input type="password" name="password" placeholder="Password" required>
         <button type="submit">Sign In</button>

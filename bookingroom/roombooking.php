@@ -42,13 +42,12 @@ session_start();
                             <p class="room-details-text">Luxury meets comfort in our elegantly designed spaces, complete with spacious living areas and modern amenities for a seamless, private stay.</p>
                             
                             <div class="cta-group">
-                                <?php if(isset($_SESSION['customer_username'])): ?>
-                                <a href="booking.php?room_name=Executive Suite&room_price=1000" class="btn btn-primary">View & Book →</a>
-                                <?php else: ?>
-                                <a href="../customer_login.php" class="btn btn-primary">View & Book →</a>
-                                <?php endif; ?>
-
-                                <a href="room-details-executive.php" class="btn btn-secondary">Room Details</a>
+                            <?php if(isset($_SESSION['customer_username'])): ?>
+                              <a href="booking.php?room_name=Executive Suite&room_price=1000" class="btn btn-primary">View & Book →</a>
+                            <?php else: ?>
+                              <a href="../customer_login.php?redirect=bookingroom/booking.php&room_name=Executive Suite&room_price=1000" class="btn btn-primary">View & Book →</a>
+                            <?php endif; ?>
+                            <a href="room-details-executive.php" class="btn btn-secondary">Room Details</a>
                             </div>
                         </div>
                     </div>
