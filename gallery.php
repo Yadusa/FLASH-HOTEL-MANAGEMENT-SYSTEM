@@ -26,9 +26,9 @@ session_start();
             <a href="specialoffers.html" class="nav-link special-offer-link"> Special Offers</a>
             <a href="gallery.php" class="nav-link Gallery">Gallery</a>
         </div>
-      <div class="below-header-back">
-    <a href="hotel.php" class="back-btn">← Back to Main</a>
-</div>
+            <div class="below-header-back">
+            <a href="hotel.php" class="back-btn">← Back to Main</a>
+        </div>
         <div class="logo">
             <h1> The Obsidian </h1>
             <p> KUALA LUMPUR </p>
