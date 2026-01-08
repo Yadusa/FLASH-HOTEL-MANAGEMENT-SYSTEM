@@ -672,6 +672,7 @@ body {
     max-width: 1300px;
     margin: 80px auto 0; /* tighter like Special Offers */
     padding: 0 30px;
+    text-align: left;
 }
 
 .back-btn {
