@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         header("Location: customer_register.php?error=empty");
         exit;
     }
-
+        $response = ["status" => "error", "message" => "Unknown error"];
     /* 2️⃣ Password match check */
     if ($password !== $confirmPassword) {
         header("Location: customer_register.php?error=password_mismatch");
