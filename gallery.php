@@ -21,22 +21,17 @@ session_start();
         <div id="hotel-page">
     <header class="main-header">
        <div class="header-content">
-        <div class="header-left-links">
+           <div class="header-left-links">
             <a href="ourStory.html" class="nav-link">Our Story</a>
             <a href="specialoffers.html" class="nav-link special-offer-link"> Special Offers</a>
             <a href="gallery.php" class="nav-link Gallery">Gallery</a>
+            </div>
 
-        </div>
-          
-          
-          <div class="logo">
-
-        </div>
-        <div class="logo">
+            <div class="logo">
 
             <h1> The Obsidian </h1>
             <p> KUALA LUMPUR </p>
-          </div>
+            </div>
          <div class="header-right-actions">
             <div class="auth-links">
                 <a href="#" onclick="showAdminLogin()" class="nav-link">Sign In</a> 
@@ -45,7 +40,7 @@ session_start();
             </div>
             
             <a href="bookingroom/roompage.html" class="cta-button book-now-button">BOOK NOW</a>
-        </div>
+          </div>
        </div>
    </header>
 
