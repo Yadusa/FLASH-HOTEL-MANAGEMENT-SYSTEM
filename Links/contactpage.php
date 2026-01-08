@@ -81,7 +81,7 @@ session_start();
             <div class="check-icon">✓</div>
             <h3>Thank You!</h3>
             <p>Your feedback has been submitted successfully. We will get back to you soon.</p>
-            <button onclick="closePopup()" class="close-btn">Close</button>
+            <button onclick="closePopup()" class="../hotel.php">Close</button>
         </div>
     </div>
 
