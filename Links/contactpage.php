@@ -19,7 +19,7 @@ session_start();
             <div class="header-left-links">
                 <a href="../ourStory.html" class="nav-link">Our Story</a>
                 <a href="../specialoffers.html" class="nav-link">Special Offers</a>
-                <a href="gallery.php" class="nav-link">Gallery</a>
+                <a href="../gallery.php" class="nav-link">Gallery</a>
             </div>
 
             <div class="logo">
@@ -34,7 +34,7 @@ session_start();
     </header>
 
     <div class="below-header-back">
-        <a href="hotel.php" class="back-btn">← Back to Main</a>
+        <a href="../hotel.php" class="back-btn">← Back to Main</a>
     </div>
 
     <main class="contact-wrapper">
