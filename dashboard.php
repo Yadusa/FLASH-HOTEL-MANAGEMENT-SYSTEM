@@ -24,7 +24,7 @@ $adminRole = $_SESSION["admin_role"];
         <br><p class="role"><?php echo ucfirst($adminRole); ?></p>
     </div>
 
-    <a href="admindashboard.php" class="active"> Dashboard</a>
+    <a href="dashboard.php" class="active"> Dashboard</a>
 
     <?php if ($adminRole === "superadmin") { ?>
         <a href="manage_subadmins.php"> Manage Subadmins</a>
