@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap');
+
+:root {
+    --obsidian: #121212;
+    --gold: #b8860b;
+    --ivory: #f9f9f9;
+    --border: rgba(0,0,0,0.1);
+    --font-main: 'Plus Jakarta Sans', sans-serif;
+    --font-title: 'Playfair Display', serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--ivory);
+    color: var(--obsidian);
+    overflow-x: hidden;
+}
+
+/* --- Header --- */
+.luxury-nav {
+    padding: 2rem;
+    background: white;
+    border-bottom: 1px solid var(--border);
+}
+
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand-identity { text-align: center; }
+.brand-identity h1 { font-family: var(--font-title); letter-spacing: 6px; font-size: 1.5rem; }
+.brand-identity span { font-size: 0.7rem; letter-spacing: 4px; }
+
+.nav-links a, .back-link {
+    text-decoration: none;
+    color: var(--obsidian);
+    font-size: 0.9rem;
+    margin-right: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: 0.3s;
+}
+
+.nav-links a:hover { color: var(--gold); }
+
+/* --- Main Layout --- */
+.contact-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: calc(100vh - 100px);
+}
+
+/* Left Panel */
+.info-panel {
+    position: relative;
+    background: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80') center/cover;
+    padding: 4rem;
+    color: white;
+    display: flex;
+    align-items: center;
+}
+
+.info-panel .overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+}
+
+.panel-content { position: relative; z-index: 2; }
+.pre-title { color: var(--gold); text-transform: uppercase; letter-spacing: 3px; font-size: 0.8rem; }
+.panel-content h2 { font-family: var(--font-title); font-size: 4rem; margin: 1rem 0; }
+
+.detail-item { margin-top: 2rem; }
+.detail-item h4 { color: var(--gold); margin-bottom: 0.5rem; text-transform: uppercase; font-size: 0.8rem; }
+.detail-item p { opacity: 0.8; line-height: 1.6; }
+
+/* Right Panel (Form) */
+.form-panel {
+    background: white;
+    padding: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modern-form { width: 100%; max-width: 500px; }
+.input-group { margin-bottom: 1.5rem; }
+.input-group label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.5rem; text-transform: uppercase; }
+
+.input-group input, .input-group textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 0;
+    font-family: var(--font-main);
+    transition: 0.3s;
+}
+
+.input-group input:focus, .input-group textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+}
+
+.input-group textarea { height: 150px; resize: none; }
+
+.submit-btn {
+    width: 100%;
+    padding: 1.2rem;
+    background: var(--obsidian);
+    color: white;
+    border: none;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.submit-btn:hover { background: var(--gold); }
+
+/* --- Popup --- */
+.popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(18, 18, 18, 0.9);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.popup-card {
+    background: white;
+    padding: 3rem;
+    text-align: center;
+    max-width: 400px;
+    animation: slideUp 0.4s ease;
+}
+
+.check-icon {
+    font-size: 3rem;
+    color: var(--gold);
+    margin-bottom: 1rem;
+}
+
+.popup-card h3 { font-family: var(--font-title); font-size: 2rem; margin-bottom: 1rem; }
+.popup-card p { margin-bottom: 2rem; color: #666; }
+
+.close-btn {
+    background: none;
+    border: 1px solid var(--obsidian);
+    padding: 0.8rem 2rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Mobile Responsive */
+@media (max-width: 900px) {
+    .contact-wrapper { grid-template-columns: 1fr; }
+    .info-panel { padding: 3rem 2rem; }
+    .panel-content h2 { font-size: 2.5rem; }
+}
