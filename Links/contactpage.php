@@ -28,7 +28,7 @@ session_start();
             </div>
 
             <div class="header-right-actions">
-                <a href="bookingroom/roompage.html" class="cta-button book-now-button">BOOK NOW</a>
+                <a href="../bookingroom/roompage.html" class="cta-button book-now-button">BOOK NOW</a>
             </div>
         </div>
     </header>
