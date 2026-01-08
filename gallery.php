@@ -44,12 +44,13 @@ session_start();
        </div>
    </header>
 
+    <div class="below-header-back">
+    <a href="hotel.php" class="back-btn">← Back to Main</a>
+    </div>
+
     <section class="gallery-container">
 
-       <div class="below-header-back">
-            <a href="hotel.php" class="back-btn">← Back to Main</a>
 
-          </div>
             <div class="gallery-intro">
                 <p class="tagline">Visual Journey</p>
                 <h2>Our Curated Spaces</h2>
@@ -73,7 +74,7 @@ session_start();
                     <div class="caption">Floors</div>
                 </div>
             </div>
-        </section>
+    </section>
 
     <!-- FOOTER (same as landing page) -->
     <footer class="main-footer">
