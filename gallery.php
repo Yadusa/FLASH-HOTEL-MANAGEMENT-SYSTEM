@@ -87,14 +87,14 @@ session_start();
             <div class="footer-links">
                 <h5>Hotel</h5>
                 <a href="ourStory.html">About Us</a>
-                <a href="#">Contact</a>
-                <a href="#">Careers</a>
+                <a href="Links/contactpage.php">Contact</a>
+                <a href="Links/JobApplication.php">Careers</a>
             </div>
 
             <div class="footer-links">
                 <h5>Services</h5>
-                <a href="#">Meetings & Events</a>
-                <a href="https://forms.gle/J6sBpLRAp8hfJz9E8">Wellness & Spa</a>
+                <a href="Links/EventSpaceBooking.php">Meetings & Events</a>
+                <a href="Links/Spa_reservation.php">Wellness & Spa</a>
                 <a href="gallery.php">Gallery</a>
             </div>
 
