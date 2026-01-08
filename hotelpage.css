@@ -670,7 +670,7 @@ body {
 /* Back to Main - Below Header Line */
 .below-header-back {
     max-width: 1300px;
-    margin: 12px auto 30px;
+    margin: 8px auto 0; /* tighter like Special Offers */
     padding: 0 30px;
 }
 
@@ -695,11 +695,10 @@ body {
 /* Gallery Layout */
 .gallery-container {
     max-width: 1200px;
-    margin: 60px auto;
+    margin: 30px auto 60px; /* smaller top margin */
     padding: 0 40px;
     text-align: center;
 }
-
 .gallery-intro {
     margin-bottom: 50px;
 }
