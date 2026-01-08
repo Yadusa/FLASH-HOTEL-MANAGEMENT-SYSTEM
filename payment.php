@@ -2,15 +2,35 @@
 session_start();
 
 // Redirect if not logged in
-if(!isset($_SESSION['customer_username'])){
+if (!isset($_SESSION['customer_username'])) {
     header("Location: ../customer_login.php");
     exit();
 }
 
-// Get total price and room name from GET (sent from booking.php)
-$total_price = isset($_GET['total_price']) ? $_GET['total_price'] : 0;
-$room_name = isset($_GET['room_name']) ? $_GET['room_name'] : '';
+// Get data from booking.php (via GET)
+$room_name  = $_GET['room_name'] ?? '';
+$room_price = isset($_GET['room_price']) ? floatval($_GET['room_price']) : 0;
+$checkin    = $_GET['check_in'] ?? '';
+$checkout   = $_GET['check_out'] ?? '';
+$adults     = isset($_GET['adults']) ? intval($_GET['adults']) : 1;
+$children   = isset($_GET['children']) ? intval($_GET['children']) : 0;
+
+$nights = 0;
+$checkinFormatted = '';
+$checkoutFormatted = '';
+
+if (!empty($checkin) && !empty($checkout)) {
+    $checkinFormatted  = date('d M', strtotime($checkin));
+    $checkoutFormatted = date('d M', strtotime($checkout));
+    $nights = (strtotime($checkout) - strtotime($checkin)) / (60*60*24);
+}
+
+$total_price = $nights * $room_price; // just room price × nights
+
+
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -28,7 +48,25 @@ $room_name = isset($_GET['room_name']) ? $_GET['room_name'] : '';
 <h2>Payment for: <?php echo htmlspecialchars($room_name); ?></h2>
 <p>Total Amount: RM <?php echo htmlspecialchars($total_price); ?></p>
 
-    <h2>Available Payment Method:</h2>
+<?php if ($nights > 0): ?>
+    <p style="font-weight:600; margin-bottom:6px;">
+        Date: <?php echo $checkinFormatted; ?> / <?php echo $checkoutFormatted; ?>
+        (<?php echo $nights; ?> night<?php echo $nights > 1 ? 's' : ''; ?>)
+    </p>
+    <p style="font-weight:600; margin-bottom:6px;">
+        Guests: <?php echo $adults; ?> Adult<?php echo $adults > 1 ? 's' : ''; ?> / <?php echo $children; ?> Child<?php echo $children > 1 ? 'ren' : ''; ?>
+    </p>
+    <p style="font-weight:600; margin-bottom:6px;">
+        Price: RM <?php echo $room_price; ?> × <?php echo $nights; ?> night<?php echo $nights > 1 ? 's' : ''; ?> = RM <?php echo $total_price; ?>
+    </p>
+<?php else: ?>
+    <p style="font-weight:600; margin-bottom:6px;">Dates not available</p>
+<?php endif; ?>
+
+
+
+<h2>Available Payment Method:</h2>
+
 
     <div class="tabs">
         <button class="tab-button active" data-target="credit">💳 Credit / Debit Card</button>
@@ -40,7 +78,7 @@ $room_name = isset($_GET['room_name']) ? $_GET['room_name'] : '';
     <div class="tab-content active" id="credit">
         <h3>Credit Card Details</h3>
 
-        <form id="creditForm">
+        <form id="creditForm" method="POST" action="">
 
             <input type="hidden" name="total_price" value="<?php echo $total_price; ?>">
             <input type="hidden" name="room_name" value="<?php echo htmlspecialchars($room_name); ?>">
@@ -55,22 +93,75 @@ $room_name = isset($_GET['room_name']) ? $_GET['room_name'] : '';
             <input type="text" id="cvv" maxlength="4" placeholder="3–4 digit"pattern="\d{3,4}" required>
 
             <label>Expiry Date</label>
-            <div class="row">
-                <select id="month">
-                    <option value="">Month</option>
-                    <option>01</option><option>02</option><option>03</option><option>04</option>
-                    <option>05</option><option>06</option><option>07</option><option>08</option>
-                    <option>09</option><option>10</option><option>11</option><option>12</option>
-                </select>
+<div class="row">
+    <select name="month" id="month" required>
+        <option value="">Month</option>
+        <?php
+            for ($m = 1; $m <= 12; $m++) {
+                $month = str_pad($m, 2, '0', STR_PAD_LEFT);
+                echo "<option value='$month'>$month</option>";
+            }
+        ?>
+    </select>
 
-                <select id="year">
-                    <option value="">Year</option>
-                    <option>2025</option>
-                    <option>2026</option>
-                    <option>2027</option>
-                    <option>2028</option>
-                </select>
-            </div>
+    <select name="year" id="year" required>
+        <option value="">Year</option>
+        <?php
+            $currentYear = date("Y");
+            $maxYear = $currentYear + 10;
+            for ($y = $currentYear; $y <= $maxYear; $y++) {
+                echo "<option value='$y'>$y</option>";
+            }
+        ?>
+    </select>
+</div>
+
+<script>
+// Disable past months if current year is selected
+const monthSelect = document.getElementById('month');
+const yearSelect = document.getElementById('year');
+
+yearSelect.addEventListener('change', () => {
+    const selectedYear = parseInt(yearSelect.value);
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1; // JS months: 0-11
+
+    for (let i = 0; i < monthSelect.options.length; i++) {
+        const monthValue = parseInt(monthSelect.options[i].value);
+        if (selectedYear === currentYear) {
+            // Disable past months
+            if (monthValue < currentMonth) {
+                monthSelect.options[i].disabled = true;
+            } else if (monthValue >= currentMonth) {
+                monthSelect.options[i].disabled = false;
+            }
+        } else {
+            // All months enabled for future years
+            monthSelect.options[i].disabled = false;
+        }
+    }
+
+    // If selected month is now disabled, reset it
+    if (monthSelect.value && monthSelect.options[monthSelect.selectedIndex].disabled) {
+        monthSelect.value = '';
+    }
+});
+
+function confirmCancel() {
+    const userConfirmed = confirm("Are you sure you want to cancel the payment?");
+    if (userConfirmed) {
+        // Redirect user to the room booking page or wherever you want
+        window.location.href = "bookingroom/roombooking.php";
+    }
+    // If user clicks "Cancel" in the confirm dialog, nothing happens
+}
+
+
+</script>
+
+
+</div>
+
 
             <label>Card Issuing Country</label>
             <select id="country">
@@ -81,6 +172,8 @@ $room_name = isset($_GET['room_name']) ? $_GET['room_name'] : '';
             </select>
 
             <button type="submit" class="submit-btn">Proceed Payment</button>
+<button type="button" class="cancel-btn" onclick="confirmCancel()">Cancel Payment</button>
+
         </form>
     </div>
 
@@ -136,4 +229,3 @@ $room_name = isset($_GET['room_name']) ? $_GET['room_name'] : '';
 <script src="script.js"></script>
 </body>
 </html>
-

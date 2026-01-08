@@ -39,14 +39,19 @@ session_start();
             <div class="auth-links">
                 <?php if(isset($_SESSION['customer_username'])): ?>
                     Welcome, <?php echo htmlspecialchars($_SESSION['customer_username']); ?> |
-                    <a href="customer_login.php" onclick="showAdminLogin()" class="nav-link">Logout</a>
+                    <a href="customer_logout.php" onclick="return confirmLogout();" class="nav-link">Logout</a>
                 <?php else: ?> 
                     <a href="customer_login.php" onclick="showAdminLogin()" class="nav-link">Login</a>
                     <span>|</span>
                     <a href="customer_register.php" class="nav-link">Register</a>
                 <?php endif; ?> 
             </div>
-            
+            <script>
+            function confirmLogout() {
+            return confirm("Are you sure you want to log out?");
+            }
+            </script>
+
             <a href="bookingroom/roombooking.php" class="cta-button book-now-button">BOOK NOW</a>
         </div>
        </div>

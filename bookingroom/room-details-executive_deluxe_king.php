@@ -1,45 +1,50 @@
 <?php
+// 1. Start session to track login status
+session_start();
 require_once "../db.php";
 
-$sql = "SELECT COUNT(*) AS available_rooms
-        FROM rooms
-        WHERE room_type = 'Executive Suite'
-        AND room_status = 'Available'";
-
+// 2. Fetch 'available_slots' specifically for the 'Executive Deluxe King'
+// Based on your database screenshot, the name must match exactly.
+$sql = "SELECT available_slots FROM rooms WHERE room_name = 'Executive Deluxe King'";
 $result = $conn->query($sql);
-$row = $result->fetch_assoc();
-$available = $row['available_rooms'];
+
+if ($result && $result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $available = $row['available_slots'];
+} else {
+    $available = 0; 
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Executive Suite | The Obsidian KL</title>
+    <title>Executive Deluxe King | The Obsidian KL</title>
     <link rel="stylesheet" href="hotel_room.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <header class="booking-header">
-        <div class="header-content-inner">
-            <h1>Room Details</h1>
-        </div>
+    <div class="header-content-inner">
+        <h1>Room Details</h1>
+    </div>
 </header>
+
 <div class="below-header-back">
-         <a href="roombooking.php" class="back-button">← Back to Rooms</a>
+    <a href="roombooking.php" class="back-button">← Back to Rooms</a>
 </div>
 
 <div class="room-details-container">
-
     <div class="room-detail-hero">
-        <img src="executive-deluxe-king.jpg" class="room-detail-image" alt="Executive Suite">
+        <img src="executive-deluxe-king.jpg" class="room-detail-image" alt="Executive Deluxe King">
 
         <div class="room-detail-content">
             <h2>Executive Deluxe King Room</h2>
-            <div class="price-tag">RM 500 / night</div>
+            <div class="price-tag">RM 420 / night</div>
 
             <p>
-                Experience refined luxury in our Family room, offering a
+                Experience refined luxury in our Executive Deluxe King room, offering a
                 spacious living area, premium furnishings, and exclusive
                 executive privileges.
             </p>
@@ -48,9 +53,7 @@ $available = $row['available_rooms'];
                 <h3>Beds & Occupancy</h3>
                 <ul>
                     <li>1 King Size Bed</li>
-            
-                    <li>Max Occupancy: 2 Adults </li>
-
+                    <li>Max Occupancy: 2 Adults</li>
                 </ul>
             </div>
 
@@ -67,19 +70,25 @@ $available = $row['available_rooms'];
 
             <?php if ($available > 0): ?>
                 <div class="availability-box available">
-                    <?php echo $available; ?> Executive Suite(s) Available
+                    <h3><?php echo $available; ?> EXECUTIVE DELUXE KING ROOM(S) AVAILABLE</h3>
+                </div>
+
+                <div class="cta-group" style="margin-top: 20px;">
+                    <?php if(isset($_SESSION['customer_username'])): ?>
+                        <a href="booking.php?room_name=Executive Deluxe King&room_price=420" class="btn btn-primary">Book Now →</a>
+                    <?php else: ?>
+                        <a href="../customer_login.php?redirect=bookingroom/booking.php&room_name=Executive Deluxe King&room_price=420" class="btn btn-primary">Book Now →</a>
+                    <?php endif; ?>
                 </div>
             <?php else: ?>
-                        <div class="cta-group">
-                            <a href=../customer_login.php class="btn btn-primary">Book Now →</a>
-                        </div>
+                <div class="availability-box out-of-stock" style="color: #b91c1c; background: #fee2e2; padding: 10px; border-radius: 8px; text-align: center; font-weight: bold;">
+                    Currently Fully Booked
+                </div>
             <?php endif; ?>
 
         </div>
     </div>
-
 </div>
 
 </body>
 </html>
-

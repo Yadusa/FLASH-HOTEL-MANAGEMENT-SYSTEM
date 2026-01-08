@@ -1,14 +1,18 @@
 <?php
+// 1. Start session to check if user is logged in
+session_start();
 require_once "../db.php";
 
-$sql = "SELECT COUNT(*) AS available_rooms
-        FROM rooms
-        WHERE room_type = 'Executive Suite'
-        AND room_status = 'Available'";
-
+// 2. Fetch the correct column 'available_slots' based on your database screenshot
+$sql = "SELECT available_slots FROM rooms WHERE room_name = 'Executive Suite'";
 $result = $conn->query($sql);
-$row = $result->fetch_assoc();
-$available = $row['available_rooms'];
+
+if ($result && $result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $available = $row['available_slots'];
+} else {
+    $available = 0; 
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,16 +25,16 @@ $available = $row['available_rooms'];
 <body>
 
 <header class="booking-header">
-        <div class="header-content-inner">
-            <h1>Room Details</h1>
-        </div>
+    <div class="header-content-inner">
+        <h1>Room Details</h1>
+    </div>
 </header>
+
 <div class="below-header-back">
-         <a href="roombooking.php" class="back-button">← Back to Rooms</a>
+    <a href="roombooking.php" class="back-button">← Back to Rooms</a>
 </div>
 
 <div class="room-details-container">
-
     <div class="room-detail-hero">
         <img src="luxury_suite.jpg" class="room-detail-image" alt="Executive Suite">
 
@@ -68,19 +72,25 @@ $available = $row['available_rooms'];
 
             <?php if ($available > 0): ?>
                 <div class="availability-box available">
-                    <?php echo $available; ?> Executive Suite(s) Available
+                    <h3><?php echo $available; ?> EXECUTIVE SUITE(S) AVAILABLE</h3>
+                </div>
+
+                <div class="cta-group" style="margin-top: 20px;">
+                    <?php if(isset($_SESSION['customer_username'])): ?>
+                        <a href="booking.php?room_name=Executive Suite&room_price=1000" class="btn btn-primary">Book Now →</a>
+                    <?php else: ?>
+                        <a href="../customer_login.php?redirect=bookingroom/booking.php&room_name=Executive Suite&room_price=1000" class="btn btn-primary">Book Now →</a>
+                    <?php endif; ?>
                 </div>
             <?php else: ?>
-                        <div class="cta-group">
-                            <a href=../customer_login.php class="btn btn-primary">Book Now →</a>
-                        </div>
+                <div class="availability-box out-of-stock" style="color: red; font-weight: bold;">
+                    Currently Fully Booked
+                </div>
             <?php endif; ?>
 
         </div>
     </div>
-
 </div>
 
 </body>
 </html>
-
