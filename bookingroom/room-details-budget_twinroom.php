@@ -1,14 +1,19 @@
 <?php
+// 1. Start session to track login status
+session_start();
 require_once "../db.php";
 
-$sql = "SELECT COUNT(*) AS available_rooms
-        FROM rooms
-        WHERE room_type = 'Executive Suite'
-        AND room_status = 'Available'";
-
+// 2. Fetch 'available_slots' specifically for the 'Executive Deluxe King'
+// Based on your database screenshot, the name must match exactly.
+$sql = "SELECT available_slots FROM rooms WHERE room_name = 'Executive Deluxe King'";
 $result = $conn->query($sql);
-$row = $result->fetch_assoc();
-$available = $row['available_rooms'];
+
+if ($result && $result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $available = $row['available_slots'];
+} else {
+    $available = 0; 
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -67,12 +72,20 @@ $available = $row['available_rooms'];
 
             <?php if ($available > 0): ?>
                 <div class="availability-box available">
-                    <?php echo $available; ?> Executive Suite(s) Available
+                    <h3><?php echo $available; ?> EXECUTIVE DELUXE KING ROOM(S) AVAILABLE</h3>
                 </div>
-            <?php else: ?>
-                        <div class="cta-group">
-                            <a href=../customer_login.php class="btn btn-primary">Book Now →</a>
-                        </div>
+
+                <div class="cta-group" style="margin-top: 20px;">
+                    <?php if(isset($_SESSION['customer_username'])): ?>
+                        <a href="booking.php?room_name=Budget Twin Room&room_price=120" class="btn btn-primary">Book Now →</a>
+                    <?php else: ?>
+                        <a href="../customer_login.php?redirect=bookingroom/booking.php&room_name=Budget Twin Room&room_price=120" class="btn btn-primary">Book Now →</a>
+                    <?php endif; ?>
+                    </div>
+                   <?php else: ?>
+                  <div class="availability-box out-of-stock" style="color: #b91c1c; background: #fee2e2; padding: 10px; border-radius: 8px; text-align: center; font-weight: bold;">
+                    Currently Fully Booked
+                 </div>
             <?php endif; ?>
 
         </div>

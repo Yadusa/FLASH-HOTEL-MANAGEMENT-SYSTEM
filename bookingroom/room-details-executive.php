@@ -16,16 +16,6 @@ $status = $row['room_status'];
 $is_bookable = ($available > 0 && $status == 'Available');
 ?>
 
-<?php if ($is_bookable): ?>
-    <div class="availability-box available">
-        <h3><?php echo $available; ?> ROOM(S) AVAILABLE</h3>
-    </div>
-    <a href="booking.php?room_name=Executive Suite" class="btn btn-primary">Book Now →</a>
-<?php else: ?>
-    <div class="availability-box out-of-stock" style="color: red; font-weight: bold;">
-        <?php echo ($status == 'Maintenance') ? "Under Maintenance" : "Currently Fully Booked"; ?>
-    </div>
-<?php endif; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

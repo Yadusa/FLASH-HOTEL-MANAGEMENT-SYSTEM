@@ -73,7 +73,7 @@ $result = $conn->query($sql);
                         </span>
                     </td>
                     <td>
-                        <form method="POST" style="display:inline;">
+                        <form method="POST" style="display:inline;" onsubmit="return confirm('Restore 1 room slot to inventory?');">
                             <input type="hidden" name="room_id" value="<?php echo $row['id']; ?>">
                             <select name="status" class="btn-status" onchange="this.form.submit()">
                                 <option value="Available" <?php if($row['room_status'] == 'Available') echo 'selected'; ?>>Available</option>
@@ -81,8 +81,14 @@ $result = $conn->query($sql);
                                 <option value="Maintenance" <?php if($row['room_status'] == 'Maintenance') echo 'selected'; ?>>Maintenance (Block)</option>
                             </select>
                             <input type="hidden" name="update_status" value="1">
+                            <button type="submit" name="restore_slot" class="btn-restore" 
+                          <?php echo ($row['available_slots'] >= $row['total_slots']) ? 'disabled' : ''; ?>>
+                           + Restore Slot
+                          </button>
                         </form>
                     </td>
+                    <td>
+
                 </tr>
                 <?php endwhile; ?>
             </tbody>
