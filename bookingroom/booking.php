@@ -46,8 +46,9 @@ if ($adults < 1 || $adults > 5) {
     $stmt->bind_param("ssissiii", $customer_username, $room_name, $room_price, $checkin, $checkout, $adults, $children, $total_price);
 
     if ($stmt->execute()) {
-        header("Location: ../payment.php?room_name=" . urlencode($room_name) . "&room_price=$room_price&check_in=$checkin&check_out=$checkout&adults=$adults&children=$children");
-        exit();
+header("Location: booking_confirm.php?room_name=" . urlencode($room_name) . "&room_price=$room_price&check_in=$checkin&check_out=$checkout&adults=$adults&children=$children");
+exit();
+
     } else {
         $error_message = "Error while booking: " . $conn->error;
     }
