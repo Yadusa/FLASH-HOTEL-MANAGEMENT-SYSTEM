@@ -27,10 +27,7 @@ session_start();
             <a href="gallery.php" class="nav-link Gallery">Gallery</a>
 
         </div>
-            <div class="below-header-back">
-            <a href="hotel.php" class="back-btn">← Back to Main</a>
-
-          </div>
+          
           
           <div class="logo">
 
@@ -57,7 +54,10 @@ session_start();
                 <p class="tagline">Visual Journey</p>
                 <h2>Our Curated Spaces</h2>
             </div>
+              <div class="below-header-back">
+            <a href="hotel.php" class="back-btn">← Back to Main</a>
 
+          </div>
             <div class="photo-grid">
                 <div class="gallery-item">
                     <img src="images/lobby1.jpg" alt="">
