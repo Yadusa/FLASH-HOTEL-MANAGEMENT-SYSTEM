@@ -17,8 +17,8 @@ session_start();
     <header class="main-header">
         <div class="header-content">
             <div class="header-left-links">
-                <a href="ourStory.html" class="nav-link">Our Story</a>
-                <a href="specialoffers.html" class="nav-link">Special Offers</a>
+                <a href="../ourStory.html" class="nav-link">Our Story</a>
+                <a href="../specialoffers.html" class="nav-link">Special Offers</a>
                 <a href="gallery.php" class="nav-link">Gallery</a>
             </div>
 
