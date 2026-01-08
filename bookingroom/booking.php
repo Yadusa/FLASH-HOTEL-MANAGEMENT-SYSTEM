@@ -315,6 +315,47 @@ updateChildrenMax();
     <a href="roombooking.php" class="btn btn-secondary" style="margin-top:20px;">← Back to Rooms</a>
 </div>
 
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const checkin = document.getElementById('checkin');
+    const checkout = document.getElementById('checkout');
+
+    // Update checkout min whenever check-in changes
+    checkin.addEventListener('change', () => {
+        if (!checkin.value) return;
+
+        const checkinDate = new Date(checkin.value);
+        const nextDay = new Date(checkinDate);
+        nextDay.setDate(checkinDate.getDate() + 1); // checkout at least 1 day after check-in
+
+        const yyyy = nextDay.getFullYear();
+        const mm = String(nextDay.getMonth() + 1).padStart(2, '0');
+        const dd = String(nextDay.getDate()).padStart(2, '0');
+
+        const minDate = `${yyyy}-${mm}-${dd}`;
+        checkout.min = minDate;
+
+        // Clear checkout if it's now before the new min
+        if (checkout.value && checkout.value < checkout.min) {
+            checkout.value = '';
+        }
+    });
+
+    // Optional: set checkout default min to tomorrow if checkin is empty
+    if (!checkin.value) {
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+        const yyyy = tomorrow.getFullYear();
+        const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+        const dd = String(tomorrow.getDate()).padStart(2, '0');
+        checkout.min = `${yyyy}-${mm}-${dd}`;
+    }
+});
+</script>
+
+
 </body>
 </html>
 
