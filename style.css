@@ -230,3 +230,19 @@ input, select {
     transform: scale(1.02);
 }
 
+.cancel-btn {
+    display: inline-block;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    background-color: #ef4444; /* red */
+    color: #fff;
+    margin-left: 10px;
+    transition: 0.3s;
+}
+
+.cancel-btn:hover {
+    background-color: #dc2626; /* darker red */
+}
