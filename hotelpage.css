@@ -697,7 +697,7 @@ body {
     max-width: 1200px;
     margin: 30px auto 60px; /* smaller top margin */
     padding: 0 40px;
-    text-align: center;
+    text-align: left;
 }
 .gallery-intro {
     margin-bottom: 50px;
