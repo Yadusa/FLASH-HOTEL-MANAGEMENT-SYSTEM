@@ -64,6 +64,11 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<script>
+function confirmLogout() {
+    return confirm("Are you sure you want to log out?");
+}
+</script>
 
 <style>
 body {
@@ -201,7 +206,8 @@ form input:focus {
 
 <div class="top-bar">
     Welcome, <?php echo htmlspecialchars($_SESSION['customer_username']); ?> |
-    <a href="../customer_logout.php">Logout</a>
+    <a href="../customer_logout.php" onclick="return confirmLogout();">Logout</a>
+
 </div>
 
 <div class="booking-container">
