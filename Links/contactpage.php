@@ -8,7 +8,7 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us | The Obsidian Kuala Lumpur</title>
-    <link rel="stylesheet" href="Links/contactpage.css">
+    <link rel="stylesheet" href="../Links/contactpage.css">
 </head>
 
 <body>
@@ -81,7 +81,7 @@ session_start();
             <div class="check-icon">✓</div>
             <h3>Thank You!</h3>
             <p>Your feedback has been submitted successfully. We will get back to you soon.</p>
-            <button onclick="closePopup()" class="../hotel.php">Close</button>
+            <button onclick="closePopup()" class="close-btn">Close</button>
         </div>
     </div>
 
