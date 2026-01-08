@@ -90,7 +90,7 @@ body {
 
 /* --- Back Button --- */
 .below-header-back { max-width: 1400px; margin: 20px auto; padding: 0 2rem; }
-.back-btn { text-decoration: none; color: #888; font-size: 0.9rem; }
+.back-btn { text-decoration: none; color: #e2dbdb; font-size: 0.9rem; }
 
 /* --- Contact Layout --- */
 .contact-container {
@@ -103,7 +103,7 @@ body {
 }
 
 .tagline { color: var(--gold); text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; font-weight: 600; }
-.contact-info h2 { font-family: var(--font-title); font-size: 3.5rem; margin: 1rem 0 2rem 0; }
+.contact-info h2 { font-family: var(--font-title); font-size: 3.5rem; margin: 1rem 0 2rem 0; color: #f5f5f5;}
 .contact-text { margin-bottom: 1.5rem; line-height: 1.6; }
 
 /* --- Form --- */
