@@ -17,6 +17,9 @@ if(!isset($_GET['room_name']) || !isset($_GET['room_price'])) {
 $room_name = $_GET['room_name'];
 $room_price = $_GET['room_price'];
 
+$today = date('Y-m-d'); // today's date
+$maxDate = date('Y-m-d', strtotime('+5 months')); // max 5 months from today
+
 // Booking submission
 $success_message = '';
 $total_price = 0;
@@ -24,30 +27,34 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $customer_username = $_SESSION['customer_username'];
     $checkin = $_POST['checkin'];
     $checkout = $_POST['checkout'];
-    $guests = intval($_POST['guests']);
+    $adults = intval($_POST['adults']);
+    $children = intval($_POST['children']);
+    $totalGuests = $adults + $children;
 
-    if(empty($checkin) || empty($checkout) || $guests < 1){
-        $error_message = "Please fill in all fields correctly.";
-    } else {
-        // --- Calculate number of nights and total price ---
-        $diff = strtotime($checkout) - strtotime($checkin);
-        $nights = max(1, ceil($diff / (60*60*24))); // at least 1 night
-        $total_price = $nights * $room_price;
-
-        // --- Insert booking into database ---
-        $stmt = $conn->prepare("INSERT INTO bookings (customer_username, room_name, room_price, checkin, checkout, guests, total_price) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssissii", $customer_username, $room_name, $room_price, $checkin, $checkout, $guests, $total_price);
-
-        if($stmt->execute()){
-    // $success_message = "Booking successful! Total Price: RM $total_price";
-    header("Location: ../payment.php?total_price=$total_price&room_name=" . urlencode($room_name));
-    exit();
+// Validation
+if ($adults < 1 || $adults > 5) {
+    $error_message = "Number of adults must be between 1 and 5.";
+} elseif ($totalGuests > 5) {
+    $error_message = "Total guests (adults + children) cannot exceed 5 per room.";
 } else {
-    $error_message = "Error while booking: " . $conn->error;
+    // Everything is valid, proceed to calculate nights and insert booking
+    $diff = strtotime($checkout) - strtotime($checkin);
+    $nights = max(1, ceil($diff / (60*60*24)));
+    $total_price = $nights * $room_price;
+
+    $stmt = $conn->prepare("INSERT INTO bookings (customer_username, room_name, room_price, checkin, checkout, adults, children, total_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssissiii", $customer_username, $room_name, $room_price, $checkin, $checkout, $adults, $children, $total_price);
+
+    if ($stmt->execute()) {
+        header("Location: ../payment.php?room_name=" . urlencode($room_name) . "&room_price=$room_price&check_in=$checkin&check_out=$checkout&adults=$adults&children=$children");
+        exit();
+    } else {
+        $error_message = "Error while booking: " . $conn->error;
+    }
+
+    $stmt->close();
 }
 
-        $stmt->close();
-    }
 }
 
 ?>
@@ -64,6 +71,36 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<script>
+function confirmLogout() {
+    return confirm("Are you sure you want to log out?");
+}
+</script>
+
+<script>
+// Step 3: Adjust checkout min based on selected check-in
+const checkin = document.getElementById('checkin');
+const checkout = document.getElementById('checkout');
+
+checkin.addEventListener('change', () => {
+    const checkinDate = new Date(checkin.value);
+    const nextDay = new Date(checkinDate);
+    nextDay.setDate(checkinDate.getDate() + 1); // checkout must be at least 1 day after check-in
+
+    const yyyy = nextDay.getFullYear();
+    const mm = String(nextDay.getMonth() + 1).padStart(2, '0');
+    const dd = String(nextDay.getDate()).padStart(2, '0');
+
+    checkout.min = `${yyyy}-${mm}-${dd}`;
+
+    // Optional: clear checkout if it's before new min
+    if (checkout.value < checkout.min) {
+        checkout.value = '';
+    }
+});
+</script>
+
+
 
 <style>
 body {
@@ -201,7 +238,8 @@ form input:focus {
 
 <div class="top-bar">
     Welcome, <?php echo htmlspecialchars($_SESSION['customer_username']); ?> |
-    <a href="../customer_logout.php">Logout</a>
+    <a href="../customer_logout.php" onclick="return confirmLogout();">Logout</a>
+
 </div>
 
 <div class="booking-container">
@@ -214,19 +252,59 @@ form input:focus {
     <?php elseif(!empty($error_message)): ?>
         <p class="error-message"><?php echo $error_message; ?></p>
     <?php endif; ?>
-
-    <form method="POST" action="">
+<form method="POST" action="">
     <label for="checkin">Check-in Date:</label>
-    <input type="date" name="checkin" id="checkin" required>
+<input type="date" name="checkin" id="checkin" required
+       min="<?php echo $today; ?>" max="<?php echo $maxDate; ?>">
 
-    <label for="checkout">Check-out Date:</label>
-    <input type="date" name="checkout" id="checkout" required>
+<label for="checkout">Check-out Date:</label>
+<input type="date" name="checkout" id="checkout" required
+       min="<?php echo $today; ?>" max="<?php echo $maxDate; ?>">
 
-    <label for="guests">Number of Guests:</label>
-    <input type="number" name="guests" id="guests" min="1" value="1" required>
+
+    <label for="adults">Number of Adults:</label>
+<input type="number" name="adults" id="adults" min="1" max="5" value="1" required>
+
+<label for="children">Number of Children:</label>
+<input type="number" name="children" id="children" min="0" max="4" value="0" required>
+<small id="child-note" style="color:#555;">Max children depends on number of adults (total guests ≤ 5)</small>
+
+<script>
+const adultsInput = document.getElementById('adults');
+const childrenInput = document.getElementById('children');
+const maxGuests = 5;
+
+function updateChildrenMax() {
+    const adults = parseInt(adultsInput.value) || 1;
+    const maxChildren = maxGuests - adults; // remaining spots for children
+    childrenInput.max = maxChildren;
+
+    // Adjust value if current children exceeds max
+    if (parseInt(childrenInput.value) > maxChildren) {
+        childrenInput.value = maxChildren;
+    }
+
+    // Optional: show note dynamically
+    document.getElementById('child-note').innerText =
+        `Max children allowed: ${maxChildren} (total guests ≤ 5)`;
+}
+
+// Trigger when adults change
+adultsInput.addEventListener('input', updateChildrenMax);
+// Trigger when children change (to correct if needed)
+childrenInput.addEventListener('input', updateChildrenMax);
+
+// Initialize on page load
+updateChildrenMax();
+</script>
+
 
     <?php if($total_price > 0): ?>
         <p style="font-weight:600;">Total Price: RM <?php echo $total_price; ?></p>
+        <p style="font-weight:600;">
+    Adults: <?php echo $adults; ?>, Children: <?php echo $children; ?> (Total: <?php echo $guests; ?>)
+</p>
+
     <?php endif; ?>
 
     <button type="submit" class="btn btn-primary">Confirm Booking</button>
