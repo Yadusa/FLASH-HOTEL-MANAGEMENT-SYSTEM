@@ -699,7 +699,7 @@ body {
 /* CONTACT PAGE */
 .contact-section {
     padding: 80px 40px;
-    background-color: var(--color-text-light);
+    background-color: grey;
 }
 
 .contact-container {
@@ -720,7 +720,7 @@ body {
 
 .contact-text {
     font-size: 16px;
-    color: #555;
+    color: #c6bdbd;
     line-height: 1.7;
     margin-bottom: 15px;
 }
