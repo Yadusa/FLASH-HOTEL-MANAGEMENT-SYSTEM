@@ -37,44 +37,51 @@ session_start();
         <a href="hotel.php" class="back-btn">← Back to Main</a>
     </div>
 
-    <section class="contact-section">
+    <main class="contact-wrapper">
         <div class="contact-container">
-
             <div class="contact-info">
                 <p class="tagline">Get In Touch</p>
                 <h2>Contact Us</h2>
-
-                <p class="contact-text">
-                    123 Obsidian Tower, KLCC,<br>
-                    50088 Kuala Lumpur, Malaysia
-                </p>
-
-                <p class="contact-text">
-                    +60 3-1234 5678
-                </p>
-
-                <p class="contact-text">
-                    reservations@obsidiankl.com
-                </p>
+                <div class="info-details">
+                    <p class="contact-text">
+                        <strong>Location</strong><br>
+                        123 Obsidian Tower, KLCC,<br>
+                        50088 Kuala Lumpur, Malaysia
+                    </p>
+                    <p class="contact-text">
+                        <strong>Phone</strong><br>
+                        +60 3-1234 5678
+                    </p>
+                    <p class="contact-text">
+                        <strong>Email</strong><br>
+                        reservations@obsidiankl.com
+                    </p>
+                </div>
             </div>
 
-            <div class="contact-form">
-                <form id="feedbackForm">
-                    <input type="text" placeholder="Your Name" required>
-                    <input type="email" placeholder="Your Email" required>
-                    <textarea placeholder="Your Feedback" required></textarea>
-                    <button type="submit" class="cta-button">Submit Feedback</button>
+            <div class="contact-form-container">
+                <form id="feedbackForm" class="modern-form">
+                    <div class="input-group">
+                        <input type="text" placeholder="Your Name" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="input-group">
+                        <textarea placeholder="Your Feedback" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Submit Feedback</button>
                 </form>
             </div>
-
         </div>
-    </section>
+    </main>
 
     <div class="popup-overlay" id="popup">
-        <div class="popup">
+        <div class="popup-card">
+            <div class="check-icon">✓</div>
             <h3>Thank You!</h3>
-            <p>Your feedback has been submitted successfully.</p>
-            <button onclick="closePopup()" class="cta-button">Close</button>
+            <p>Your feedback has been submitted successfully. We will get back to you soon.</p>
+            <button onclick="closePopup()" class="close-btn">Close</button>
         </div>
     </div>
 

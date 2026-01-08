@@ -4,18 +4,20 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (form) {
         form.addEventListener("submit", function (e) {
-            e.preventDefault(); // Prevents the page from reloading
+            e.preventDefault(); // Prevents page reload
             
-            // Show the popup by changing display to flex
-            popup.style.display = "flex";
+            // Show the popup
+            if (popup) {
+                popup.style.display = "flex";
+            }
             
-            // Reset the form fields
+            // Clear inputs
             form.reset();
         });
     }
 });
 
-// Function for the Close button inside the popup
 function closePopup() {
+    // Redirects user back to main page
     window.location.href = 'hotel.php';
 }
