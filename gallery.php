@@ -28,11 +28,12 @@ session_start();
         </div>
             <div class="below-header-back">
             <a href="hotel.php" class="back-btn">← Back to Main</a>
-        </div>
-        <div class="logo">
+          </div>
+          
+          <div class="logo">
             <h1> The Obsidian </h1>
             <p> KUALA LUMPUR </p>
-        </div>
+          </div>
          <div class="header-right-actions">
             <div class="auth-links">
                 <a href="#" onclick="showAdminLogin()" class="nav-link">Sign In</a> 
