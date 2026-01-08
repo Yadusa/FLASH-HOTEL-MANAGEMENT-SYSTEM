@@ -8,14 +8,12 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us | The Obsidian Kuala Lumpur</title>
-
-    <link rel="stylesheet" href="hotelpage.css">
+    <link rel="stylesheet" href="../hotelpage.css">
 </head>
 
 <body>
 <div id="hotel-page">
 
-    <!-- HEADER (reuse your existing header) -->
     <header class="main-header">
         <div class="header-content">
             <div class="header-left-links">
@@ -35,16 +33,13 @@ session_start();
         </div>
     </header>
 
-    <!-- BACK BUTTON -->
     <div class="below-header-back">
         <a href="hotel.php" class="back-btn">← Back to Main</a>
     </div>
 
-    <!-- CONTACT SECTION -->
     <section class="contact-section">
         <div class="contact-container">
 
-            <!-- LEFT: CONTACT INFO -->
             <div class="contact-info">
                 <p class="tagline">Get In Touch</p>
                 <h2>Contact Us</h2>
@@ -63,7 +58,6 @@ session_start();
                 </p>
             </div>
 
-            <!-- RIGHT: FEEDBACK FORM -->
             <div class="contact-form">
                 <form id="feedbackForm">
                     <input type="text" placeholder="Your Name" required>
@@ -76,7 +70,6 @@ session_start();
         </div>
     </section>
 
-    <!-- SUCCESS POPUP -->
     <div class="popup-overlay" id="popup">
         <div class="popup">
             <h3>Thank You!</h3>
@@ -87,6 +80,6 @@ session_start();
 
 </div>
 
-<script src="contact.js"></script>
+<script src="../contact.js"></script>
 </body>
 </html>
