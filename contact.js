@@ -8,5 +8,5 @@ form.addEventListener("submit", function (e) {
 });
 
 function closePopup() {
-    popup.style.display = "none";
+    window.location.href = 'hotel.php';
 }

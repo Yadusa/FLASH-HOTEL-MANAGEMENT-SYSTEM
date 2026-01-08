@@ -9,7 +9,7 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us | The Obsidian Kuala Lumpur</title>
 
-    <link rel="stylesheet" href="hotelpage.css">
+    <link rel="stylesheet" href="../hotelpage.css">
 </head>
 
 <body>
@@ -87,6 +87,6 @@ session_start();
 
 </div>
 
-<script src="contact.js"></script>
+<script src="../contact.js"></script>
 </body>
 </html>
