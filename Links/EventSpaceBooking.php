@@ -242,6 +242,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <div class="popup-overlay">
     <div class="popup-card">
+        <button class="popup-close" onclick="closePopup()">✕</button>
+
         <div style="font-size:60px;">✧</div>
         <h3>Booking Received!</h3>
         <p>Your event space request has been submitted. Our team will contact you shortly.</p>

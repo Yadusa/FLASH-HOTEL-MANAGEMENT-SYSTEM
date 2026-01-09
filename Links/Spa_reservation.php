@@ -190,6 +190,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <div class="popup-overlay">
     <div class="popup-card">
+        <button class="popup-close" onclick="closePopup()">✕</button>
+
         <div style="font-size:50px;">🌿</div>
         <h3>Relaxation Awaits!</h3>
         <p>Your reservation has been submitted successfully.</p>

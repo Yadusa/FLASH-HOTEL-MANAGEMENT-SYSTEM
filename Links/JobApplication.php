@@ -220,6 +220,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <div class="popup-overlay">
     <div class="popup-card">
+        <button class="popup-close" onclick="closePopup()">✕</button>
+
         <div style="font-size:50px;">✉</div>
         <h3>Application Received!</h3>
         <p>Thank you for applying. Our HR team will review your application.</p>
