@@ -179,11 +179,10 @@ input, select, textarea {
 
 <body>
 
-<div class="top-nav">
-    <a href="../hotel.php" class="back-link">← Back to Main Page</a>
-</div>
-
 <h2>The Obsidian KL Reservation</h2>
+<div class="top-nav">
+    <a href="../specialoffers.html" class="back-link">← Back to Offers</a>
+</div>
 
 <form method="post" id="feedbackForm">
 

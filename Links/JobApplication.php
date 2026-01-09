@@ -186,11 +186,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <body>
 
+<h2>Work with Us – Obsidian Kuala Lumpur</h2>
 <div class="top-nav">
     <a href="../hotel.php" class="back-link">← Back to Main Page</a>
 </div>
-
-<h2>Work with Us – Obsidian Kuala Lumpur</h2>
 
 <?php if ($error_msg) echo "<div class='error-banner'>$error_msg</div>"; ?>
 

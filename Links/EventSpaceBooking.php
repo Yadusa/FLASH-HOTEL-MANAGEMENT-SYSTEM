@@ -160,11 +160,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <body>
 
+<h2>Event Reservations</h2>
 <div class="top-nav">
     <a href="../hotel.php" class="back-link">← Back to Main Page</a>
 </div>
-
-<h2>Event Reservations</h2>
 
 <form method="post" action="">
     <div class="form-grid">

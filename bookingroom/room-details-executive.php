@@ -72,25 +72,40 @@ $is_bookable = ($available > 0 && $status == 'Available');
                 </ul>
             </div>
 
-            <?php if ($available > 0): ?>
-                <div class="availability-box available">
-                    <h3><?php echo $available; ?> EXECUTIVE SUITE(S) AVAILABLE</h3>
-                </div>
-
-                <div class="cta-group" style="margin-top: 20px;">
-                    <?php if(isset($_SESSION['customer_username'])): ?>
-                        <a href="booking.php?room_name=Executive Suite&room_price=1000" class="btn btn-primary">Book Now →</a>
-                    <?php else: ?>
-                        <a href="../customer_login.php?redirect=bookingroom/booking.php&room_name=Executive Suite&room_price=1000" class="btn btn-primary">Book Now →</a>
-                    <?php endif; ?>
-                </div>
-            <?php else: ?>
-                <div class="availability-box out-of-stock" style="color: red; font-weight: bold;">
-                    Currently Fully Booked
-                </div>
-            <?php endif; ?>
-
+        <div class="status-container" style="margin-top: 20px;">
+        <?php if ($is_bookable): ?>
+        <div class="availability-box available">
+            <h3 style="color: #006644;"><?php echo $available; ?> EXECUTIVE SUITE(S) AVAILABLE</h3>
         </div>
+
+        <div class="cta-group" style="margin-top: 20px;">
+            <?php if(isset($_SESSION['customer_username'])): ?>
+                <a href="booking.php?room_name=Executive Suite&room_price=1000" class="btn btn-primary">Book Now →</a>
+            <?php else: ?>
+                <a href="../customer_login.php?redirect=bookingroom/booking.php&room_name=Executive Suite&room_price=1000" class="btn btn-primary">Book Now →</a>
+            <?php endif; ?>
+        </div>
+
+        <?php else: ?>
+          <div class="availability-box out-of-stock" style="padding: 20px; background: #ffebe6; border-radius: 8px; border: 1px solid #ffbdad;">
+            <h3 style="color: #bf2600; margin: 0;">
+                <?php 
+                    if ($status == 'Maintenance') {
+                        echo "UNDER MAINTENANCE";
+                        echo "<p style='font-size: 0.9rem; font-weight: normal; margin-top: 5px;'>This room is temporarily unavailable due to scheduled maintenance.</p>";
+                    } else {
+                        echo "CURRENTLY FULLY BOOKED";
+                        echo "<p style='font-size: 0.9rem; font-weight: normal; margin-top: 5px;'>Please check back later or explore our other luxury suites.</p>";
+                    }
+                ?>
+            </h3>
+         </div>
+        
+          <div class="cta-group" style="margin-top: 20px; opacity: 0.5;">
+            <button class="btn btn-secondary" disabled>Booking Unavailable</button>
+         </div>
+       <?php endif; ?>
+    </div>
     </div>
 </div>
 
