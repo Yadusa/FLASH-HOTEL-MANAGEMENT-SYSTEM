@@ -82,7 +82,7 @@ $conn->close();
 <body>
 
 <div class="top-nav">
-    <a href="hotel.php" class="back-btn">← Back to Main Page</a>
+    <a href="../hotel.php" class="back-btn">← Back to Main Page</a>
 </div>
 
 <h2>The Obsidian KL Reservation</h2>
@@ -132,7 +132,7 @@ $conn->close();
         <div style="font-size: 50px; color: #b8860b; margin-bottom: 15px;">✧</div>
         <h3>Thank You!</h3>
         <p>Your dinner reservation has been successfully submitted. We look forward to hosting you at The Obsidian.</p>
-        <a href="hotel.php" class="back-btn">Back to Main</a>
+        <a href="../hotel.php" class="back-btn">Back to Main</a>
     </div>
 </div>
 
