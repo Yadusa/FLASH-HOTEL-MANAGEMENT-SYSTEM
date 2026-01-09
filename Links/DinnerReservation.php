@@ -13,27 +13,28 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$show_popup = false; // Logic to track if we should show the popup
+$show_popup = false; 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $reservation_date = $conn->real_escape_string($_POST['reservation_date']);
-    $time_slot = $conn->real_escape_string($_POST['time_slot']);
-    $guests = (int)$_POST['guests'];
-    $full_name = $conn->real_escape_string($_POST['full_name']);
-    $contact_number = $conn->real_escape_string($_POST['contact_number']);
-    $email = $conn->real_escape_string($_POST['email']);
-    $room_number = $conn->real_escape_string($_POST['room_number']);
-  
-    $special_requests = $conn->real_escape_string($_POST['special_requests']);
-    $referral = $conn->real_escape_string($_POST['referral']);
+    // Sanitize and get inputs using the null coalescing operator to prevent warnings
+    $reservation_date = $conn->real_escape_string($_POST['reservation_date'] ?? '');
+    $time_slot        = $conn->real_escape_string($_POST['time_slot'] ?? '');
+    $guests           = (int)($_POST['guests'] ?? 0);
+    $full_name        = $conn->real_escape_string($_POST['full_name'] ?? '');
+    $contact_number   = $conn->real_escape_string($_POST['contact_number'] ?? '');
+    $email            = $conn->real_escape_string($_POST['email'] ?? '');
+    $room_number      = $conn->real_escape_string($_POST['room_number'] ?? '');
+    $special_requests = $conn->real_escape_string($_POST['special_requests'] ?? '');
+    $referral         = $conn->real_escape_string($_POST['referral'] ?? '');
 
+    // SQL Query - Removed dietary_restrictions and other_dietary
     $sql = "INSERT INTO DinnerReservation 
-            (reservation_date, time_slot, guests, full_name, contact_number, email, room_number, dietary_restrictions, other_dietary, special_requests, referral_source)
+            (reservation_date, time_slot, guests, full_name, contact_number, email, room_number, special_requests, referral_source)
             VALUES 
-            ('$reservation_date', '$time_slot', $guests, '$full_name', '$contact_number', '$email', '$room_number', '$dietary', '$other_dietary', '$special_requests', '$referral')";
+            ('$reservation_date', '$time_slot', $guests, '$full_name', '$contact_number', '$email', '$room_number', '$special_requests', '$referral')";
 
     if ($conn->query($sql) === TRUE) {
-        $show_popup = true; // Set to true so HTML knows to show the popup
+        $show_popup = true; 
     } else {
         echo "<script>alert('Error: " . $conn->error . "');</script>";
     }
@@ -47,10 +48,8 @@ $conn->close();
     <meta charset="UTF-8">
     <title>Obsidian KL Dinner Reservation</title>
     <style>
-        /* Basic Styling */
         body { font-family: 'Poppins', sans-serif; padding: 20px; background: #f4f4f4; color: #333; }
         
-        /* Back Button Styling */
         .top-nav { max-width: 600px; margin: 0 auto 15px auto; }
         .btn-back { text-decoration: none; color: #666; font-size: 14px; border-bottom: 1px solid #ccc; padding-bottom: 2px; }
         .btn-back:hover { color: #000; border-color: #000; }
@@ -68,7 +67,7 @@ $conn->close();
         .popup-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.8);
-            display: <?php echo $show_popup ? 'flex' : 'none'; ?>; /* Show only if $show_popup is true */
+            display: <?php echo $show_popup ? 'flex' : 'none'; ?>; 
             justify-content: center; align-items: center; z-index: 1000;
         }
         .popup-card {
@@ -114,8 +113,6 @@ $conn->close();
 
     <label>Room Number:</label>
     <input type="text" name="room_number">
-
-   
 
     <label>Special Requests:</label>
     <textarea name="special_requests" rows="3"></textarea>
