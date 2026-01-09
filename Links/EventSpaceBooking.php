@@ -67,6 +67,10 @@ $conn->close();
         .message { text-align: center; margin-bottom: 20px; color: green; font-weight: bold; }
         label { font-weight: bold; margin-top: 10px; display: block; }
     </style>
+    <div class="top-nav">
+    <a href="../hotel.php" class="back-link">← Back to Main Page</a>
+    
+    </div>
 </head>
 <body>
 
