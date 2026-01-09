@@ -27,18 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $special_requests = $conn->real_escape_string($_POST['special_requests'] ?? '');
     $referral         = $conn->real_escape_string($_POST['referral'] ?? '');
 
-    // SQL Query
-    $sql = "INSERT INTO DinnerReservation 
-            (reservation_date, time_slot, guests, full_name, contact_number, email, room_number, special_requests, referral_source)
-            VALUES 
-            ('$reservation_date', '$time_slot', $guests, '$full_name', '$contact_number', '$email', '$room_number', '$special_requests', '$referral')";
-
-    if ($conn->query($sql) === TRUE) {
-        $show_popup = true; 
-    } else {
-        // This will only show if there is a database error
-        echo "<script>alert('Database Error: " . $conn->error . "');</script>";
-    }
+   
 }
 $conn->close();
 ?>
@@ -144,12 +133,16 @@ $conn->close();
     <button type="submit" class="submit-btn">Submit Reservation</button>
 </form>
 
-<div class="popup-overlay">
+<form method="post" action="" id="feedbackForm">
+    <button type="submit" class="submit-btn">Submit Reservation</button>
+</form>
+
+<div class="popup-overlay" id="popup">
     <div class="popup-card">
-        <div style="font-size: 60px; color: #b8860b; margin-bottom: 15px;">✧</div>
+        <div style="font-size: 50px; color: #b8860b; margin-bottom: 15px;">✧</div>
         <h3>Thank You!</h3>
-        <p>Your dinner reservation has been successfully submitted. We look forward to hosting you at The Obsidian Kuala Lumpur.</p>
-        <a href="../hotel.php" class="popup-btn">Back to Main</a>
+        <p>Your dinner reservation has been successfully submitted.</p>
+        <button onclick="closePopup()" class="popup-btn">Back to Main</button>
     </div>
 </div>
 
