@@ -133,9 +133,7 @@ $conn->close();
     <button type="submit" class="submit-btn">Submit Reservation</button>
 </form>
 
-<form method="post" action="" id="feedbackForm">
-    <button type="submit" class="submit-btn">Submit Reservation</button>
-</form>
+
 
 <div class="popup-overlay" id="popup">
     <div class="popup-card">
@@ -145,6 +143,6 @@ $conn->close();
         <button onclick="closePopup()" class="popup-btn">Back to Main</button>
     </div>
 </div>
-
+<script src="../contact.js"></script>
 </body>
 </html>

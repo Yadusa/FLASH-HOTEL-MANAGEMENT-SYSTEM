@@ -167,6 +167,11 @@ body {
     transition: 0.3s;
 }
 
+.popup-overlay {
+    display: none; /* Change this from PHP logic to just 'none' */
+    position: fixed;
+    /* ... rest of your styles ... */
+}
 .close-btn:hover {
     background-color: var(--color-accent);
     color: var(--color-primary);
