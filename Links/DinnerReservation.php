@@ -23,8 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $contact_number = $conn->real_escape_string($_POST['contact_number']);
     $email = $conn->real_escape_string($_POST['email']);
     $room_number = $conn->real_escape_string($_POST['room_number']);
-    $dietary = $conn->real_escape_string($_POST['dietary']);
-    $other_dietary = $conn->real_escape_string($_POST['other_dietary']);
+  
     $special_requests = $conn->real_escape_string($_POST['special_requests']);
     $referral = $conn->real_escape_string($_POST['referral']);
 
@@ -116,13 +115,7 @@ $conn->close();
     <label>Room Number:</label>
     <input type="text" name="room_number">
 
-    <label>Dietary:</label>
-    <select name="dietary">
-        <option value="None">None</option>
-        <option value="Vegetarian">Vegetarian</option>
-        <option value="Vegan">Vegan</option>
-        <option value="Other">Other</option>
-    </select>
+   
 
     <label>Special Requests:</label>
     <textarea name="special_requests" rows="3"></textarea>
