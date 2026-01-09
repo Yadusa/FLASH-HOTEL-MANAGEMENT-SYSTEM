@@ -7,7 +7,7 @@ $dbname = "flashhotel";
 $username = "root";
 $password = "";
 
-$conn = new mysqli($host, $username, $password, $dbname);
+
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -31,11 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $guests          = (int)$_POST['guests'];
     $concerns        = $conn->real_escape_string($_POST['concerns']);
 
-    $sql = "INSERT INTO Spa 
-        (full_name, contact_number, email, room_number, appointment_date, time_slot, service, duration, guests, concerns)
-        VALUES 
-        ('$full_name', '$contact_number', '$email', '$room_number', '$appointment_date', '$time_slot', '$service', '$duration', $guests, '$concerns')";
-
+   
     if ($conn->query($sql) === TRUE) {
         $show_popup = true; 
     } else {
