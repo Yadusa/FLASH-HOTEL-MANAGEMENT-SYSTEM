@@ -3,22 +3,17 @@
 // Database credentials
 // ---------------------------
 $host = "localhost";
-$dbname = "flashhotel"; // Replace with your DB name
+$dbname = "flashhotel"; 
 $username = "root";
 $password = "";
 
-// Create connection
 $conn = new mysqli($host, $username, $password, $dbname);
 
-// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// ---------------------------
-// Handle form submission
-// ---------------------------
-$message = "";
+$show_popup = false; // Logic to track if we should show the popup
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $reservation_date = $conn->real_escape_string($_POST['reservation_date']);
@@ -33,19 +28,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $special_requests = $conn->real_escape_string($_POST['special_requests']);
     $referral = $conn->real_escape_string($_POST['referral']);
 
-    // Insert into database
     $sql = "INSERT INTO DinnerReservation 
-        (reservation_date, time_slot, guests, full_name, contact_number, email, room_number, dietary_restrictions, other_dietary, special_requests, referral_source)
-        VALUES 
-        ('$reservation_date', '$time_slot', $guests, '$full_name', '$contact_number', '$email', '$room_number', '$dietary', '$other_dietary', '$special_requests', '$referral')";
+            (reservation_date, time_slot, guests, full_name, contact_number, email, room_number, dietary_restrictions, other_dietary, special_requests, referral_source)
+            VALUES 
+            ('$reservation_date', '$time_slot', $guests, '$full_name', '$contact_number', '$email', '$room_number', '$dietary', '$other_dietary', '$special_requests', '$referral')";
 
     if ($conn->query($sql) === TRUE) {
-        $message = "Dinner reservation submitted successfully!";
+        $show_popup = true; // Set to true so HTML knows to show the popup
     } else {
-        $message = "Error: " . $conn->error;
+        echo "<script>alert('Error: " . $conn->error . "');</script>";
     }
 }
-
 $conn->close();
 ?>
 
@@ -55,42 +48,63 @@ $conn->close();
     <meta charset="UTF-8">
     <title>Obsidian KL Dinner Reservation</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; background: #f7f7f7; }
-        h2 { text-align: center; color: #333; }
-        form { max-width: 600px; margin: auto; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);}
-        input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border-radius: 4px; border: 1px solid #ccc; box-sizing: border-box;}
-        button { padding: 12px 20px; background: #007bff; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
-        button:hover { background: #0056b3; }
-        .message { text-align: center; margin-bottom: 20px; color: green; font-weight: bold; }
-        label { font-weight: bold; margin-top: 10px; display: block; }
+        /* Basic Styling */
+        body { font-family: 'Poppins', sans-serif; padding: 20px; background: #f4f4f4; color: #333; }
+        
+        /* Back Button Styling */
+        .top-nav { max-width: 600px; margin: 0 auto 15px auto; }
+        .btn-back { text-decoration: none; color: #666; font-size: 14px; border-bottom: 1px solid #ccc; padding-bottom: 2px; }
+        .btn-back:hover { color: #000; border-color: #000; }
+
+        h2 { text-align: center; color: #1a1a1a; }
+        form { max-width: 600px; margin: auto; background: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);}
+        
+        label { font-weight: bold; margin-top: 15px; display: block; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
+        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border-radius: 6px; border: 1px solid #ddd; box-sizing: border-box;}
+        
+        button.submit-btn { width: 100%; padding: 15px; background: #1a1a1a; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; margin-top: 20px; transition: 0.3s; }
+        button.submit-btn:hover { background: #444; }
+
+        /* --- POPUP OVERLAY --- */
+        .popup-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: <?php echo $show_popup ? 'flex' : 'none'; ?>; /* Show only if $show_popup is true */
+            justify-content: center; align-items: center; z-index: 1000;
+        }
+        .popup-card {
+            background: white; padding: 40px; border-radius: 20px; text-align: center;
+            max-width: 400px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .popup-card h3 { font-size: 24px; margin-bottom: 10px; color: #1a1a1a; }
+        .popup-card p { color: #666; margin-bottom: 25px; }
+        .btn-main { display: inline-block; padding: 12px 30px; background: #1a1a1a; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<h2>Obsidian KL Dinner Reservation</h2>
+<div class="top-nav">
+    <a href="hotel.php" class="btn-back">← Back to Main Page</a>
+</div>
 
-<?php if ($message) echo "<p class='message'>$message</p>"; ?>
+<h2>The Obsidian KL Reservation</h2>
 
 <form method="post" action="">
     <label>Date of Reservation:</label>
     <input type="date" name="reservation_date" required>
 
-    <label>Preferred Time Slot:</label>
+    <label>Time Slot:</label>
     <select name="time_slot" required>
         <option value="6:00 PM">6:00 PM</option>
-        <option value="6:30 PM">6:30 PM</option>
         <option value="7:00 PM">7:00 PM</option>
-        <option value="7:30 PM">7:30 PM</option>
         <option value="8:00 PM">8:00 PM</option>
-        <option value="8:30 PM">8:30 PM</option>
         <option value="9:00 PM">9:00 PM</option>
-        <option value="9:30 PM">9:30 PM</option>
     </select>
 
-    <label>Number of Guests (including yourself):</label>
+    <label>Guests:</label>
     <input type="number" name="guests" min="1" required>
 
-    <label>Full Name for Reservation:</label>
+    <label>Full Name:</label>
     <input type="text" name="full_name" required>
 
     <label>Contact Number:</label>
@@ -102,34 +116,35 @@ $conn->close();
     <label>Room Number:</label>
     <input type="text" name="room_number">
 
-    <label>Dietary Restrictions / Allergies:</label>
+    <label>Dietary:</label>
     <select name="dietary">
         <option value="None">None</option>
         <option value="Vegetarian">Vegetarian</option>
         <option value="Vegan">Vegan</option>
-        <option value="Gluten-Free">Gluten-Free</option>
-        <option value="Nut Allergy">Nut Allergy</option>
-        <option value="Shellfish Allergy">Shellfish Allergy</option>
         <option value="Other">Other</option>
     </select>
 
-    <label>If 'Other' dietary restrictions, please specify:</label>
-    <input type="text" name="other_dietary">
-
-    <label>Any special requests (occasion, seating, etc.):</label>
+    <label>Special Requests:</label>
     <textarea name="special_requests" rows="3"></textarea>
 
-    <label>How did you hear about The Obsidian KL?</label>
+    <label>Referral:</label>
     <select name="referral">
         <option value="Social Media">Social Media</option>
         <option value="Search Engine">Search Engine</option>
         <option value="Word of Mouth">Word of Mouth</option>
-        <option value="Online Review/Article">Online Review/Article</option>
-        <option value="Other">Other</option>
     </select>
 
-    <button type="submit">Submit Reservation</button>
+    <button type="submit" class="submit-btn">Submit Reservation</button>
 </form>
+
+<div class="popup-overlay">
+    <div class="popup-card">
+        <div style="font-size: 50px; color: #b8860b; margin-bottom: 15px;">✧</div>
+        <h3>Thank You!</h3>
+        <p>Your dinner reservation has been successfully submitted. We look forward to hosting you at The Obsidian.</p>
+        <a href="hotel.php" class="btn-main">Back to Main</a>
+    </div>
+</div>
 
 </body>
 </html>
