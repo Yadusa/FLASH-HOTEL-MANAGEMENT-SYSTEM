@@ -45,7 +45,7 @@ session_start();
                     <span>|</span>
                     <a href="customer_register.php" class="nav-link">Register</a>
                     <span>|</span>
-                    <a href="customer_register.php" class="nav-link">Admin</a>
+                    <a href="login.php" class="nav-link">Admin</a>
                 <?php endif; ?> 
             </div>
             <script>
