@@ -3,22 +3,17 @@
 // Database credentials
 // ---------------------------
 $host = "localhost";
-$dbname = "flashhotel"; // Replace with your DB name
+$dbname = "flashhotel"; 
 $username = "root";
 $password = "";
 
-// Create connection
 $conn = new mysqli($host, $username, $password, $dbname);
 
-// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// ---------------------------
-// Handle form submission
-// ---------------------------
-$message = "";
+$show_popup = false; // Logic to trigger popup
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $contact_name = $conn->real_escape_string($_POST['contact_name']);
@@ -36,19 +31,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $urgency = $conn->real_escape_string($_POST['urgency']);
     $special_requests = $conn->real_escape_string($_POST['special_requests']);
 
-    // Insert into database
     $sql = "INSERT INTO EventSpaceBooking
         (contact_name, email, phone_number, event_title, event_date, start_time, end_time, attendees, event_type, space_type, equipment_setup, catering_requirements, urgency_level, special_requests)
         VALUES
         ('$contact_name', '$email', '$phone_number', '$event_title', '$event_date', '$start_time', '$end_time', $attendees, '$event_type', '$space_type', '$equipment_setup', '$catering', '$urgency', '$special_requests')";
 
     if ($conn->query($sql) === TRUE) {
-        $message = "Event space booking submitted successfully!";
+        $show_popup = true; // Set to true to show the overlay
     } else {
-        $message = "Error: " . $conn->error;
+        echo "<script>alert('Error: " . $conn->error . "');</script>";
     }
 }
-
 $conn->close();
 ?>
 
@@ -56,29 +49,56 @@ $conn->close();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Obsidian KL Event Space Booking</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 20px; background: #f7f7f7; }
-        h2 { text-align: center; color: #333; }
-        form { max-width: 700px; margin: auto; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);}
-        input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border-radius: 4px; border: 1px solid #ccc; box-sizing: border-box;}
-        button { padding: 12px 20px; background: #007bff; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
-        button:hover { background: #0056b3; }
-        .message { text-align: center; margin-bottom: 20px; color: green; font-weight: bold; }
-        label { font-weight: bold; margin-top: 10px; display: block; }
-    </style>
-    <div class="top-nav">
-    <a href="../hotel.php" class="back-link">← Back to Main Page</a>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     
-    </div>
+    <style>
+        body { font-family: 'Poppins', sans-serif; padding: 20px; background: #f4f4f4; color: #333; }
+        
+        .top-nav { max-width: 700px; margin: 0 auto 15px auto; }
+        .back-link { text-decoration: none; color: #666; font-size: 14px; border-bottom: 1px solid #ccc; padding-bottom: 2px; }
+        .back-link:hover { color: #000; border-color: #000; }
+
+        h2 { text-align: center; color: #1a1a1a; font-family: 'Playfair Display', serif; font-size: 32px; }
+        form { max-width: 700px; margin: auto; background: #fff; padding: 35px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);}
+        
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .full-width { grid-column: span 2; }
+        
+        label { font-weight: 600; margin-top: 10px; display: block; font-size: 13px; text-transform: uppercase; color: #555; }
+        input, select, textarea { width: 100%; padding: 12px; margin-top: 5px; border-radius: 6px; border: 1px solid #ddd; box-sizing: border-box; font-family: inherit;}
+        
+        .checkbox-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px 0; }
+        .checkbox-item { font-size: 14px; display: flex; align-items: center; gap: 8px; }
+        .checkbox-item input { width: auto; margin: 0; }
+
+        button.submit-btn { width: 100%; padding: 15px; background: #1a1a1a; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; margin-top: 20px; transition: 0.3s; font-weight: 600; }
+        button.submit-btn:hover { background: #444; }
+
+        /* --- POPUP OVERLAY --- */
+        .popup-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: <?php echo $show_popup ? 'flex' : 'none'; ?>; 
+            justify-content: center; align-items: center; z-index: 2000;
+        }
+        .popup-card {
+            background: white; padding: 40px; border-radius: 20px; text-align: center;
+            max-width: 450px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .popup-card h3 { font-size: 26px; margin-bottom: 10px; color: #1a1a1a; }
+        .popup-card p { color: #666; margin-bottom: 25px; line-height: 1.6; }
+        .popup-btn { display: inline-block; padding: 12px 30px; background: #1a1a1a; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; }
+    </style>
 </head>
 <body>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<div class="top-nav">
+    <a href="../hotel.php" class="back-link">← Back to Main Page</a>
+</div>
 
 <h2>Event Reservations</h2>
-
-<?php if ($message) echo "<p class='message'>$message</p>"; ?>
 
 <form method="post" action="">
     <div class="form-grid">
@@ -169,8 +189,8 @@ $conn->close();
             <label>Urgency Level</label>
             <select name="urgency">
                 <option value="Not Urgent">Standard Processing</option>
-                <option value="3">Priority (Level 3)</option>
-                <option value="5">Urgent (Level 5)</option>
+                <option value="Priority">Priority (Level 3)</option>
+                <option value="Urgent">Urgent (Level 5)</option>
                 <option value="Immediate Need">Immediate / Same Day</option>
             </select>
         </div>
@@ -181,8 +201,17 @@ $conn->close();
         </div>
     </div>
 
-    <button type="submit">Confirm Booking Request</button>
+    <button type="submit" class="submit-btn">Confirm Booking Request</button>
 </form>
+
+<div class="popup-overlay">
+    <div class="popup-card">
+        <div style="font-size: 60px; color: #b8860b; margin-bottom: 15px;">✧</div>
+        <h3>Booking Received!</h3>
+        <p>Your event space inquiry has been successfully submitted. Our events team will review your requirements and contact you within 24 hours.</p>
+        <a href="../hotel.php" class="popup-btn">Back to Main</a>
+    </div>
+</div>
 
 </body>
 </html>
