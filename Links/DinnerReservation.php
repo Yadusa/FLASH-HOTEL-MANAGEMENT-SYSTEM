@@ -51,8 +51,8 @@ $conn->close();
         body { font-family: 'Poppins', sans-serif; padding: 20px; background: #f4f4f4; color: #333; }
         
         .top-nav { max-width: 600px; margin: 0 auto 15px auto; }
-        .btn-back { text-decoration: none; color: #666; font-size: 14px; border-bottom: 1px solid #ccc; padding-bottom: 2px; }
-        .btn-back:hover { color: #000; border-color: #000; }
+        .back-btn { text-decoration: none; color: #666; font-size: 14px; border-bottom: 1px solid #ccc; padding-bottom: 2px; }
+        .back-btn:hover { color: #000; border-color: #000; }
 
         h2 { text-align: center; color: #1a1a1a; }
         form { max-width: 600px; margin: auto; background: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);}
@@ -76,13 +76,13 @@ $conn->close();
         }
         .popup-card h3 { font-size: 24px; margin-bottom: 10px; color: #1a1a1a; }
         .popup-card p { color: #666; margin-bottom: 25px; }
-        .btn-main { display: inline-block; padding: 12px 30px; background: #1a1a1a; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; }
+        .back-btn { display: inline-block; padding: 12px 30px; background: #1a1a1a; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="top-nav">
-    <a href="hotel.php" class="btn-back">← Back to Main Page</a>
+    <a href="hotel.php" class="back-btn">← Back to Main Page</a>
 </div>
 
 <h2>The Obsidian KL Reservation</h2>
@@ -132,7 +132,7 @@ $conn->close();
         <div style="font-size: 50px; color: #b8860b; margin-bottom: 15px;">✧</div>
         <h3>Thank You!</h3>
         <p>Your dinner reservation has been successfully submitted. We look forward to hosting you at The Obsidian.</p>
-        <a href="hotel.php" class="btn-main">Back to Main</a>
+        <a href="hotel.php" class="back-btn">Back to Main</a>
     </div>
 </div>
 
