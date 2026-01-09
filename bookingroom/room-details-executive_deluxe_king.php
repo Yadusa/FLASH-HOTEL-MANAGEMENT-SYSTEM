@@ -79,11 +79,11 @@ if ($result && $result->num_rows > 0) {
                     <?php else: ?>
                         <a href="../customer_login.php?redirect=bookingroom/booking.php&room_name=Executive Deluxe King&room_price=420" class="btn btn-primary">Book Now →</a>
                     <?php endif; ?>
-                </div>
-            <?php else: ?>
-                <div class="availability-box out-of-stock" style="color: #b91c1c; background: #fee2e2; padding: 10px; border-radius: 8px; text-align: center; font-weight: bold;">
+                    </div>
+                   <?php else: ?>
+                  <div class="availability-box out-of-stock" style="color: #b91c1c; background: #fee2e2; padding: 10px; border-radius: 8px; text-align: center; font-weight: bold;">
                     Currently Fully Booked
-                </div>
+                 </div>
             <?php endif; ?>
 
         </div>

@@ -4,16 +4,18 @@ session_start();
 require_once "../db.php";
 
 // 2. Fetch the correct column 'available_slots' based on your database screenshot
-$sql = "SELECT available_slots FROM rooms WHERE room_name = 'Executive Suite'";
+// Modified query for room_details_executive.php
+$sql = "SELECT available_slots, room_status FROM rooms WHERE room_name = 'Executive Suite'";
 $result = $conn->query($sql);
+$row = $result->fetch_assoc();
 
-if ($result && $result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    $available = $row['available_slots'];
-} else {
-    $available = 0; 
-}
+$available = $row['available_slots'];
+$status = $row['room_status'];
+
+// The room is only "Bookable" if slots > 0 AND status is 'Available'
+$is_bookable = ($available > 0 && $status == 'Available');
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

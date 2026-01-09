@@ -17,8 +17,8 @@ if(!isset($_GET['room_name']) || !isset($_GET['room_price'])) {
 $room_name = $_GET['room_name'];
 $room_price = $_GET['room_price'];
 
-$today = date('Y-m-d'); // today's date
-$maxDate = date('Y-m-d', strtotime('+5 months')); // max 5 months from today
+$today = date('Y-m-d'); 
+$maxDate = date('Y-m-d', strtotime('+5 months')); 
 
 // Booking submission
 $success_message = '';
@@ -31,32 +31,46 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $children = intval($_POST['children']);
     $totalGuests = $adults + $children;
 
-// Validation
-if ($adults < 1 || $adults > 5) {
-    $error_message = "Number of adults must be between 1 and 5.";
-} elseif ($totalGuests > 5) {
-    $error_message = "Total guests (adults + children) cannot exceed 5 per room.";
-} else {
-    // Everything is valid, proceed to calculate nights and insert booking
-    $diff = strtotime($checkout) - strtotime($checkin);
-    $nights = max(1, ceil($diff / (60*60*24)));
-    $total_price = $nights * $room_price;
-
-    $stmt = $conn->prepare("INSERT INTO bookings (customer_username, room_name, room_price, checkin, checkout, adults, children, total_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssissiii", $customer_username, $room_name, $room_price, $checkin, $checkout, $adults, $children, $total_price);
-
-    if ($stmt->execute()) {
-        header("Location: ../payment.php?room_name=" . urlencode($room_name) . "&room_price=$room_price&check_in=$checkin&check_out=$checkout&adults=$adults&children=$children");
-        exit();
+    // Validation
+    if ($adults < 1 || $adults > 5) {
+        $error_message = "Number of adults must be between 1 and 5.";
+    } elseif ($totalGuests > 5) {
+        $error_message = "Total guests (adults + children) cannot exceed 5 per room.";
     } else {
-        $error_message = "Error while booking: " . $conn->error;
+        $diff = strtotime($checkout) - strtotime($checkin);
+        $nights = max(1, ceil($diff / (60*60*24)));
+        $total_price = $nights * $room_price;
+
+        $stmt = $conn->prepare("INSERT INTO bookings (customer_username, room_name, room_price, checkin, checkout, adults, children, total_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssissiii", $customer_username, $room_name, $room_price, $checkin, $checkout, $adults, $children, $total_price);
+
+        if ($stmt->execute()) {
+            
+            // --- INSERTED CODE START ---
+            
+            // 1. Reduce the available slots by 1 for the booked room
+            $update_slots_sql = "UPDATE rooms SET available_slots = available_slots - 1 WHERE room_name = ?";
+            $update_stmt = $conn->prepare($update_slots_sql);
+            $update_stmt->bind_param("s", $room_name);
+            $update_stmt->execute();
+            $update_stmt->close();
+
+            // 2. Automatically set status to 'Occupied' if slots reach 0
+            $check_zero_sql = "UPDATE rooms SET room_status = 'Occupied' WHERE available_slots <= 0 AND room_status = 'Available'";
+            $conn->query($check_zero_sql);
+            
+            // --- INSERTED CODE END ---
+
+            header("Location: booking_confirm.php?room_name=" . urlencode($room_name) . "&room_price=$room_price&check_in=$checkin&check_out=$checkout&adults=$adults&children=$children");
+            exit();
+
+        } else {
+            $error_message = "Error while booking: " . $conn->error;
+        }
+
+        $stmt->close();
     }
-
-    $stmt->close();
 }
-
-}
-
 ?>
 
 
@@ -313,6 +327,47 @@ updateChildrenMax();
 
     <a href="roombooking.php" class="btn btn-secondary" style="margin-top:20px;">← Back to Rooms</a>
 </div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const checkin = document.getElementById('checkin');
+    const checkout = document.getElementById('checkout');
+
+    // Update checkout min whenever check-in changes
+    checkin.addEventListener('change', () => {
+        if (!checkin.value) return;
+
+        const checkinDate = new Date(checkin.value);
+        const nextDay = new Date(checkinDate);
+        nextDay.setDate(checkinDate.getDate() + 1); // checkout at least 1 day after check-in
+
+        const yyyy = nextDay.getFullYear();
+        const mm = String(nextDay.getMonth() + 1).padStart(2, '0');
+        const dd = String(nextDay.getDate()).padStart(2, '0');
+
+        const minDate = `${yyyy}-${mm}-${dd}`;
+        checkout.min = minDate;
+
+        // Clear checkout if it's now before the new min
+        if (checkout.value && checkout.value < checkout.min) {
+            checkout.value = '';
+        }
+    });
+
+    // Optional: set checkout default min to tomorrow if checkin is empty
+    if (!checkin.value) {
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+        const yyyy = tomorrow.getFullYear();
+        const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+        const dd = String(tomorrow.getDate()).padStart(2, '0');
+        checkout.min = `${yyyy}-${mm}-${dd}`;
+    }
+});
+</script>
+
 
 </body>
 </html>

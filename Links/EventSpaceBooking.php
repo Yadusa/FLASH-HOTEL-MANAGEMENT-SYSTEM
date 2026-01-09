@@ -70,84 +70,114 @@ $conn->close();
 </head>
 <body>
 
-<h2>Obsidian KL Event Space Booking</h2>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<h2>Event Reservations</h2>
 
 <?php if ($message) echo "<p class='message'>$message</p>"; ?>
 
 <form method="post" action="">
-    <label>Contact Person Full Name:</label>
-    <input type="text" name="contact_name" required>
+    <div class="form-grid">
+        <div class="full-width">
+            <label>Contact Person Full Name</label>
+            <input type="text" name="contact_name" placeholder="E.g. Alexander Vance" required>
+        </div>
 
-    <label>Email Address:</label>
-    <input type="email" name="email" required>
+        <div>
+            <label>Email Address</label>
+            <input type="email" name="email" placeholder="vance@obsidian.com" required>
+        </div>
 
-    <label>Phone Number:</label>
-    <input type="text" name="phone_number" required>
+        <div>
+            <label>Phone Number</label>
+            <input type="text" name="phone_number" placeholder="+60..." required>
+        </div>
 
-    <label>Event/Meeting Title:</label>
-    <input type="text" name="event_title" required>
+        <div class="full-width">
+            <label>Event/Meeting Title</label>
+            <input type="text" name="event_title" placeholder="Annual Strategy Summit" required>
+        </div>
 
-    <label>Date of Event/Meeting:</label>
-    <input type="date" name="event_date" required>
+        <div>
+            <label>Date of Event</label>
+            <input type="date" name="event_date" required>
+        </div>
 
-    <label>Start Time:</label>
-    <input type="time" name="start_time" required>
+        <div>
+            <label>Attendees</label>
+            <input type="number" name="attendees" min="1" placeholder="Number of Guests" required>
+        </div>
 
-    <label>End Time:</label>
-    <input type="time" name="end_time" required>
+        <div>
+            <label>Start Time</label>
+            <input type="time" name="start_time" required>
+        </div>
 
-    <label>Estimated Number of Attendees:</label>
-    <input type="number" name="attendees" min="1" required>
+        <div>
+            <label>End Time</label>
+            <input type="time" name="end_time" required>
+        </div>
 
-    <label>Type of Event:</label>
-    <select name="event_type" required>
-        <option value="Internal Team Meeting">Internal Team Meeting</option>
-        <option value="Client Presentation">Client Presentation</option>
-        <option value="Workshop/Training Session">Workshop/Training Session</option>
-        <option value="Conference/Seminar">Conference/Seminar</option>
-        <option value="Social Event/Reception">Social Event/Reception</option>
-        <option value="Other">Other</option>
-    </select>
+        <div>
+            <label>Type of Event</label>
+            <select name="event_type" required>
+                <option value="" disabled selected>Select Event Type</option>
+                <option value="Internal Team Meeting">Internal Team Meeting</option>
+                <option value="Client Presentation">Client Presentation</option>
+                <option value="Workshop/Training Session">Workshop/Training Session</option>
+                <option value="Conference/Seminar">Conference/Seminar</option>
+                <option value="Social Event/Reception">Social Event/Reception</option>
+            </select>
+        </div>
 
-    <label>Preferred Space Type:</label>
-    <select name="space_type" required>
-        <option value="Small Meeting Room (1-8 people)">Small Meeting Room (1-8 people)</option>
-        <option value="Medium Meeting Room (9-20 people)">Medium Meeting Room (9-20 people)</option>
-        <option value="Large Conference Hall (21+ people)">Large Conference Hall (21+ people)</option>
-        <option value="Flexible Event Space">Flexible Event Space</option>
-        <option value="No Preference">Do not have a preference</option>
-    </select>
+        <div>
+            <label>Preferred Space Type</label>
+            <select name="space_type" required>
+                <option value="" disabled selected>Select Space</option>
+                <option value="Small Meeting Room">Small Meeting Room (1-8)</option>
+                <option value="Medium Meeting Room">Medium Meeting Room (9-20)</option>
+                <option value="Large Conference Hall">Large Conference Hall (21+)</option>
+                <option value="Flexible Event Space">Flexible Event Space</option>
+            </select>
+        </div>
 
-    <label>Required Equipment/Setup:</label>
-    <input type="checkbox" name="equipment_setup[]" value="Projector and Screen"> Projector and Screen
-    <input type="checkbox" name="equipment_setup[]" value="Whiteboard/Flipchart"> Whiteboard/Flipchart
-    <input type="checkbox" name="equipment_setup[]" value="Video Conferencing System"> Video Conferencing System
-    <input type="checkbox" name="equipment_setup[]" value="Microphone and Speakers"> Microphone and Speakers
-    <input type="checkbox" name="equipment_setup[]" value="Laptop/Computer Access"> Laptop/Computer Access
-    <input type="checkbox" name="equipment_setup[]" value="Specialized Seating Arrangement"> Specialized Seating Arrangement (U-shape, Classroom)
+        <div class="full-width">
+            <label>Required Equipment & Setup</label>
+            <div class="checkbox-group">
+                <div class="checkbox-item"><input type="checkbox" name="equipment_setup[]" value="Projector"> Projector & Screen</div>
+                <div class="checkbox-item"><input type="checkbox" name="equipment_setup[]" value="Whiteboard"> Whiteboard</div>
+                <div class="checkbox-item"><input type="checkbox" name="equipment_setup[]" value="Video Conf"> Video Conferencing</div>
+                <div class="checkbox-item"><input type="checkbox" name="equipment_setup[]" value="Audio"> Audio/Mic System</div>
+            </div>
+        </div>
 
-    <label>Catering Requirements:</label>
-    <input type="checkbox" name="catering[]" value="Coffee/Tea Service"> Coffee/Tea Service
-    <input type="checkbox" name="catering[]" value="Light Snacks"> Light Snacks (pastries, cookies)
-    <input type="checkbox" name="catering[]" value="Lunch Buffet"> Lunch Buffet
-    <input type="checkbox" name="catering[]" value="Dinner Service"> Dinner Service
-    <input type="checkbox" name="catering[]" value="None"> None
+        <div class="full-width">
+            <label>Catering Requirements</label>
+            <div class="checkbox-group">
+                <div class="checkbox-item"><input type="checkbox" name="catering[]" value="Coffee/Tea"> Coffee/Tea Service</div>
+                <div class="checkbox-item"><input type="checkbox" name="catering[]" value="Snacks"> Light Snacks</div>
+                <div class="checkbox-item"><input type="checkbox" name="catering[]" value="Lunch"> Lunch Buffet</div>
+                <div class="checkbox-item"><input type="checkbox" name="catering[]" value="Dinner"> Dinner Service</div>
+            </div>
+        </div>
 
-    <label>Level of Urgency for this Booking:</label>
-    <select name="urgency">
-        <option value="Not Urgent">Not Urgent</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="Immediate Need">Immediate Need</option>
-    </select>
+        <div>
+            <label>Urgency Level</label>
+            <select name="urgency">
+                <option value="Not Urgent">Standard Processing</option>
+                <option value="3">Priority (Level 3)</option>
+                <option value="5">Urgent (Level 5)</option>
+                <option value="Immediate Need">Immediate / Same Day</option>
+            </select>
+        </div>
 
-    <label>Special Requests or Additional Notes:</label>
-    <textarea name="special_requests" rows="4"></textarea>
+        <div class="full-width">
+            <label>Special Requests</label>
+            <textarea name="special_requests" rows="3" placeholder="Dietary restrictions, specific layout needs..."></textarea>
+        </div>
+    </div>
 
-    <button type="submit">Submit Booking</button>
+    <button type="submit">Confirm Booking Request</button>
 </form>
 
 </body>
