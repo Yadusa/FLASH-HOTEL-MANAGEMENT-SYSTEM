@@ -19,5 +19,5 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function closePopup() {
     // Redirects user back to main page
-    window.location.href = 'contactpage.php';
+   window.location.href = '../hotel.php';
 }

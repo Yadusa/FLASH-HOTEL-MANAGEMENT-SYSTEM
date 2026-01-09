@@ -94,6 +94,7 @@ $conn->close();
 <h2>The Obsidian KL Reservation</h2>
 
 <form method="post" action="">
+    <form id="feedbackForm">
     <label>Date of Reservation:</label>
     <input type="date" name="reservation_date" required>
 
@@ -131,6 +132,7 @@ $conn->close();
     </select>
 
     <button type="submit" class="submit-btn">Submit Reservation</button>
+</form>
 </form>
 
 
