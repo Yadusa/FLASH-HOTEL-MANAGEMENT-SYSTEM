@@ -46,6 +46,44 @@ $result = $conn->query($sql);
             background: #e1f5fe;
             color: #01579b;
         }
+        .btn-edit, .btn-delete {
+          padding: 6px 12px;
+          border-radius: 4px;
+          text-decoration: none;
+          font-size: 0.85em;
+          font-weight: bold;
+          display: inline-block;
+        }
+
+        .btn-edit {
+         background-color: #ffc107;
+         color: #000;
+         margin-right: 5px;
+        }
+
+        .btn-delete {
+         background-color: #dc3545;
+         color: #fff;
+        }
+
+        .btn-edit:hover { background-color: #e0a800; }
+        .btn-delete:hover { background-color: #c82333; }
+
+        /* Status Badge Base */
+        
+        /* Pending: Yellow/Orange theme */
+        .status-pending {
+         background-color: #fff3cd;
+         color: #856404;
+         border: 1px solid #ffeeba; 
+        }
+
+        /* Paid: Green theme */
+        .status-paid {
+         background-color: #d4edda;
+         color: #155724;
+         border: 1px solid #c3e6cb;
+        }
     </style>
 </head>
 <body>
@@ -64,6 +102,7 @@ $result = $conn->query($sql);
 
     <a href="logout.php" class="logout">Logout</a>
 </div>
+
 
 <div class="main-content">
     <div class="topbar">
@@ -84,35 +123,50 @@ $result = $conn->query($sql);
         <table class="booking-table">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Customer</th>
-                    <th>Room Type</th>
-                    <th>Check-in</th>
-                    <th>Check-out</th>
-                    <th>Guests</th>
-                    <th>Total Price</th>
-                    <th>Booked On</th>
+                 <th>ID</th>
+                 <th>Customer</th>
+                 <th>Room Type</th>
+                 <th>Check-in</th>
+                 <th>Check-out</th>
+                 <th>Guests</th>
+                 <th>Total Price</th>
+                 <th>Payment Status</th>
+                 <th>Booked On</th>
+                 <th>Actions</th> 
                 </tr>
             </thead>
             <tbody>
-                <?php
-                if ($result->num_rows > 0) {
-                    while($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>#" . $row['id'] . "</td>";
-                        echo "<td><strong>" . htmlspecialchars($row['customer_username']) . "</strong></td>";
-                        echo "<td>" . htmlspecialchars($row['room_name']) . "</td>";
-                        echo "<td>" . $row['checkin'] . "</td>";
-                        echo "<td>" . $row['checkout'] . "</td>";
-                        echo "<td>" . $row['adults'] . "A, " . $row['children'] . "C</td>";
-                        echo "<td>$" . number_format($row['total_price'], 2) . "</td>";
-                        echo "<td>" . date('M d, Y H:i', strtotime($row['created_at'])) . "</td>";
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='8' style='text-align:center;'>No bookings found.</td></tr>";
-                }
-                ?>
+             <?php
+             if ($result->num_rows > 0) {
+              while($row = $result->fetch_assoc()) {
+                // Determine CSS class based on status
+                $statusClass = (strtolower($row['payment_status']) == 'paid') ? 'status-paid' : 'status-pending';
+                
+                echo "<tr>";
+                echo "<td>#" . $row['id'] . "</td>";
+                echo "<td><strong>" . htmlspecialchars($row['customer_username']) . "</strong></td>";
+                echo "<td>" . htmlspecialchars($row['room_name']) . "</td>";
+                echo "<td>" . $row['checkin'] . "</td>";
+                echo "<td>" . $row['checkout'] . "</td>";
+                echo "<td>" . $row['adults'] . "A, " . $row['children'] . "C</td>";
+                echo "<td>$" . number_format($row['total_price'], 2) . "</td>";
+                
+                // Displaying the status with a badge
+                echo "<td><span class='status-badge " . $statusClass . "'>" . htmlspecialchars($row['payment_status']) . "</span></td>";
+                
+                echo "<td>" . date('M d, Y H:i', strtotime($row['created_at'])) . "</td>";
+                
+                // Actions from previous step
+                echo "<td>
+                        <a href='edit_booking.php?id=" . $row['id'] . "' class='btn-edit'>Edit</a>
+                        <a href='delete_booking.php?id=" . $row['id'] . "' class='btn-delete' onclick='return confirm(\"Delete this booking?\")'>Delete</a>
+                      </td>";
+                echo "</tr>";
+              }
+              } else {
+             echo "<tr><td colspan='10' style='text-align:center;'>No bookings found.</td></tr>";
+              }
+             ?>
             </tbody>
         </table>
     </div>
