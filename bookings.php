@@ -97,7 +97,12 @@ $result = $conn->query($sql);
     <a href="dashboard.php"> Dashboard</a>
 
     <?php if ($adminRole === "superadmin") { ?>
+        <a href="manage_rooms.php"> Manage Rooms</a>
+        <a href="manage_subadmins.php"> Manage Subadmins</a>
         <a href="bookings.php" class="active"> Bookings</a>
+        <a href="customers.php"> Customers</a>
+        <a href="manage_staff.php" > Manage Staff</a>
+        <a href="reports.php"> Reports</a>
     <?php } ?>
 
     <a href="logout.php" class="logout">Logout</a>

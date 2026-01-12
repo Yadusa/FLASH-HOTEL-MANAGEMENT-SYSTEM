@@ -71,9 +71,10 @@ $result = $conn->query("SELECT * FROM admins WHERE role IN ('subadmin', 'recepti
     <a href="manage_rooms.php"> Manage Rooms</a>
     
     <?php if ($adminRole === "superadmin") { ?>
-        <a href="manage_subadmins.php" class="active"> Manage Staff</a>
-        <a href="manage_staff.php"> Staff</a>
+        <a href="manage_subadmins.php" class="active"> Manage Subadmins</a>
         <a href="bookings.php"> Bookings</a>
+        <a href="customers.php"> Customers</a>
+        <a href="manage_staff.php"> Manage Staff</a>
         <a href="reports.php"> Reports</a>
     <?php } ?>
     
