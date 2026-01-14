@@ -27,7 +27,7 @@ if (!$data) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Subadmin | FLASH Hotel</title>
+    <title>Edit Staff Account | FLASH Hotel</title>
     <link rel="stylesheet" href="subadmin.css">
 </head>
 <body>
@@ -42,8 +42,8 @@ if (!$data) {
 <div class="main-content">
     <div class="form-container">
         <div class="form-header">
-            <h2>Edit Subadmin</h2>
-            <p>Modifying details for: <strong><?php echo htmlspecialchars($data['username']); ?></strong></p>
+            <h2>Edit Staff Details</h2>
+            <p>Updating account for: <strong><?php echo htmlspecialchars($data['username']); ?></strong></p>
         </div>
 
         <form action="update_subadmins_process.php" method="POST" class="admin-form">
@@ -52,7 +52,7 @@ if (!$data) {
             <div class="form-group">
                 <label for="id">Admin ID</label>
                 <input type="number" id="id" name="id" value="<?php echo $data['id']; ?>" required>
-                <small>Changing this will update the staff's unique login ID.</small>
+                <small>The unique staff identification number.</small>
             </div>
 
             <div class="form-group">
@@ -61,14 +61,19 @@ if (!$data) {
             </div>
 
             <div class="form-group">
-                <label for="password">New Password</label>
-                <input type="password" id="password" name="password" placeholder="Leave blank to keep current password">
-                <small>Only enter a value if you wish to reset the password.</small>
+                <label for="status">Account Status</label>
+                <select id="status" name="status" required style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ddd;">
+                    <option value="active" <?php echo ($data['status'] == 'active') ? 'selected' : ''; ?>>Active</option>
+                    <option value="inactive" <?php echo ($data['status'] == 'inactive') ? 'selected' : ''; ?>>Inactive</option>
+                    <option value="suspended" <?php echo ($data['status'] == 'suspended') ? 'selected' : ''; ?>>Suspended</option>
+                    <option value="terminated" <?php echo ($data['status'] == 'terminated') ? 'selected' : ''; ?>>Terminated</option>
+                </select>
+                <small>Inactive or Suspended users cannot log in.</small>
             </div>
 
-            <div class="form-actions">
-                <button type="submit" class="btn-primary">Update Subadmin</button>
-                <a href="manage_subadmins.php" class="btn-link">Cancel and Go Back</a>
+            <div class="form-actions" style="margin-top: 30px;">
+                <button type="submit" class="btn-primary">Save Changes</button>
+                <a href="manage_subadmins.php" class="btn-link">Cancel</a>
             </div>
         </form>
     </div>

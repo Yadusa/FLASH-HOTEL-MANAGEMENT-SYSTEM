@@ -23,7 +23,7 @@ session_start();
     <header class="main-header">
        <div class="header-content">
         <div class="header-left-links">
-            <a href="ourStory.php" class="nav-link">Our Story</a>
+            <a href="ourStory.html" class="nav-link">Our Story</a>
             <a href="specialoffers.php" class="nav-link special-offer-link"> Special Offers</a>
             <a href="gallery.php" class="nav-link Gallery">Gallery</a>
         </div>
@@ -39,7 +39,7 @@ session_start();
                 <a href="#" class="nav-link">Join Now</a> 
             </div>
             
-            <a href="bookingroom/roombooking.html" class="cta-button book-now-button">BOOK NOW</a>
+            <a href="bookingroom/roombooking.php" class="cta-button book-now-button">BOOK NOW</a>
         </div>
 
         
@@ -66,7 +66,7 @@ session_start();
             <img src="images/Specialoffer2.png" alt="Romantic Getaway">
             <h2>Weekend Indulgence</h2>
             <p>Indulge in late checkout at 2PM over the weekend.</p>
-            <a href="bookingroom/booking.php" class="book-btn">Book Now</a>
+            <a href="bookingroom/roombooking.php" class="book-btn">Book Now</a>
         </div>
         <div class="offer-card">
             <img src="images/Specialoffer3.png" alt="Spa & Massage">

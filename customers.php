@@ -40,7 +40,12 @@ $result = $conn->query($sql);
     </div>
 
     <a href="dashboard.php"> Dashboard</a>
+    <a href="manage_rooms.php"> Manage Rooms</a>
+    <a href="manage_subadmins.php"> Manage Subadmins</a>
+    <a href="bookings.php"> Bookings</a>
     <a href="customers.php" class="active"> Customers</a>
+    <a href="manage_staff.php"> Manage Staff</a>
+    <a href="reports.php"> Reports</a>
     <a href="logout.php" class="logout">Logout</a>
 </div>
 

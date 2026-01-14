@@ -412,3 +412,65 @@ table tr:hover {
         grid-template-columns: 1fr;
     }
 }
+
+/* --- Table Header Info --- */
+.table-header {
+    margin-bottom: 20px;
+}
+.table-header p {
+    font-size: 14px;
+    color: #666;
+}
+
+/* --- Staff Specific Cell Styling --- */
+.staff-name-cell {
+    display: flex;
+    flex-direction: column;
+}
+.staff-id {
+    font-size: 11px;
+    color: var(--color-accent-gold);
+    font-weight: 700;
+}
+
+.contact-info small {
+    color: #888;
+}
+
+/* --- Status Badges --- */
+.badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.badge-active { background: #e6fffa; color: #2d6a4f; border: 1px solid #b7e4c7; }
+.badge-inactive { background: #fff5f5; color: #c53030; border: 1px solid #feb2b2; }
+.badge-on-leave { background: #fffaf0; color: #9a6e12; border: 1px solid #fbd38d; }
+
+/* --- Action Links --- */
+.action-link {
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    margin-left: 10px;
+    transition: 0.2s;
+}
+.action-link.edit { color: var(--color-primary-dark); }
+.action-link.delete { color: #dc3545; }
+.action-link:hover { text-decoration: underline; }
+
+/* --- Avatar Circle (Ensuring Consistency) --- */
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--color-accent-gold);
+    color: var(--color-primary-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    border: 2px solid var(--color-primary-dark);
+}
