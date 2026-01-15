@@ -207,9 +207,23 @@ form input, form select { width: 100%; padding: 10px 12px; margin-bottom: 15px; 
         <label>Cardholder Name</label>
         <input type="text" id="cardName" placeholder="Enter cardholder name" required>
         <label>Credit Card Number</label>
-        <input type="text" id="cardNumber" maxlength="16" placeholder="XXXX XXXX XXXX XXXX" pattern="\d{16}" required>
+        <input type="text"
+       id="cardNumber"
+       maxlength="16"
+       placeholder="XXXX XXXX XXXX XXXX"
+       inputmode="numeric"
+       pattern="\d{16}"
+       oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+       required>
         <label>CVC / CVV</label>
-        <input type="text" id="cvv" maxlength="4" placeholder="3–4 digit" pattern="\d{3,4}" required>
+        <input type="text"
+       id="cvv"
+       maxlength="4"
+       placeholder="3–4 digit"
+       inputmode="numeric"
+       pattern="\d{3,4}"
+       oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+       required>
         <label>Expiry Date</label>
         <div class="row">
             <select id="month" required>
@@ -262,7 +276,7 @@ form input, form select { width: 100%; padding: 10px 12px; margin-bottom: 15px; 
 <div class="tab-content" id="wallet">
     <h3>Select Your eWallet</h3>
     <ul class="wallet-list">
-        <li onclick="showQR('Boost', 'images/QRcode.jpg')">
+        <li onclick="showQR('Boost', 'images/QRcode.png')">
             <img src="images/boost.jpg" alt="Boost">
             <span>Boost</span>
         </li>
@@ -274,7 +288,7 @@ form input, form select { width: 100%; padding: 10px 12px; margin-bottom: 15px; 
             <img src="images/shopee.png" alt="ShopeePay">
             <span>ShopeePay</span>
         </li>
-        <li onclick="showQR('Touch \'n Go', 'images/QRcode.jpg')">
+        <li onclick="showQR('Touch \'n Go', 'images/QRcode.png')">
             <img src="images/tng.jpg" alt="Touch 'n Go Wallet">
             <span>Touch 'n Go</span>
         </li>
@@ -385,4 +399,5 @@ function showBookingSummary() {
 </script>
 </body>
 </html>
+
 
