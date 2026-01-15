@@ -72,6 +72,9 @@ session_start();
                     <li class="slide">
                         <img src="images/carousell-3.jpg" alt="Poolside area">
                     </li>
+                    <li class="slide">
+                        <img src="images/carousell-4.jpg" alt="weekend offer banner">
+                    </li>
                 </ul>
                
             </div>
