@@ -111,8 +111,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </div>
 </header>
 
-<div class="below-header-back">
-    <a href="../hotel.php" class="back-btn">← Back to Main</a>
+<div class="top-nav">
+    <a href="../specialoffers.php" class="back-link">← Back to Offers</a>
 </div>
 
 <main class="contact-wrapper">

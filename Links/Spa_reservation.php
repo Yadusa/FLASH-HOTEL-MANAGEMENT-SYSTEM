@@ -142,7 +142,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <h2>The Obsidian Spa Reservation</h2>
 <div class="top-nav">
-    <a href="../hotel.php" class="back-link">← Back to Main Page</a>
+    <a href="../specialoffers.php" class="back-link">← Back to Offers</a>
 </div>
 
 <form method="post" action="">
