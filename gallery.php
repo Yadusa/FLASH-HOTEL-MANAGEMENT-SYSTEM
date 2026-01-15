@@ -39,7 +39,7 @@ session_start();
                 <a href="#" class="nav-link">Join Now</a> 
             </div>
             
-            <a href="bookingroom/roompage.html" class="cta-button book-now-button">BOOK NOW</a>
+           
           </div>
        </div>
    </header>

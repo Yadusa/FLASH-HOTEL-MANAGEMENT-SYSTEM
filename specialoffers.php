@@ -33,13 +33,9 @@ session_start();
             <p> KUALA LUMPUR </p>
         </div>
          <div class="header-right-actions">
-            <div class="auth-links">
-                <a href="#" onclick="showAdminLogin()" class="nav-link">Sign In</a> 
-                <span>|</span>
-                <a href="#" class="nav-link">Join Now</a> 
-            </div>
+          
             
-            <a href="bookingroom/roombooking.php" class="cta-button book-now-button">BOOK NOW</a>
+           
         </div>
 
         
