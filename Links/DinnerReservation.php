@@ -181,7 +181,7 @@ input, select, textarea {
 
 <h2>The Obsidian KL Reservation</h2>
 <div class="top-nav">
-    <a href="../specialoffers.html" class="back-link">← Back to Offers</a>
+    <a href="../specialoffers.php" class="back-link">← Back to Offers</a>
 </div>
 
 <form method="post" id="feedbackForm">
