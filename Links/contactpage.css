@@ -1,23 +1,26 @@
-
+/* --- 1. GLOBAL VARIABLES & RESET --- */
 :root {
-    --color-primary: #1a1a1a; /* Deep Obsidian Black */
-    --color-secondary: #f5f5f5; /* Light Background */
-    --color-accent: #b8860b; /* Dark Goldenrod/Gold Accent */
+    --color-primary: #1a1a1a; /* Deep Obsidian */
+    --color-accent: #b8860b;  /* Gold */
     --color-text-dark: #333333;
-    --color-text-light: #ffffff;
+    --color-text-light: #f5f5f5;
     --font-serif: 'Playfair Display', serif;
     --font-sans: 'Poppins', sans-serif;
+    
+    /* Aliases for consistency */
+    --gold: var(--color-accent);
+    --obsidian: var(--color-primary);
 }
 
 body {
-      background-color: var(--color-primary);
-    color: var(--color-text-dark);
-    font-family: 'Poppins', sans-serif;
+    background-color: var(--color-primary);
+    color: var(--color-text-light); /* Default to light for dark background */
+    font-family: var(--font-sans);
     margin: 0;
     line-height: 1.6;
 }
 
-/* Header Section */
+/* --- 2. HEADER SECTION --- */
 .booking-header {
     height: 30vh;
     background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
@@ -25,116 +28,168 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom: 2px solid var(--primary-gold);
+    border-bottom: 2px solid var(--gold);
 }
 
 .booking-header h1 {
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-serif);
     font-size: 3rem;
     color: white;
     text-transform: uppercase;
     letter-spacing: 3px;
 }
 
-/* Navigation */
-.below-header-back {
-    padding: 20px 5%;
+/* Offers Card Section */
+.offers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 50px 200px;
+    display:block;
 }
 
-.back-btn {
-    color: var(--primary-gold);
+.offer-card {
+    background-color: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.offer-card img {
+    width:fit;
+    height: 400px;
+    object-fit: fill;
+}
+
+.offer-card h2 {
+    margin: 15px 0 10px;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.offer-card p {
+    padding: 0 15px 15px;
+    font-size: 1rem;
+    color: #666;
+}
+
+.offer-card .book-btn {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 10px 25px;
+    background-color: #fac069;
+    color: white;
     text-decoration: none;
-    font-weight: 600;
-    transition: 0.3s;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.offer-card .book-btn:hover {
+    background-color: #ff4757;
+}
+
+.offer-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+/* Back to Main - Below Header Line */
+.below-header-back {
+    max-width: 1300px;
+    margin: 8px auto 0;
+    padding: 0 30px;
+    display: flex;
+    justify-content: flex-start;
+}
+.below-header-back a {
+    text-decoration: none;}
+.back-btn {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--color-text-dark);
+    text-decoration: none;
+    display: inline-block;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 6px;
+    transition: color 0.3s ease, transform 0.2s ease;
 }
 
 .back-btn:hover {
-    letter-spacing: 1px;
+    color: var(--color-accent);
+    transform: translateX(-4px);
 }
 
-
-/* --- Header --- */
-.main-header {
-    padding: 1.5rem 2rem;
-    background: white;
-    border-bottom: 1px solid var(--border);
-}
-
-.header-content {
-    max-width: 1400px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo { text-align: center; }
-.logo h1 { font-family: var(--font-title); letter-spacing: 4px; font-size: 1.8rem; margin: 0; }
-.logo p { font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; margin: 0; }
-
-.header-left-links { display: flex; gap: 25px; }
-.nav-link { text-decoration: none; color: var(--obsidian); font-size: 0.9rem; transition: 0.3s; }
-.nav-link:hover { color: var(--gold); }
-
-.cta-button {
-    background: var(--obsidian);
-    color: white;
-    padding: 0.8rem 1.5rem;
-    text-decoration: none;
-    font-size: 0.8rem;
-    letter-spacing: 1px;
-    transition: 0.3s;
-}
-
-.cta-button:hover { background: var(--gold); }
-
-/* --- Back Button --- */
-.below-header-back { max-width: 1400px; margin: 20px auto; padding: 0 2rem; }
-.back-btn { text-decoration: none; color: #e2dbdb; font-size: 0.9rem; }
-
-/* --- Contact Layout --- */
+/* --- 4. CONTACT LAYOUT --- */
 .contact-container {
     max-width: 1100px;
-    margin: 60px auto;
+    margin: 40px auto 80px; /* Reduced top margin since Back Button is there */
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 80px;
     padding: 0 2rem;
 }
 
-.tagline { color: var(--gold); text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; font-weight: 600; color: #f5f5f5;}
-.contact-info h2 { font-family: var(--font-title); font-size: 3.5rem; margin: 1rem 0 2rem 0; color: #f5f5f5;}
-.contact-text { margin-bottom: 1.5rem; line-height: 1.6; color: #f5f5f5;}
+.tagline { 
+    color: var(--gold); 
+    text-transform: uppercase; 
+    letter-spacing: 2px; 
+    font-size: 0.8rem; 
+    font-weight: 600; 
+}
 
-/* --- Form --- */
+.contact-info h2 { 
+    font-family: var(--font-serif); 
+    font-size: 3.5rem; 
+    margin: 1rem 0 2rem 0; 
+    color: var(--color-text-light);
+}
+
+.contact-text { 
+    margin-bottom: 1.5rem; 
+    color: #cccccc; 
+}
+
+/* --- 5. FORM STYLING --- */
 .input-group { margin-bottom: 1.2rem; }
-.input-group input, .input-group textarea {
+
+.input-group input, 
+.input-group textarea {
     width: 100%;
     padding: 1rem;
-    border: 1px solid #ddd;
-    font-family: var(--font-main);
-    background: white;
+    border: 1px solid #333;
+    font-family: var(--font-sans);
+    background: #ffffff;
+    color: var(--color-text-dark);
 }
+
 .input-group textarea { height: 150px; resize: none; }
 
 .submit-btn {
     width: 100%;
     padding: 1.2rem;
-    background: var(--obsidian);
+    background: var(--gold); /* Use gold for the primary action */
     color: white;
     border: none;
     cursor: pointer;
     font-weight: 600;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
     transition: 0.3s;
 }
-.submit-btn:hover { background: var(--gold); }
 
-/* --- Popup --- */
+.submit-btn:hover { 
+    background: #a6790a; 
+    filter: brightness(1.1);
+}
+
+/* --- 6. POPUP --- */
 .popup-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.85);
+    background: rgba(0,0,0,0.9);
     display: none; /* Controlled by JS */
     align-items: center;
     justify-content: center;
@@ -145,39 +200,41 @@ body {
     background: white;
     padding: 3rem;
     text-align: center;
-    max-width: 450px;
+    max-width: 400px;
     width: 90%;
-    animation: fadeIn 0.3s ease;
+    color: var(--color-text-dark);
+    animation: fadeIn 0.4s ease-out;
 }
 
 .check-icon { font-size: 3rem; color: var(--gold); margin-bottom: 1rem; }
-.close-btn { margin-top: 1rem; background: var(--obsidian); color: rgb(26, 25, 25); border: none; padding: 0.8rem 2rem; cursor: pointer; }
-
 
 .close-btn {
     margin-top: 1.5rem;
     padding: 0.8rem 2rem;
-    background-color: var(--color-primary);
-    color: var(--color-text-light);
-    border: 2px solid var(--color-accent);
-    border-radius: 12px;
-    font-size: 1rem;
+    background-color: var(--obsidian);
+    color: white;
+    border: 1px solid var(--gold);
+    font-size: 0.9rem;
     cursor: pointer;
     font-weight: 600;
+    letter-spacing: 1px;
     transition: 0.3s;
 }
 
-.popup-overlay {
-    display: none; /* Change this from PHP logic to just 'none' */
-    position: fixed;
-    /* ... rest of your styles ... */
-}
 .close-btn:hover {
-    background-color: var(--color-accent);
-    color: var(--color-primary);
+    background-color: var(--gold);
 }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* --- 7. ANIMATIONS & RESPONSIVE --- */
+@keyframes fadeIn { 
+    from { opacity: 0; transform: translateY(20px); } 
+    to { opacity: 1; transform: translateY(0); } 
+}
 
 @media (max-width: 850px) {
-    .contact-container { grid-template-columns: 1fr; gap: 40px; }
+    .contact-container { 
+        grid-template-columns: 1fr; 
+        gap: 40px; 
+    }
+    .booking-header h1 { font-size: 2rem; }
 }

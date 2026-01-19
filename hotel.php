@@ -64,7 +64,7 @@ session_start();
             <div class="carousell" data-carousell>
                 <button class="carousell-button prev" data-carousell-button="prev">&#8249;</button> <button class="carousell-button next" data-carousell-button="next">&#8250;</button> <ul data-slides>
                     <li class="slide" data-active>
-                        <img src="images/carousell-1.jpg" alt="Hotel exterior or lobby view">
+                        <img src="images/carousell-4.jpg" alt="weekend offer banner">
                     </li>
                     <li class="slide">
                         <img src="images/carousell-2.jpg" alt="Luxury suite interior">
@@ -73,7 +73,7 @@ session_start();
                         <img src="images/carousell-3.jpg" alt="Poolside area">
                     </li>
                     <li class="slide">
-                        <img src="images/carousell-4.jpg" alt="weekend offer banner">
+                        <img src="images/carousell-1.jpg" alt="festival">
                     </li>
                 </ul>
                
@@ -144,7 +144,7 @@ session_start();
                 </div>
                 <div class="footer-links">
                     <h5>Hotel</h5>
-                    <a href="ourStory.html">About Us</a>
+                    <a href="ourStory.html">Our story</a>
                     <a href="Links/contactpage.php">Contact</a>
                     <a href="Links/JobApplication.php">Careers</a>
                 </div>
