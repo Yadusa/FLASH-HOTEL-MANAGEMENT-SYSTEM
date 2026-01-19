@@ -1,11 +1,9 @@
 
 :root {
-    --color-primary: #1a1a1a; /* Deep Obsidian Black */
-    --color-secondary: #f5f5f5; /* Light Background */
-    --color-accent: #b8860b; /* Dark Goldenrod/Gold Accent */
+    --color-primary: #1a1a1a; 
+    --color-accent: #b8860b; /* Your Gold */
     --color-text-dark: #333333;
     --color-text-light: #ffffff;
-    --font-serif: 'Playfair Display', serif;
     --font-sans: 'Poppins', sans-serif;
 }
 
@@ -86,40 +84,41 @@ body {
     transition: 0.3s;
 }
 
-.cta-button:hover { background: var(--gold); }
-
-
-.below-header-back {
-    max-width: 1300px;
-    margin: 8px auto 0;
-    padding: 0 30px;
-    display: flex;
-    justify-content: flex-start;
+/* Container to give it breathing room below the header */
+.below-header-back { 
+    max-width: 1300px; 
+    margin: 20px auto 0; 
+    padding: 0 5%; 
+    display: flex; 
+    justify-content: flex-start; 
 }
-.below-header-back a {
-    text-decoration: none;}
+
 .back-btn {
     font-family: var(--font-sans);
-    font-size: 13px;
-    font-weight: 400;
-    color: var(--color-text-dark);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #e2dbdb; /* Light grey so it stands out on dark backgrounds */
     text-decoration: none;
-    display: inline-block;
-    border-bottom: 1px solid #e0e0e0;
-    padding-bottom: 6px;
-    transition: color 0.3s ease, transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(184, 134, 11, 0.3); /* Subtle gold underline */
+    padding-bottom: 4px;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 .back-btn:hover {
-    color: var(--color-accent);
-    transform: translateX(-4px);
+    color: var(--color-accent); /* Turns full gold on hover */
+    border-bottom: 1px solid var(--color-accent);
+    transform: translateX(-5px); /* Slight nudge to the left for a "back" feel */
 }
 
-
-/* --- Back Button --- */
-.below-header-back { max-width: 1400px; margin: 20px auto; padding: 0 2rem; }
-.back-btn { text-decoration: none; color: #e2dbdb; font-size: 0.9rem; }
-
+/* Optional: Add an arrow symbol using CSS */
+.back-btn::before {
+    content: '←';
+    margin-right: 8px;
+}
 /* --- Contact Layout --- */
 .contact-container {
     max-width: 1100px;
