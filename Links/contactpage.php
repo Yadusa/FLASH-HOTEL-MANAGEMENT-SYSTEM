@@ -96,7 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <div class="header-content">
         <div class="header-left-links">
             <a href="../ourStory.html" class="nav-link">Our Story</a>
-            <a href="../specialoffers.php" class="nav-link">Special Offers</a>
+            <a href="../specialoffers.php" class="nav-link special-offer-link"> Special Offers</a>
             <a href="../gallery.php" class="nav-link">Gallery</a>
         </div>
 
