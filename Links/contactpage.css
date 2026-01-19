@@ -88,6 +88,34 @@ body {
 
 .cta-button:hover { background: var(--gold); }
 
+
+.below-header-back {
+    max-width: 1300px;
+    margin: 8px auto 0;
+    padding: 0 30px;
+    display: flex;
+    justify-content: flex-start;
+}
+.below-header-back a {
+    text-decoration: none;}
+.back-btn {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--color-text-dark);
+    text-decoration: none;
+    display: inline-block;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 6px;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.back-btn:hover {
+    color: var(--color-accent);
+    transform: translateX(-4px);
+}
+
+
 /* --- Back Button --- */
 .below-header-back { max-width: 1400px; margin: 20px auto; padding: 0 2rem; }
 .back-btn { text-decoration: none; color: #e2dbdb; font-size: 0.9rem; }
