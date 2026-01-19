@@ -2,10 +2,14 @@
 session_start();
 require_once "db.php";
 
+// 1. Security Check
 if (!isset($_SESSION["admin_id"])) {
     header("Location: login.php");
     exit;
 }
+
+// 2. Get Admin Role for Sidebar Logic
+$adminRole = $_SESSION["admin_role"] ?? 'staff'; // Default to staff if not set
 
 // --- HANDLE SLOT RESTORATION ---
 if (isset($_POST['restore_slot'])) {
@@ -45,10 +49,78 @@ $result = $conn->query($sql);
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Rooms | FLASH Hotel Admin</title>
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        :root { --obsidian-gold: #b89241; --dark-sidebar: #2c3e50; }
+        :root {
+            --primary: #2c3e50;    /* Dark Blue Sidebar */
+            --accent: #b89241;     /* Gold Brand Color */
+            --bg-light: #f4f6f9;   /* Light Gray Background */
+            --text-dark: #333;
+            --white: #ffffff;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            display: flex;
+        }
+
+        /* --- SIDEBAR STYLE (MATCHING DASHBOARD) --- */
+        .sidebar {
+            width: 260px;
+            background: var(--primary);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+        }
+        .brand {
+            padding: 25px;
+            background: rgba(0,0,0,0.1);
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .brand h2 { margin: 0; font-size: 24px; color: var(--accent); letter-spacing: 1px; }
+        .brand .role { margin: 5px 0 0; font-size: 12px; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .sidebar a {
+            padding: 15px 25px;
+            text-decoration: none;
+            color: #b0b8c1;
+            display: flex;
+            align-items: center;
+            transition: 0.3s;
+            border-left: 4px solid transparent;
+        }
+        .sidebar a i { margin-right: 12px; width: 20px; text-align: center; }
+        .sidebar a:hover, .sidebar a.active {
+            background: rgba(255,255,255,0.05);
+            color: white;
+            border-left-color: var(--accent);
+        }
+        .sidebar .logout { margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); color: #ffadad; }
+        .sidebar .logout:hover { background: #3d2a2a; border-left-color: #dc3545; }
+
+        /* --- MAIN CONTENT STYLE --- */
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            padding: 25px;
+        }
+
+        /* Top Bar */
+        .topbar { margin-bottom: 30px; }
+        .topbar h3 { margin: 0; font-size: 24px; color: var(--text-dark); }
+
+        /* --- ROOM MANAGEMENT SPECIFIC STYLES --- */
         .status-pill { padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; }
         .available { background: #e3fcef; color: #006644; }
         .occupied { background: #ffebe6; color: #bf2600; }
@@ -60,27 +132,34 @@ $result = $conn->query($sql);
             border-radius: 4px; cursor: pointer; font-weight: 600; margin-left: 10px;
         }
         .btn-restore:disabled { background-color: #ccc; cursor: not-allowed; }
-        .room-table td { padding: 15px; border-bottom: 1px solid #eee; }
+        .room-table td { padding: 15px; border-bottom: 1px solid #eee; vertical-align: middle; }
     </style>
 </head>
 <body>
 
 <div class="sidebar">
-    <div class="brand"><h2> FLASH Hotel Admin</h2></div>
-    <a href="dashboard.php"> Dashboard</a>
-    <a href="manage_rooms.php" class="active"> Manage Rooms</a>
-    <a href="logout.php" class="logout">Logout</a>
+    <div class="brand">
+        <h2>FLASH HOTEL</h2>
+        <p class="role"><?php echo ucfirst($adminRole); ?></p>
+    </div>
+
+    <a href="dashboard.php"><i class="fas fa-home"></i> Dashboard</a>
+    <a href="manage_rooms.php" class="active"><i class="fas fa-bed"></i> Manage Rooms</a>
+
+
+    <a href="logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
 </div>
 
 <div class="main-content">
-    <div class="topbar"><h3>Room Inventory Management</h3></div>
+    <div class="topbar"><h3><i class="fas fa-door-open"></i> Room Inventory Management</h3></div>
 
-    <div class="admin-card" style="margin: 20px; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-        <h4 style="margin-bottom: 20px;">Active Inventory & Room Control</h4>
+    <div class="admin-card" style="background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+        <h4 style="margin-top: 0; margin-bottom: 20px; color: #666;">Active Inventory & Room Control</h4>
+        
         <table class="room-table" style="width: 100%; border-collapse: collapse;">
             <thead>
                 <tr style="background: #f8f9fa; text-align: left;">
-                    <th>Room Type</th>
+                    <th style="padding: 15px;">Room Type</th>
                     <th>Inventory (Avail/Total)</th>
                     <th>Current Status</th>
                     <th>Manual Control (Block/Unblock)</th>
@@ -92,9 +171,10 @@ $result = $conn->query($sql);
                 <tr>
                     <td><strong><?php echo htmlspecialchars($row['room_name']); ?></strong></td>
                     <td>
-                        <span style="font-weight: 600; color: var(--obsidian-gold);">
+                        <span style="font-weight: 600; color: var(--accent); font-size: 1.1rem;">
                             <?php echo $row['available_slots']; ?>
-                        </span> / <?php echo $row['total_slots']; ?>
+                        </span> 
+                        <span style="color: #999;">/ <?php echo $row['total_slots']; ?></span>
                     </td>
                     <td>
                         <span class="status-pill <?php echo strtolower($row['room_status'] ?? 'available'); ?>">
@@ -117,7 +197,7 @@ $result = $conn->query($sql);
                             <input type="hidden" name="room_id" value="<?php echo $row['id']; ?>">
                             <button type="submit" name="restore_slot" class="btn-restore" 
                                 <?php echo ($row['available_slots'] >= $row['total_slots']) ? 'disabled' : ''; ?>>
-                                + Restore Slot
+                                <i class="fas fa-plus"></i> Restore Slot
                             </button>
                         </form>
                     </td>
@@ -127,5 +207,6 @@ $result = $conn->query($sql);
         </table>
     </div>
 </div>
+
 </body>
 </html>
