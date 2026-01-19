@@ -58,19 +58,19 @@ session_start();
            
             <div class="photo-grid">
                 <div class="gallery-item">
-                    <img src="images/lobby1.jpg" alt="">
+                    <img src="images/lobby1.png" alt="">
                     <div class="caption">The Obsidian KL</div>
                 </div>
                 <div class="gallery-item">
-                    <img src="images/lobby2.jpg" alt="">
+                    <img src="images/lobby2.png" alt="">
                     <div class="caption">Waiting area</div>
                 </div>
                 <div class="gallery-item">
-                    <img src="images/lobby3.jpg" alt="">
+                    <img src="images/lobby3.png" alt="">
                     <div class="caption">Walkway</div>
                 </div>
                 <div class="gallery-item">
-                    <img src="images/lobby4.jpg" alt="City View from Window">
+                    <img src="images/lobby4.png" alt="City View from Window">
                     <div class="caption">Floors</div>
                 </div>
             </div>
