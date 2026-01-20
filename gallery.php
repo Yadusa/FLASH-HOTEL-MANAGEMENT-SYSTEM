@@ -67,11 +67,11 @@ session_start();
                 </div>
                 <div class="gallery-item">
                     <img src="images/lobby3.png" alt="">
-                    <div class="caption">Walkway</div>
+                    <div class="caption">Bar area</div>
                 </div>
                 <div class="gallery-item">
                     <img src="images/lobby4.png" alt="City View from Window">
-                    <div class="caption">Floors</div>
+                    <div class="caption">Lobby</div>
                 </div>
             </div>
     </section>
