@@ -1,13 +1,19 @@
 <?php
-// ---------------------------
-// Handle form submission ONLY
-// ---------------------------
 $show_popup = false;
+$error_message = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // No database — just confirm submission
-    $show_popup = true;
+
+    $start_time = $_POST['start_time'];
+    $end_time   = $_POST['end_time'];
+
+    if (strtotime($end_time) <= strtotime($start_time)) {
+        $error_message = "End time must be after start time.";
+    } else {
+        $show_popup = true;
+    }
 }
+
 ?>
 
 <!DOCTYPE html>
