@@ -228,7 +228,7 @@ input, select, textarea {
 <!-- POPUP -->
 <div class="popup-overlay">
     <div class="popup-card">
-        <button class="popup-close" onclick="closePopup()">✕</button>
+        
         <div style="font-size:50px;color:#b8860b;">✧</div>
         <h3>Thank You!</h3>
         <p>Your dinner reservation has been successfully submitted.</p>

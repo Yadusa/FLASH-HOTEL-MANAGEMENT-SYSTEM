@@ -167,7 +167,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <!-- POPUP -->
 <div class="popup-overlay">
     <div class="popup-card">
-        <button class="popup-close" onclick="closePopup()">✕</button>
+        
         <div class="check-icon">✓</div>
         <h3>Thank You!</h3>
         <p>Your feedback has been submitted successfully. We will get back to you soon.</p>
