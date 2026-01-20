@@ -8,9 +8,16 @@ if (!isset($_SESSION["admin_id"])) {
     exit;
 }
 
+
 $adminName = $_SESSION["admin_name"];
 $adminRole = $_SESSION["admin_role"];
 $currentDate = date('Y-m-d'); // Today's date for queries
+
+// ===============================
+// DATE FILTER (NEW)
+// ===============================
+$startDate = $_GET['start_date'] ?? $currentDate;
+$endDate   = $_GET['end_date']   ?? date('Y-m-d', strtotime($startDate . ' +1 day'));
 
 // =========================================================
 // 2. LIVE DATABASE QUERIES
@@ -18,16 +25,40 @@ $currentDate = date('Y-m-d'); // Today's date for queries
 
 // A. CALCULATE ROOM STATISTICS
 // We sum up 'total_slots' and 'available_slots' from the rooms table
-$roomSql = "SELECT 
-                SUM(total_slots) as total_capacity, 
-                SUM(CASE 
-                    WHEN room_status = 'Available' THEN available_slots 
-                    ELSE 0 
-                END) as real_available 
-            FROM rooms";
+$roomSql = "
+SELECT 
+    r.room_name,
+    r.total_slots,
+    (
+        r.total_slots - COUNT(b.id)
+    ) AS available_slots
+FROM rooms r
+LEFT JOIN bookings b 
+    ON r.room_name = b.room_name
+    AND b.checkin < '$endDate'
+    AND b.checkout > '$startDate'
+GROUP BY r.room_name
+";
+
 
 $roomResult = $conn->query($roomSql);
 $roomData = $roomResult->fetch_assoc();
+
+$total_rooms = 0;
+$available_rooms = 0;
+$roomDetails = [];
+
+while ($row = $roomResult->fetch_assoc()) {
+    $total_rooms += $row['total_slots'];
+    $available_rooms += max(0, $row['available_slots']);
+    $roomDetails[] = $row;
+}
+
+$occupied_rooms = $total_rooms - $available_rooms;
+$occupancy_rate = ($total_rooms > 0)
+    ? round(($occupied_rooms / $total_rooms) * 100)
+    : 0;
+
 
 // Assign variables (default to 0 if null)
 $total_rooms = $roomData['total_capacity'] ?? 0;
@@ -112,6 +143,13 @@ $arrivalsResult = $conn->query($listSql);
         
         .user-profile { display: flex; align-items: center; gap: 15px; background: white; padding: 8px 15px; border-radius: 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .avatar-circle { width: 35px; height: 35px; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+
+                <form method="GET" style="margin-bottom:20px; display:flex; gap:10px;">
+            <input type="date" name="start_date" value="<?php echo $startDate; ?>" required>
+            <input type="date" name="end_date" value="<?php echo $endDate; ?>" required>
+            <button class="btn-sm">Apply</button>
+        </form>
+
 
         /* Stats Cards */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px; }
