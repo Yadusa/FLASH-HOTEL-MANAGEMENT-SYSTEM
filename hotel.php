@@ -64,7 +64,7 @@ session_start();
             <div class="carousell" data-carousell>
                 <button class="carousell-button prev" data-carousell-button="prev">&#8249;</button> <button class="carousell-button next" data-carousell-button="next">&#8250;</button> <ul data-slides>
                     <li class="slide" data-active>
-                        <img src="images/carousell-4.jpg" alt="weekend offer banner">
+                        <img src="images/Offer.png" alt="weekend offer banner">
                     </li>
                     <li class="slide">
                         <img src="images/carousell-2.jpg" alt="Luxury suite interior">
