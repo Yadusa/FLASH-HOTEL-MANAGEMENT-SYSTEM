@@ -42,15 +42,20 @@ GROUP BY r.room_name
 
 
 $roomResult = $conn->query($roomSql);
-$roomData = $roomResult->fetch_assoc();
+
+
+
+if (!$roomResult) {
+    die("Room Query Failed: " . $conn->error);
+}
 
 $total_rooms = 0;
 $available_rooms = 0;
 $roomDetails = [];
 
 while ($row = $roomResult->fetch_assoc()) {
-    $total_rooms += $row['total_slots'];
-    $available_rooms += max(0, $row['available_slots']);
+    $total_rooms += (int)$row['total_slots'];
+    $available_rooms += max(0, (int)$row['available_slots']);
     $roomDetails[] = $row;
 }
 
@@ -60,9 +65,7 @@ $occupancy_rate = ($total_rooms > 0)
     : 0;
 
 
-// Assign variables (default to 0 if null)
-$total_rooms = $roomData['total_capacity'] ?? 0;
-$available_rooms = $roomData['real_available'] ?? 0;
+
 
 // Occupied = Total - Available
 // This now includes rooms that are booked AND rooms marked as 'Maintenance/Occupied'
