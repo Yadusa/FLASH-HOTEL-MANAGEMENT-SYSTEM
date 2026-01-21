@@ -15,19 +15,27 @@ $currentDate = date('Y-m-d');
 // ===============================
 // DATE FILTER
 // ===============================
+// Ensure startDate and endDate are set
 $startDate = $_GET['start_date'] ?? $currentDate;
 $endDate   = $_GET['end_date']   ?? date('Y-m-d', strtotime($startDate . ' +1 day'));
 
-// =========================================================
-// 2. LIVE DATABASE QUERIES
-// =========================================================
-
-// A. CALCULATE ROOM STATISTICS
+// Room query: count bookings that overlap with the selected dates
 $roomSql = "
 SELECT 
     r.room_name,
     r.total_slots,
-    (r.total_slots - COUNT(b.id)) AS available_slots
+    (r.total_slots - IFNULL(SUM(
+        CASE 
+            WHEN b.id IS NOT NULL THEN 1
+            ELSE 0
+        END
+    ), 0)) AS available_slots,
+    IFNULL(SUM(
+        CASE 
+            WHEN b.id IS NOT NULL THEN 1
+            ELSE 0
+        END
+    ), 0) AS booked_count
 FROM rooms r
 LEFT JOIN bookings b 
     ON r.room_name = b.room_name
@@ -40,6 +48,7 @@ $roomResult = $conn->query($roomSql);
 if (!$roomResult) {
     die("Room Query Failed: " . $conn->error);
 }
+
 
 $total_rooms = 0;
 $available_rooms = 0;
@@ -251,15 +260,27 @@ if (!$arrivalsResult) {
                 <h3><i class="fas fa-concierge-bell"></i> Today's Arrivals</h3>
                 <a href="bookings.php" class="btn-sm">View All Bookings</a>
             </div>
-            <table class="table-clean">
-               <thead>
-    <tr>
-        <th>ID</th>
-        <th>Guest Name</th>
-        <th>Room Assigned</th>
-        <th>Action</th>
-    </tr>
-</thead>
+           <table class="table-clean">
+    <thead>
+        <tr>
+            <th>Room Name</th>
+            <th>Total Slots</th>
+            <th>Booked</th>
+            <th>Available</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php while($row = $roomResult->fetch_assoc()): ?>
+        <tr>
+            <td><?php echo htmlspecialchars($row['room_name']); ?></td>
+            <td><?php echo (int)$row['total_slots']; ?></td>
+            <td><?php echo (int)$row['booked_count']; ?></td>
+            <td><?php echo max(0, (int)$row['available_slots']); ?></td>
+        </tr>
+        <?php endwhile; ?>
+    </tbody>
+</table>
+
 <tbody>
     <?php if ($arrivalsResult->num_rows > 0): ?>
         <?php while($row = $arrivalsResult->fetch_assoc()): ?>
