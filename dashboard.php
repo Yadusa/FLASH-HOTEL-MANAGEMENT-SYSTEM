@@ -71,7 +71,7 @@ $pending_bookings = $pendingResult ? $pendingResult->fetch_assoc()['count'] : 0;
 
 // E. FETCH TODAY'S ARRIVALS LIST
 $listSql = "
-SELECT b.id, c.cust_name, b.customer_username, b.room_name, b.payment_status 
+SELECT b.id, c.cust_name, b.customer_username, b.room_name
 FROM bookings b
 LEFT JOIN customer c ON b.customer_username = c.username
 WHERE b.checkin = '$currentDate'
@@ -81,6 +81,8 @@ $arrivalsResult = $conn->query($listSql);
 if (!$arrivalsResult) {
     die("Arrivals Query Failed: " . $conn->error);
 }
+
+
 
 ?>
 <!DOCTYPE html>
@@ -250,42 +252,37 @@ if (!$arrivalsResult) {
                 <a href="bookings.php" class="btn-sm">View All Bookings</a>
             </div>
             <table class="table-clean">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Guest Name</th>
-                        <th>Room Assigned</th>
-                        <th>Payment Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if ($arrivalsResult->num_rows > 0): ?>
-                        <?php while($row = $arrivalsResult->fetch_assoc()): ?>
-                            <tr>
-                                <td>#<?php echo $row['id']; ?></td>
-                                <td><strong><?php echo htmlspecialchars($row['cust_name'] ?? $row['customer_username']); ?></strong></td>
-                                <td><?php echo htmlspecialchars($row['room_name']); ?></td>
-                                <td>
-                                    <span class="status-badge <?php echo ($row['payment_status'] == 'Paid') ? 'status-confirmed' : 'status-pending'; ?>">
-                                        <?php echo htmlspecialchars($row['payment_status']); ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <a href="bookings.php?checkin_id=<?php echo $row['id']; ?>" style="color:var(--primary); font-size:14px;">
-                                        <i class="fas fa-check-circle"></i> Check In
-                                    </a>
-                                </td>
-                            </tr>
-                        <?php endwhile; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="5" style="text-align:center; color:#999; padding:20px;">
-                                No arrivals scheduled for today (<?php echo $currentDate; ?>).
-                            </td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
+               <thead>
+    <tr>
+        <th>ID</th>
+        <th>Guest Name</th>
+        <th>Room Assigned</th>
+        <th>Action</th>
+    </tr>
+</thead>
+<tbody>
+    <?php if ($arrivalsResult->num_rows > 0): ?>
+        <?php while($row = $arrivalsResult->fetch_assoc()): ?>
+        <tr>
+            <td>#<?php echo $row['id']; ?></td>
+            <td><strong><?php echo htmlspecialchars($row['cust_name'] ?? $row['customer_username']); ?></strong></td>
+            <td><?php echo htmlspecialchars($row['room_name']); ?></td>
+            <td>
+                <a href="bookings.php?checkin_id=<?php echo $row['id']; ?>" style="color:var(--primary); font-size:14px;">
+                    <i class="fas fa-check-circle"></i> Check In
+                </a>
+            </td>
+        </tr>
+        <?php endwhile; ?>
+    <?php else: ?>
+        <tr>
+            <td colspan="4" style="text-align:center; color:#999; padding:20px;">
+                No arrivals scheduled for today (<?php echo $currentDate; ?>).
+            </td>
+        </tr>
+    <?php endif; ?>
+</tbody>
+
             </table>
         </div>
 
