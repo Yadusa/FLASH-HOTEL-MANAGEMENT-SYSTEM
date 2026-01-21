@@ -8,35 +8,28 @@ if (!isset($_SESSION["admin_id"])) {
     exit;
 }
 
-// 2. Get Admin Role for Sidebar Logic
 $adminRole = $_SESSION["admin_role"] ?? 'staff';
-
-// 3. Date filter for checking booked rooms
-$selected_date = $_GET['date'] ?? date('Y-m-d'); // Default today if no date selected
+$selected_date = $_GET['date'] ?? date('Y-m-d');
 
 // --- HANDLE SLOT RESTORATION ---
 if (isset($_POST['restore_slot'])) {
     $room_id = $_POST['room_id'];
-    $restore_sql = "UPDATE rooms SET available_slots = available_slots + 1 
-                    WHERE id = ? AND available_slots < total_slots";
+    $restore_sql = "UPDATE rooms SET available_slots = available_slots + 1 WHERE id = ? AND available_slots < total_slots";
     $stmt = $conn->prepare($restore_sql);
     $stmt->bind_param("i", $room_id);
     
     if($stmt->execute()) {
-        // If restoring a slot makes the room available again, update status automatically
-        $auto_avail = "UPDATE rooms SET room_status = 'Available' 
-                       WHERE id = ? AND available_slots > 0 AND room_status = 'Occupied'";
+        $auto_avail = "UPDATE rooms SET room_status = 'Available' WHERE id = ? AND available_slots > 0 AND room_status = 'Occupied'";
         $stmt2 = $conn->prepare($auto_avail);
         $stmt2->bind_param("i", $room_id);
         $stmt2->execute();
     }
 }
 
-// --- HANDLE MANUAL STATUS UPDATES (BLOCKING/UNBLOCKING) ---
+// --- HANDLE MANUAL STATUS UPDATES ---
 if (isset($_POST['update_status_trigger'])) {
     $room_id = $_POST['room_id'];
     $new_status = $_POST['new_status'];
-    
     $status_sql = "UPDATE rooms SET room_status = ? WHERE id = ?";
     $stmt = $conn->prepare($status_sql);
     $stmt->bind_param("si", $new_status, $room_id);
@@ -52,100 +45,95 @@ $result = $conn->query($sql);
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Rooms | FLASH Hotel Admin</title>
+    <title>Manage Rooms | FLASH Hotel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Styles same as before, omitted for brevity */
-        .status-pill { padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; }
-        .available { background: #e3fcef; color: #006644; }
-        .occupied { background: #ffebe6; color: #bf2600; }
-        .maintenance { background: #fff3cd; color: #856404; }
-        .btn-status { padding: 8px; border-radius: 4px; border: 1px solid #ddd; background: white; cursor: pointer; }
-        .btn-restore { background-color: #2ecc71; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: 600; margin-left: 10px; }
-        .btn-restore:disabled { background-color: #ccc; cursor: not-allowed; }
-        .room-table td { padding: 15px; border-bottom: 1px solid #eee; vertical-align: middle; }
+        /* Updated Styles for a cleaner look like your first image */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; display: flex; }
+        .sidebar { width: 240px; background: #2c3e50; color: white; height: 100vh; padding: 20px; position: fixed; }
+        .sidebar a { color: white; text-decoration: none; display: block; padding: 12px; margin-bottom: 5px; border-radius: 4px; }
+        .sidebar a.active { background: #34495e; border-left: 4px solid #3498db; }
+        .main-content { margin-left: 280px; padding: 40px; width: calc(100% - 320px); }
+        .admin-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { background: #34495e; color: white; padding: 15px; text-align: left; }
+        td { padding: 15px; border-bottom: 1px solid #eee; }
+        .status-pill { padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: bold; }
+        .available { background: #d4edda; color: #155724; }
+        .occupied { background: #f8d7da; color: #721c24; }
+        .btn-restore { background: #6c757d; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; }
+        .btn-restore:hover { background: #5a6268; }
     </style>
 </head>
 <body>
+
 <div class="sidebar">
-    <div class="brand">
-        <h2>FLASH HOTEL</h2>
-        <p class="role"><?php echo ucfirst($adminRole); ?></p>
-    </div>
-    <a href="dashboard.php"><i class="fas fa-home"></i> Dashboard</a>
-    <a href="manage_rooms.php" class="active"><i class="fas fa-bed"></i> Manage Rooms</a>
-    <a href="logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    <h2>FLASH HOTEL</h2>
+    <p>Logged as: <?php echo ucfirst($adminRole); ?></p>
+    <hr>
+    <a href="dashboard.php">Dashboard</a>
+    <a href="manage_rooms.php" class="active">Manage Rooms</a>
+    <a href="logout.php">Logout</a>
 </div>
 
 <div class="main-content">
-    <div class="topbar"><h3><i class="fas fa-door-open"></i> Room Inventory Management</h3></div>
-
-    <div class="admin-card" style="background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-        <h4 style="margin-top: 0; margin-bottom: 20px; color: #666;">Active Inventory & Room Control</h4>
-
-        <!-- Date Picker -->
-        <form method="GET" style="margin-bottom: 15px;">
-            <label>Select Date: </label>
+    <div class="admin-card">
+        <h2>Room Inventory Management</h2>
+        
+        <form method="GET" style="margin-bottom: 20px;">
+            <label>Check Date: </label>
             <input type="date" name="date" value="<?php echo $selected_date; ?>" onchange="this.form.submit()">
         </form>
 
-        <table class="room-table" style="width: 100%; border-collapse: collapse;">
+        <table>
             <thead>
-                <tr style="background: #f8f9fa; text-align: left;">
+                <tr>
                     <th>Room Type</th>
                     <th>Inventory (Avail/Total)</th>
-                    <th>Available on Selected Date</th>
-                    <th>Current Status</th>
+                    <th>Status</th>
                     <th>Manual Control</th>
-                    <th>Inventory Recovery</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                <?php while($row = $result->fetch_assoc()):
-                    // Calculate bookings for selected date
-                    $stmt = $conn->prepare("SELECT COUNT(*) as booked_count FROM bookings WHERE room_id = ? AND ? BETWEEN start_date AND end_date");
-                    $stmt->bind_param("is", $row['id'], $selected_date);
-                    $stmt->execute();
-                    $book_result = $stmt->get_result()->fetch_assoc();
-                    $booked_count = $book_result['booked_count'] ?? 0;
-                    $real_available = max(0, $row['available_slots'] - $booked_count);
+                <?php while($row = $result->fetch_assoc()): 
+                    // Calculate bookings safely
+                    $count_query = "SELECT COUNT(*) as booked_count FROM bookings WHERE room_id = ? AND ? BETWEEN start_date AND end_date";
+                    $stmt_count = $conn->prepare($count_query);
+                    
+                    if ($stmt_count) {
+                        $stmt_count->bind_param("is", $row['id'], $selected_date);
+                        $stmt_count->execute();
+                        $count_res = $stmt_count->get_result()->fetch_assoc();
+                        $booked = $count_res['booked_count'];
+                    } else {
+                        $booked = 0; // Fallback if query fails
+                    }
                 ?>
                 <tr>
-                    <td><strong><?php echo htmlspecialchars($row['room_name']); ?></strong></td>
+                    <td><strong><?php echo $row['room_name']; ?></strong></td>
+                    <td><?php echo $row['available_slots']; ?> / <?php echo $row['total_slots']; ?></td>
                     <td>
-                        <span style="font-weight: 600; color: var(--accent); font-size: 1.1rem;">
-                            <?php echo $row['available_slots']; ?>
-                        </span> 
-                        <span style="color: #999;">/ <?php echo $row['total_slots']; ?></span>
-                    </td>
-                    <td>
-                        <span style="font-weight: 600; color: #007bff;">
-                            <?php echo $real_available; ?>
+                        <span class="status-pill <?php echo strtolower($row['room_status']); ?>">
+                            <?php echo $row['room_status']; ?>
                         </span>
                     </td>
                     <td>
-                        <span class="status-pill <?php echo strtolower($row['room_status'] ?? 'available'); ?>">
-                            <?php echo $row['room_status'] ?? 'Available'; ?>
-                        </span>
-                    </td>
-                    <td>
-                        <form method="POST" style="display:inline;">
+                        <form method="POST">
                             <input type="hidden" name="room_id" value="<?php echo $row['id']; ?>">
                             <input type="hidden" name="update_status_trigger" value="1">
-                            <select name="new_status" class="btn-status" onchange="this.form.submit()">
+                            <select name="new_status" onchange="this.form.submit()">
                                 <option value="Available" <?php if($row['room_status'] == 'Available') echo 'selected'; ?>>Available</option>
-                                <option value="Occupied" <?php if($row['room_status'] == 'Occupied') echo 'selected'; ?>>Occupied (Full)</option>
-                                <option value="Maintenance" <?php if($row['room_status'] == 'Maintenance') echo 'selected'; ?>>Maintenance (Block)</option>
+                                <option value="Occupied" <?php if($row['room_status'] == 'Occupied') echo 'selected'; ?>>Full</option>
+                                <option value="Maintenance" <?php if($row['room_status'] == 'Maintenance') echo 'selected'; ?>>Block</option>
                             </select>
                         </form>
                     </td>
                     <td>
-                        <form method="POST" style="display:inline;" onsubmit="return confirm('Restore 1 room slot?');">
+                        <form method="POST">
                             <input type="hidden" name="room_id" value="<?php echo $row['id']; ?>">
-                            <button type="submit" name="restore_slot" class="btn-restore" 
-                                <?php echo ($row['available_slots'] >= $row['total_slots']) ? 'disabled' : ''; ?>>
-                                <i class="fas fa-plus"></i> Restore Slot
+                            <button type="submit" name="restore_slot" class="btn-restore" <?php echo ($row['available_slots'] >= $row['total_slots']) ? 'disabled' : ''; ?>>
+                                + Restore Slot
                             </button>
                         </form>
                     </td>
@@ -155,5 +143,6 @@ $result = $conn->query($sql);
         </table>
     </div>
 </div>
+
 </body>
 </html>
