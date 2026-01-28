@@ -50,12 +50,15 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nights = max(1, ceil($diff / (60*60*24)));
             $total_price = $nights * $room_price;
 
-            $stmt = $conn->prepare("INSERT INTO bookings (customer_username, room_name, room_price, checkin, checkout, adults, children, total_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            if (!$stmt) {
-    die("Prepare failed: " . $conn->error);
-}
-       $stmt->bind_param("ssdssiii", $customer_username, $room_name, $room_price, $checkin, $checkout, $adults, $children, $total_price);
+           $stmt = $conn->prepare("INSERT INTO bookings (customer_username, room_name, room_price, checkin, checkout, adults, children, total_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
+if (!$stmt) {
+    echo "SQL Error: " . $conn->error . "<br>";
+    echo "Error Number: " . $conn->errno . "<br>";
+    die();
+}
+
+$stmt->bind_param("ssdssiii", $customer_username, $room_name, $room_price, $checkin, $checkout, $adults, $children, $total_price);
         if ($stmt->execute()) {
             
             // --- INSERTED CODE START ---
