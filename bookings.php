@@ -273,11 +273,11 @@ $result = $conn->query($sql);
             </thead>
             <tbody>
                 <?php if ($result && $result->num_rows > 0): ?>
-                    <?php while($row = $result->fetch_assoc()): 
+                    <?php while($row = $result->fetch_assoc()):
                         // Determine CSS class based on payment status
-                        $statusRaw = strtolower($row['payment_status']);
+                        $statusRaw = isset($row['payment_status']) ? strtolower($row['payment_status']) : 'pending';
                         $statusClass = 'status-pending'; // default
-                        
+
                         if ($statusRaw == 'paid' || $statusRaw == 'confirmed') {
                             $statusClass = 'status-paid';
                         } elseif ($statusRaw == 'cancelled') {

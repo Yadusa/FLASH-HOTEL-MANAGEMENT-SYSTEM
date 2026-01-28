@@ -159,7 +159,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <input type="text" name="room_number" required>
 
     <label>Appointment Date</label>
-    <input type="date" name="appointment_date" required>
+    <input type="date" name="appointment_date" min="<?php echo date('Y-m-d'); ?>" max="<?php echo date('Y-12-31'); ?>" required>
 
     <label>Preferred Time Slot</label>
     <select name="time_slot" required>

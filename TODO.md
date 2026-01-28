@@ -19,3 +19,6 @@
 ## Testing
 - [x] Test all new features
 - [x] Ensure no existing functionality is broken
+- [x] Fix undefined array key warning in bookings.php
+- [x] Remove extra ?> from room details pages
+- [x] Update spa reservation date range

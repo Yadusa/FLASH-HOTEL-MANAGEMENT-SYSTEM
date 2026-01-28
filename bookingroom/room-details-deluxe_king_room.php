@@ -15,7 +15,7 @@ $status = $row['room_status'];
 // The room is only "Bookable" if slots > 0 AND status is 'Available'
 $is_bookable = ($available > 0 && $status == 'Available');
 ?>
-?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
