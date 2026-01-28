@@ -13,14 +13,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $checkin = $_POST['checkin'];
     $checkout = $_POST['checkout'];
     $status = $_POST['payment_status'];
+    $adults = (int)$_POST['adults'];
+    $children = (int)$_POST['children'];
 
-    $update_sql = "UPDATE bookings SET room_name=?, checkin=?, checkout=?, payment_status=? WHERE id=?";
-    $stmt = $conn->prepare($update_sql);
-    $stmt->bind_param("ssssi", $room, $checkin, $checkout, $status, $id);
-    
-    if ($stmt->execute()) {
-        header("Location: bookings.php?msg=updated");
-        exit;
+    // Validate input
+    if ($adults < 1 || $adults > 10 || $children < 0 || $children > 10) {
+        $error_message = "Invalid number of guests. Adults: 1-10, Children: 0-10.";
+    } else {
+        $update_sql = "UPDATE bookings SET room_name=?, checkin=?, checkout=?, payment_status=?, adults=?, children=? WHERE id=?";
+        $stmt = $conn->prepare($update_sql);
+        $stmt->bind_param("ssssiii", $room, $checkin, $checkout, $status, $adults, $children, $id);
+
+        if ($stmt->execute()) {
+            header("Location: bookings.php?msg=updated");
+            exit;
+        }
     }
 }
 ?>
@@ -61,6 +68,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <option value="Paid" <?php if($booking['payment_status'] == 'Paid') echo 'selected'; ?>>Paid</option>
                         <option value="Cancelled" <?php if($booking['payment_status'] == 'Cancelled') echo 'selected'; ?>>Cancelled</option>
                     </select>
+                </div>
+                <div class="form-group">
+                    <label>Number of Adults</label>
+                    <input type="number" name="adults" min="1" max="10" value="<?php echo $booking['adults']; ?>" required>
+                </div>
+                <div class="form-group">
+                    <label>Number of Children</label>
+                    <input type="number" name="children" min="0" max="10" value="<?php echo $booking['children']; ?>" required>
                 </div>
                 <button type="submit" class="btn-save">Update Booking</button>
                 <a href="bookings.php">Cancel</a>

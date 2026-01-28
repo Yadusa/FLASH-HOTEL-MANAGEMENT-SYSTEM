@@ -33,46 +33,43 @@ if (isset($_POST['create_manual_booking'])) {
     $checkout = $_POST['manual_checkout'];
     $adults = (int)$_POST['manual_adults'];
     $children = (int)$_POST['manual_children'];
+    $room_price = (float)$_POST['manual_room_price'];
 
     // Check if room is available for booking
     $room_check = $conn->prepare("SELECT room_status FROM rooms WHERE room_name = ?");
-    $room_check->bind_param("s", $room_name);
-    $room_check->execute();
-    $room_check_result = $room_check->get_result();
-    $room_info = $room_check_result->fetch_assoc();
-    
-    if ($room_info['room_status'] == 'Unavailable for Booking') {
-        $error_message = "This room is currently unavailable for booking!";
+    if ($room_check === false) {
+        $error_message = "Database error: " . $conn->error;
     } else {
-        // Get room price
-        $room_query = $conn->prepare("SELECT room_price FROM rooms WHERE room_name = ?");
-        $room_query->bind_param("s", $room_name);
-        $room_query->execute();
-        $room_result = $room_query->get_result();
-        $room = $room_result->fetch_assoc();
-        $room_price = $room['room_price'];
+        $room_check->bind_param("s", $room_name);
+        $room_check->execute();
+        $room_check_result = $room_check->get_result();
+        $room_info = $room_check_result->fetch_assoc();
 
-        // Calculate total price
-        $diff = strtotime($checkout) - strtotime($checkin);
-        $nights = max(1, ceil($diff / (60*60*24)));
-        $total_price = $nights * $room_price;
+        if ($room_info['room_status'] == 'Unavailable for Booking') {
+            $error_message = "This room is currently unavailable for booking!";
+        } else {
+            // Calculate total price
+            $diff = strtotime($checkout) - strtotime($checkin);
+            $nights = max(1, ceil($diff / (60*60*24)));
+            $total_price = $nights * $room_price;
 
-        // Insert booking
-        $insert_sql = "INSERT INTO bookings (customer_username, room_name, room_price, checkin, checkout, adults, children, total_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($insert_sql);
-        $stmt->bind_param("ssdssiii", $customer_username, $room_name, $room_price, $checkin, $checkout, $adults, $children, $total_price);
-        $stmt->execute();
+            // Insert booking
+            $insert_sql = "INSERT INTO bookings (customer_username, room_name, room_price, checkin, checkout, adults, children, total_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $conn->prepare($insert_sql);
+            $stmt->bind_param("ssdssiii", $customer_username, $room_name, $room_price, $checkin, $checkout, $adults, $children, $total_price);
+            $stmt->execute();
 
-        // Update available slots
-        $update_slots = "UPDATE rooms SET available_slots = available_slots - 1 WHERE room_name = ?";
-        $update_stmt = $conn->prepare($update_slots);
-        $update_stmt->bind_param("s", $room_name);
-        $update_stmt->execute();
+            // Update available slots
+            $update_slots = "UPDATE rooms SET available_slots = available_slots - 1 WHERE room_name = ?";
+            $update_stmt = $conn->prepare($update_slots);
+            $update_stmt->bind_param("s", $room_name);
+            $update_stmt->execute();
 
-        // Set status if full
-        $conn->query("UPDATE rooms SET room_status = 'Occupied' WHERE available_slots <= 0 AND room_status = 'Available'");
-        
-        $success_message = "Booking created successfully!";
+            // Set status if full
+            $conn->query("UPDATE rooms SET room_status = 'Occupied' WHERE available_slots <= 0 AND room_status = 'Available'");
+
+            $success_message = "Booking created successfully!";
+        }
     }
 }
 
@@ -410,6 +407,8 @@ $rooms_result = $conn->query($rooms_sql);
                 <input type="number" name="manual_adults" min="1" value="1" required>
                 <label>Children: </label>
                 <input type="number" name="manual_children" min="0" value="0" required><br><br>
+                <label>Room Price (RM per night): </label>
+                <input type="number" name="manual_room_price" min="0" step="0.01" required><br><br>
                 <button type="submit" name="create_manual_booking" class="btn btn-success">Create Booking</button>
             </form>
         </div>
