@@ -1,15 +1,9 @@
-# TODO: Add Informational Messages for Room Availability and Adjust Address Field UI
+# TODO: Add New Functionality to Hotel Booking Management System
 
 ## Pending Tasks
-- [x] Add availability check in roombooking.php to display “Sorry, this room is fully booked for the dates you selected.” above “View & Book” button if available_slots <= 0 for each room.
-- [x] Update blocked date error in booking.php to “Sorry, this room is currently unavailable.”
-- [ ] Update messages in room-details-deluxe_king_room.php: "UNDER MAINTENANCE" to “Sorry, this room is currently unavailable.” and "CURRENTLY FULLY BOOKED" to “Sorry, this room is fully booked for the dates you selected.”
-- [ ] Update messages in room-details-executive_deluxe_king.php: "UNDER MAINTENANCE" to “Sorry, this room is currently unavailable.” and "CURRENTLY FULLY BOOKED" to “Sorry, this room is fully booked for the dates you selected.”
-- [ ] Update messages in room-details-budget_twinroom.php: "UNDER MAINTENANCE" to “Sorry, this room is currently unavailable.” and "CURRENTLY FULLY BOOKED" to “Sorry, this room is fully booked for the dates you selected.”
-- [ ] Update messages in room-details-executive.php: "UNDER MAINTENANCE" to “Sorry, this room is currently unavailable.” and "CURRENTLY FULLY BOOKED" to “Sorry, this room is fully booked for the dates you selected.”
-- [ ] Update messages in room-details-family_room.php: "UNDER MAINTENANCE" to “Sorry, this room is currently unavailable.” and "CURRENTLY FULLY BOOKED" to “Sorry, this room is fully booked for the dates you selected.”
-- [ ] Update messages in room-details-standard_doubleroom.php: "UNDER MAINTENANCE" to “Sorry, this room is currently unavailable.” and "CURRENTLY FULLY BOOKED" to “Sorry, this room is fully booked for the dates you selected.”
-- [ ] Adjust textarea in customer_register.php to match input field size and style by adding CSS (padding, margin, border-radius, border).
-- [ ] Adjust textarea in edit_customer.php to match input field size and style by adding CSS (padding, margin, border-radius, border).
-- [ ] Test that booking remains disabled for blocked dates and unavailable rooms.
-- [ ] Verify UI consistency for address fields.
+- [x] Add "Undo" button in bookings.php actions column for cancelled bookings (payment_status = 'Cancelled') to restore to 'Pending'
+- [x] Add "Edit People" link in customers.php actions column to edit adults/children for customer's bookings
+- [x] Create undo_booking.php script to handle undoing cancelled bookings by updating payment_status to 'Pending'
+- [x] Create edit_people.php page to select and edit adults/children for the customer's bookings
+- [ ] Test that existing functionality remains intact
+- [ ] Ensure all changes are additive only

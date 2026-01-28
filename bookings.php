@@ -301,7 +301,13 @@ $rooms_result = $conn->query($rooms_sql);
             <i class="fas fa-check-circle"></i> <?php echo htmlspecialchars($success_message); ?>
         </div>
     <?php endif; ?>
-    
+
+    <?php if (isset($_GET['undone'])): ?>
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i> Booking cancellation undone successfully!
+        </div>
+    <?php endif; ?>
+
     <?php if (isset($error_message)): ?>
         <div class="alert alert-danger">
             <i class="fas fa-exclamation-circle"></i> <?php echo htmlspecialchars($error_message); ?>
@@ -464,7 +470,12 @@ $rooms_result = $conn->query($rooms_sql);
                                 <a href="edit_booking.php?id=<?php echo $row['id']; ?>" class="action-link edit-link" title="Edit Booking">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>
-                                <a href="delete_booking.php?id=<?php echo $row['id']; ?>" class="action-link delete-link" 
+                                <?php if ($row['payment_status'] === 'Cancelled'): ?>
+                                    <a href="undo_booking.php?id=<?php echo $row['id']; ?>" class="action-link" style="color: #28a745;" title="Undo Cancellation">
+                                        <i class="fas fa-undo"></i> Undo
+                                    </a>
+                                <?php endif; ?>
+                                <a href="delete_booking.php?id=<?php echo $row['id']; ?>" class="action-link delete-link"
                                    title="Delete Booking" onclick="return confirm('WARNING: Are you sure you want to delete Booking #<?php echo $row['id']; ?>?');">
                                     <i class="fas fa-trash-alt"></i> Delete
                                 </a>
