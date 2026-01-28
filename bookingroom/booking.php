@@ -51,7 +51,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $total_price = $nights * $room_price;
 
             $stmt = $conn->prepare("INSERT INTO bookings (customer_username, room_name, room_price, checkin, checkout, adults, children, total_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssissiii", $customer_username, $room_name, $room_price, $checkin, $checkout, $adults, $children, $total_price);
+            if (!$stmt) {
+    die("Prepare failed: " . $conn->error);
+}
+       $stmt->bind_param("ssdssiii", $customer_username, $room_name, $room_price, $checkin, $checkout, $adults, $children, $total_price);
 
         if ($stmt->execute()) {
             
