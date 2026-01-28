@@ -36,6 +36,28 @@ if (isset($_POST['update_status_trigger'])) {
     $stmt->execute();
 }
 
+// --- HANDLE ADD NEW ROOM ---
+if (isset($_POST['add_room'])) {
+    $room_name = trim($_POST['room_name']);
+    $total_slots = (int)$_POST['total_slots'];
+    if (!empty($room_name) && $total_slots > 0) {
+        $insert_sql = "INSERT INTO rooms (room_name, total_slots, available_slots, room_status) VALUES (?, ?, ?, 'Available')";
+        $stmt = $conn->prepare($insert_sql);
+        $stmt->bind_param("sii", $room_name, $total_slots, $total_slots);
+        $stmt->execute();
+    }
+}
+
+// --- HANDLE BLOCK DATE ---
+if (isset($_POST['block_date'])) {
+    $room_name = $_POST['block_room_name'];
+    $block_date = $_POST['block_date'];
+    $insert_block = "INSERT INTO room_blocked_dates (room_name, blocked_date) VALUES (?, ?) ON DUPLICATE KEY UPDATE blocked_date = blocked_date";
+    $stmt = $conn->prepare($insert_block);
+    $stmt->bind_param("ss", $room_name, $block_date);
+    $stmt->execute();
+}
+
 // Fetch all rooms
 $sql = "SELECT * FROM rooms";
 $result = $conn->query($sql);
@@ -79,7 +101,34 @@ $result = $conn->query($sql);
 <div class="main-content">
     <div class="admin-card">
         <h2>Room Inventory Management</h2>
-        
+
+        <!-- Add New Room Form -->
+        <h3>Add New Room</h3>
+        <form method="POST" style="margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+            <label>Room Name: </label>
+            <input type="text" name="room_name" required>
+            <label>Total Slots: </label>
+            <input type="number" name="total_slots" min="1" required>
+            <button type="submit" name="add_room" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">Add Room</button>
+        </form>
+
+        <!-- Block Dates Form -->
+        <h3>Block Dates for Rooms</h3>
+        <form method="POST" style="margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+            <label>Room: </label>
+            <select name="block_room_name" required>
+                <?php
+                $room_result = $conn->query("SELECT room_name FROM rooms");
+                while($room = $room_result->fetch_assoc()) {
+                    echo "<option value='" . htmlspecialchars($room['room_name']) . "'>" . htmlspecialchars($room['room_name']) . "</option>";
+                }
+                ?>
+            </select>
+            <label>Block Date: </label>
+            <input type="date" name="block_date" required>
+            <button type="submit" name="block_date" style="background: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">Block Date</button>
+        </form>
+
         <form method="GET" style="margin-bottom: 20px;">
             <label>Check Date: </label>
             <input type="date" name="date" value="<?php echo $selected_date; ?>" onchange="this.form.submit()">

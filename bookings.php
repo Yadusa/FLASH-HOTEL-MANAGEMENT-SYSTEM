@@ -11,6 +11,44 @@ if (!isset($_SESSION["admin_id"])) {
 $adminName = $_SESSION["admin_name"];
 $adminRole = $_SESSION["admin_role"];
 
+// Handle manual booking creation
+if (isset($_POST['create_manual_booking'])) {
+    $customer_username = trim($_POST['manual_customer_username']);
+    $room_name = $_POST['manual_room_name'];
+    $checkin = $_POST['manual_checkin'];
+    $checkout = $_POST['manual_checkout'];
+    $adults = (int)$_POST['manual_adults'];
+    $children = (int)$_POST['manual_children'];
+
+    // Get room price
+    $room_query = $conn->prepare("SELECT room_price FROM rooms WHERE room_name = ?");
+    $room_query->bind_param("s", $room_name);
+    $room_query->execute();
+    $room_result = $room_query->get_result();
+    $room = $room_result->fetch_assoc();
+    $room_price = $room['room_price'];
+
+    // Calculate total price
+    $diff = strtotime($checkout) - strtotime($checkin);
+    $nights = max(1, ceil($diff / (60*60*24)));
+    $total_price = $nights * $room_price;
+
+    // Insert booking
+    $insert_sql = "INSERT INTO bookings (customer_username, room_name, room_price, checkin, checkout, adults, children, total_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($insert_sql);
+    $stmt->bind_param("ssissiii", $customer_username, $room_name, $room_price, $checkin, $checkout, $adults, $children, $total_price);
+    $stmt->execute();
+
+    // Update available slots
+    $update_slots = "UPDATE rooms SET available_slots = available_slots - 1 WHERE room_name = ?";
+    $update_stmt = $conn->prepare($update_slots);
+    $update_stmt->bind_param("s", $room_name);
+    $update_stmt->execute();
+
+    // Set status if full
+    $conn->query("UPDATE rooms SET room_status = 'Occupied' WHERE available_slots <= 0 AND room_status = 'Available'");
+}
+
 // 2. Fetch all bookings
 $sql = "SELECT * FROM bookings ORDER BY created_at DESC";
 $result = $conn->query($sql);
@@ -189,7 +227,35 @@ $result = $conn->query($sql);
     <div class="table-box">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
             <h4 style="margin: 0; font-size: 1.1rem; color: #555;">All Room Reservations</h4>
-            </div>
+            <button onclick="toggleManualBookingForm()" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">+ Manual Booking</button>
+        </div>
+
+        <!-- Manual Booking Form (Hidden by default) -->
+        <div id="manualBookingForm" style="display: none; margin-bottom: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background: #f9f9f9;">
+            <h4>Create Manual Booking</h4>
+            <form method="POST">
+                <label>Customer Username: </label>
+                <input type="text" name="manual_customer_username" required><br><br>
+                <label>Room: </label>
+                <select name="manual_room_name" required>
+                    <?php
+                    $room_result = $conn->query("SELECT room_name FROM rooms");
+                    while($room = $room_result->fetch_assoc()) {
+                        echo "<option value='" . htmlspecialchars($room['room_name']) . "'>" . htmlspecialchars($room['room_name']) . "</option>";
+                    }
+                    ?>
+                </select><br><br>
+                <label>Check-in Date: </label>
+                <input type="date" name="manual_checkin" required><br><br>
+                <label>Check-out Date: </label>
+                <input type="date" name="manual_checkout" required><br><br>
+                <label>Adults: </label>
+                <input type="number" name="manual_adults" min="1" value="1" required>
+                <label>Children: </label>
+                <input type="number" name="manual_children" min="0" value="0" required><br><br>
+                <button type="submit" name="create_manual_booking" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">Create Booking</button>
+            </form>
+        </div>
 
         <table class="booking-table">
             <thead>
@@ -267,5 +333,15 @@ $result = $conn->query($sql);
     </div>
 </div>
 
+<script>
+function toggleManualBookingForm() {
+    var form = document.getElementById('manualBookingForm');
+    if (form.style.display === 'none' || form.style.display === '') {
+        form.style.display = 'block';
+    } else {
+        form.style.display = 'none';
+    }
+}
+</script>
 </body>
 </html>
