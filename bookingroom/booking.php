@@ -77,7 +77,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error_message = "Error while booking: " . $conn->error;
         }
 
-        $stmt->close();
+        $stmt->close();}
     }
 }
 ?>
