@@ -83,7 +83,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['update_customer'])) {
                    value="<?= htmlspecialchars($customer['contact_number'] ?? ''); ?>" required>
 
             <label for="address">Address</label>
-            <textarea id="address" name="address" required><?= htmlspecialchars($customer['address'] ?? ''); ?></textarea>
+            <textarea id="address" name="address" required style="width: 100%; padding: 13px 14px; margin-bottom: 16px; border-radius: 12px; border: 1px solid #d1d5db;"><?= htmlspecialchars($customer['address'] ?? ''); ?></textarea>
 
             <button type="submit" name="update_customer">Update Customer</button>
             <a href="customers.php" class="cancel-link">Cancel and Go Back</a>

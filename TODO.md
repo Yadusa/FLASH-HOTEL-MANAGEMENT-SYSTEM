@@ -1,24 +1,15 @@
-# TODO List for Adding New Features to Hotel Booking Management System
+# TODO: Add Informational Messages for Room Availability and Adjust Address Field UI
 
-## Database Changes
-- [x] Create add_features.sql with ALTER TABLE for customer address and CREATE TABLE for room_blocked_dates
-
-## Customer Management
-- [x] Update customer_register_process.php to include address in registration
-- [x] Update edit_customer.php to include address in editing
-- [x] Modify delete_customer.php to delete associated bookings before deleting customer
-
-## Room Management
-- [x] Add form in manage_rooms.php to add new rooms with capacity
-- [x] Add admin interface in manage_rooms.php to block dates for rooms
-
-## Booking Management
-- [x] Add form in bookings.php to manually create bookings
-- [x] Update booking.php to check for blocked dates before allowing booking
-
-## Testing
-- [x] Test all new features
-- [x] Ensure no existing functionality is broken
-- [x] Fix undefined array key warning in bookings.php
-- [x] Remove extra ?> from room details pages
-- [x] Update spa reservation date range
+## Pending Tasks
+- [x] Add availability check in roombooking.php to display “Sorry, this room is fully booked for the dates you selected.” above “View & Book” button if available_slots <= 0 for each room.
+- [x] Update blocked date error in booking.php to “Sorry, this room is currently unavailable.”
+- [ ] Update messages in room-details-deluxe_king_room.php: "UNDER MAINTENANCE" to “Sorry, this room is currently unavailable.” and "CURRENTLY FULLY BOOKED" to “Sorry, this room is fully booked for the dates you selected.”
+- [ ] Update messages in room-details-executive_deluxe_king.php: "UNDER MAINTENANCE" to “Sorry, this room is currently unavailable.” and "CURRENTLY FULLY BOOKED" to “Sorry, this room is fully booked for the dates you selected.”
+- [ ] Update messages in room-details-budget_twinroom.php: "UNDER MAINTENANCE" to “Sorry, this room is currently unavailable.” and "CURRENTLY FULLY BOOKED" to “Sorry, this room is fully booked for the dates you selected.”
+- [ ] Update messages in room-details-executive.php: "UNDER MAINTENANCE" to “Sorry, this room is currently unavailable.” and "CURRENTLY FULLY BOOKED" to “Sorry, this room is fully booked for the dates you selected.”
+- [ ] Update messages in room-details-family_room.php: "UNDER MAINTENANCE" to “Sorry, this room is currently unavailable.” and "CURRENTLY FULLY BOOKED" to “Sorry, this room is fully booked for the dates you selected.”
+- [ ] Update messages in room-details-standard_doubleroom.php: "UNDER MAINTENANCE" to “Sorry, this room is currently unavailable.” and "CURRENTLY FULLY BOOKED" to “Sorry, this room is fully booked for the dates you selected.”
+- [ ] Adjust textarea in customer_register.php to match input field size and style by adding CSS (padding, margin, border-radius, border).
+- [ ] Adjust textarea in edit_customer.php to match input field size and style by adding CSS (padding, margin, border-radius, border).
+- [ ] Test that booking remains disabled for blocked dates and unavailable rooms.
+- [ ] Verify UI consistency for address fields.

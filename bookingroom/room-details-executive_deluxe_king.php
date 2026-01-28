@@ -86,12 +86,12 @@ $is_bookable = ($available > 0 && $status == 'Available');
         <?php else: ?>
           <div class="availability-box out-of-stock" style="padding: 20px; background: #ffebe6; border-radius: 8px; border: 1px solid #ffbdad;">
             <h3 style="color: #bf2600; margin: 0;">
-                <?php 
+                <?php
                     if ($status == 'Maintenance') {
-                        echo "UNDER MAINTENANCE";
+                        echo "Sorry, this room is currently unavailable.";
                         echo "<p style='font-size: 0.9rem; font-weight: normal; margin-top: 5px;'>This room is temporarily unavailable due to scheduled maintenance.</p>";
                     } else {
-                        echo "CURRENTLY FULLY BOOKED";
+                        echo "Sorry, this room is fully booked for the dates you selected.";
                         echo "<p style='font-size: 0.9rem; font-weight: normal; margin-top: 5px;'>Please check back later or explore our other luxury suites.</p>";
                     }
                 ?>

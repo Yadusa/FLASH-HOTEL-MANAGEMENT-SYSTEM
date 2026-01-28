@@ -44,8 +44,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         $blocked_result = $blocked_check->get_result()->fetch_assoc();
 
         if ($blocked_result['blocked_count'] > 0) {
-            $error_message = "Sorry, this room is not available for the selected dates.";
-        } else {
+            $error_message = "Sorry, this room is currently unavailable.";
+        }
             $diff = strtotime($checkout) - strtotime($checkin);
             $nights = max(1, ceil($diff / (60*60*24)));
             $total_price = $nights * $room_price;
@@ -85,7 +85,7 @@ $stmt->bind_param("ssdssiii", $customer_username, $room_name, $room_price, $chec
 
         $stmt->close();}
     }
-}
+
 ?>
 
 

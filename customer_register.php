@@ -73,7 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <input type="text" name="cust_name" placeholder="Full Name" required>
         <input type="email" name="cust_email" placeholder="Email Address" required>
         <input type="text" name="contact_number" placeholder="Contact Number" required>
-        <textarea name="address" placeholder="Address" required></textarea>
+        <textarea name="address" placeholder="Address" required style="width: 100%; padding: 13px 14px; margin-bottom: 16px; border-radius: 12px; border: 1px solid #d1d5db;"></textarea>
         <input type="password" name="password" placeholder="Password" required>
         <input type="password" name="confirm_password" placeholder="Confirm Password" required>
         <button type="submit">Register</button>

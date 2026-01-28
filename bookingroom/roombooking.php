@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once "../db.php";
 ?>
 
 <!DOCTYPE html>
@@ -40,7 +41,14 @@ session_start();
                             <h3 class="room-name">Executive Suite</h3>
                             <p class="room-price">From RM 1,000 / night</p>
                             <p class="room-details-text">Luxury meets comfort in our elegantly designed spaces, complete with spacious living areas and modern amenities for a seamless, private stay.</p>
-                            
+                            <?php
+                            $sql = "SELECT available_slots FROM rooms WHERE room_name = 'Executive Suite'";
+                            $result = $conn->query($sql);
+                            $row = $result->fetch_assoc();
+                            if ($row['available_slots'] <= 0) {
+                                echo '<p style="color: red; font-weight: bold;">Sorry, this room is fully booked for the dates you selected.</p>';
+                            }
+                            ?>
                             <div class="cta-group">
                             <?php if(isset($_SESSION['customer_username'])): ?>
                               <a href="booking.php?room_name=Executive Suite&room_price=1000" class="btn btn-primary">View & Book →</a>
@@ -60,7 +68,14 @@ session_start();
                             <h3 class="room-name">Deluxe King Room</h3>
                             <p class="room-price">From RM 950 / night</p>
                             <p class="room-details-text">Rest in a comfortable king-size bed, featuring a private marble bathroom, work desk, and complimentary Wi-Fi for superior comfort.</p>
-                            
+                            <?php
+                            $sql = "SELECT available_slots FROM rooms WHERE room_name = 'Deluxe King Room'";
+                            $result = $conn->query($sql);
+                            $row = $result->fetch_assoc();
+                            if ($row['available_slots'] <= 0) {
+                                echo '<p style="color: red; font-weight: bold;">Sorry, this room is fully booked for the dates you selected.</p>';
+                            }
+                            ?>
                             <div class="cta-group">
                                 <?php if(isset($_SESSION['customer_username'])): ?>
                                 <a href="booking.php?room_name=Deluxe King Room&room_price=950" class="btn btn-primary">View & Book →</a>  
@@ -85,7 +100,14 @@ session_start();
                             <h3 class="room-name">Family Room</h3>
                             <p class="room-price">From RM 500 / night</p>
                             <p class="room-details-text">Spacious and modern accommodations tailored for families, offering interconnected options and ample space for a relaxed holiday.</p>
-                            
+                            <?php
+                            $sql = "SELECT available_slots FROM rooms WHERE room_name = 'Family Room'";
+                            $result = $conn->query($sql);
+                            $row = $result->fetch_assoc();
+                            if ($row['available_slots'] <= 0) {
+                                echo '<p style="color: red; font-weight: bold;">Sorry, this room is fully booked for the dates you selected.</p>';
+                            }
+                            ?>
                             <div class="cta-group">
                                 <?php if(isset($_SESSION['customer_username'])): ?>
                                  <a href="booking.php?room_name=Family Room&room_price=500" class="btn btn-primary">View & Book →</a>
@@ -105,7 +127,14 @@ session_start();
                             <h3 class="room-name">Executive Deluxe King</h3>
                             <p class="room-price">From RM 420 / night</p>
                             <p class="room-details-text">Pamper yourself with premium toiletries and cozy bathrobes. Unwind with in-room entertainment and exclusive executive lounge access.</p>
-                            
+                            <?php
+                            $sql = "SELECT available_slots FROM rooms WHERE room_name = 'Executive Deluxe King'";
+                            $result = $conn->query($sql);
+                            $row = $result->fetch_assoc();
+                            if ($row['available_slots'] <= 0) {
+                                echo '<p style="color: red; font-weight: bold;">Sorry, this room is fully booked for the dates you selected.</p>';
+                            }
+                            ?>
                             <div class="cta-group">
                                 <?php if(isset($_SESSION['customer_username'])): ?>
                                  <a href="booking.php?room_name=Executive Deluxe King&room_price=420" class="btn btn-primary">View & Book →</a>
@@ -150,7 +179,14 @@ session_start();
                             <h3 class="room-name">Budget Twin Room</h3>
                             <p class="room-price">From RM 120 / night</p>
                             <p class="room-details-text">An economical choice offering clean twin beds, a private bathroom, and a work area, perfect for the efficient traveler.</p>
-                            
+                            <?php
+                            $sql = "SELECT available_slots FROM rooms WHERE room_name = 'Budget Twin Room'";
+                            $result = $conn->query($sql);
+                            $row = $result->fetch_assoc();
+                            if ($row['available_slots'] <= 0) {
+                                echo '<p style="color: red; font-weight: bold;">Sorry, this room is fully booked for the dates you selected.</p>';
+                            }
+                            ?>
                             <div class="cta-group">
                                 <?php if(isset($_SESSION['customer_username'])): ?>
                                  <a href="booking.php?room_name=Budget Twin Room&room_price=120" class="btn btn-primary">View & Book →</a>
