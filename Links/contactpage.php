@@ -1,12 +1,42 @@
 <?php
 session_start();
 
+// ---------------------------------------------------------
+// 1. DATABASE CONFIGURATION
+// ---------------------------------------------------------
+$host     = "localhost";
+$db_user  = "root";
+$db_pass  = "";
+$db_name  = "flashhotel"; // Using the same DB name as your dinner reservation
+
+$conn = new mysqli($host, $db_user, $db_pass, $db_name);
+
+if ($conn->connect_error) {
+    die("Database Connection Failed: " . $conn->connect_error);
+}
+
+// ---------------------------------------------------------
+// 2. HANDLE FORM SUBMISSION
+// ---------------------------------------------------------
 $show_popup = false;
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // You can save feedback to DB here later
-    $show_popup = true;
+    $name     = htmlspecialchars($_POST['name']);
+    $email    = htmlspecialchars($_POST['email']);
+    $feedback = htmlspecialchars($_POST['feedback']);
+
+    $stmt = $conn->prepare("INSERT INTO contact_feedback (name, email, feedback) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $name, $email, $feedback);
+
+    if ($stmt->execute()) {
+        $show_popup = true;
+    } else {
+        echo "<script>alert('Error submitting feedback.');</script>";
+    }
+    
+    $stmt->close();
 }
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -164,7 +194,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </div>
 </main>
 
-<!-- POPUP -->
 <div class="popup-overlay">
     <div class="popup-card">
         
@@ -180,7 +209,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <script>
 function closePopup() {
     window.location.href = "../hotel.php"; 
-    // change to "contact.php" if you want to stay on contact page
 }
 </script>
 
