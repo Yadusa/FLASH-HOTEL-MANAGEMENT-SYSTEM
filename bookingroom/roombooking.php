@@ -15,6 +15,50 @@ require_once "../db.php";
          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
          <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
          
+         <style>
+             /* Disabled button styles */
+             .btn-disabled {
+                 background-color: #cccccc !important;
+                 color: #666666 !important;
+                 cursor: not-allowed !important;
+                 pointer-events: none;
+                 opacity: 0.6;
+             }
+             
+             .unavailable-notice {
+                 color: #dc3545;
+                 font-weight: bold;
+                 font-size: 14px;
+                 margin: 10px 0;
+                 padding: 8px 12px;
+                 background: #f8d7da;
+                 border: 1px solid #f5c6cb;
+                 border-radius: 5px;
+                 display: inline-block;
+             }
+             
+             .fully-booked-badge {
+                 background: #dc3545;
+                 color: white;
+                 padding: 5px 10px;
+                 border-radius: 5px;
+                 font-size: 12px;
+                 font-weight: bold;
+                 display: inline-block;
+                 margin-bottom: 10px;
+             }
+             
+             .unavailable-badge {
+                 background: #6c757d;
+                 color: white;
+                 padding: 5px 10px;
+                 border-radius: 5px;
+                 font-size: 12px;
+                 font-weight: bold;
+                 display: inline-block;
+                 margin-bottom: 10px;
+             }
+         </style>
     </head>
 
     <body>
@@ -42,18 +86,30 @@ require_once "../db.php";
                             <p class="room-price">From RM 1,000 / night</p>
                             <p class="room-details-text">Luxury meets comfort in our elegantly designed spaces, complete with spacious living areas and modern amenities for a seamless, private stay.</p>
                             <?php
-                            $sql = "SELECT available_slots FROM rooms WHERE room_name = 'Executive Suite'";
+                            $sql = "SELECT available_slots, room_status FROM rooms WHERE room_name = 'Executive Suite'";
                             $result = $conn->query($sql);
                             $row = $result->fetch_assoc();
-                            if ($row['available_slots'] <= 0) {
-                                echo '<p style="color: red; font-weight: bold;">Sorry, this room is fully booked for the dates you selected.</p>';
+                            $is_available = true;
+                            
+                            if ($row['room_status'] == 'Unavailable for Booking') {
+                                echo '<span class="unavailable-badge">🚫 UNAVAILABLE FOR BOOKING</span>';
+                                $is_available = false;
+                            } elseif ($row['available_slots'] <= 0) {
+                                echo '<span class="fully-booked-badge">🔒 FULLY BOOKED</span>';
+                                $is_available = false;
                             }
                             ?>
                             <div class="cta-group">
                             <?php if(isset($_SESSION['customer_username'])): ?>
-                              <a href="booking.php?room_name=Executive Suite&room_price=1000" class="btn btn-primary">View & Book →</a>
+                              <a href="<?php echo $is_available ? 'booking.php?room_name=Executive Suite&room_price=1000' : '#'; ?>" 
+                                 class="btn btn-primary <?php echo !$is_available ? 'btn-disabled' : ''; ?>">
+                                 View & Book →
+                              </a>
                             <?php else: ?>
-                              <a href="../customer_login.php?redirect=bookingroom/booking.php&room_name=Executive Suite&room_price=1000" class="btn btn-primary">View & Book →</a>
+                              <a href="<?php echo $is_available ? '../customer_login.php?redirect=bookingroom/booking.php&room_name=Executive Suite&room_price=1000' : '#'; ?>" 
+                                 class="btn btn-primary <?php echo !$is_available ? 'btn-disabled' : ''; ?>">
+                                 View & Book →
+                              </a>
                             <?php endif; ?>
                             <a href="room-details-executive.php" class="btn btn-secondary">Room Details</a>
                             </div>
@@ -69,18 +125,30 @@ require_once "../db.php";
                             <p class="room-price">From RM 950 / night</p>
                             <p class="room-details-text">Rest in a comfortable king-size bed, featuring a private marble bathroom, work desk, and complimentary Wi-Fi for superior comfort.</p>
                             <?php
-                            $sql = "SELECT available_slots FROM rooms WHERE room_name = 'Deluxe King Room'";
+                            $sql = "SELECT available_slots, room_status FROM rooms WHERE room_name = 'Deluxe King Room'";
                             $result = $conn->query($sql);
                             $row = $result->fetch_assoc();
-                            if ($row['available_slots'] <= 0) {
-                                echo '<p style="color: red; font-weight: bold;">Sorry, this room is fully booked for the dates you selected.</p>';
+                            $is_available = true;
+                            
+                            if ($row['room_status'] == 'Unavailable for Booking') {
+                                echo '<span class="unavailable-badge">🚫 UNAVAILABLE FOR BOOKING</span>';
+                                $is_available = false;
+                            } elseif ($row['available_slots'] <= 0) {
+                                echo '<span class="fully-booked-badge">🔒 FULLY BOOKED</span>';
+                                $is_available = false;
                             }
                             ?>
                             <div class="cta-group">
                                 <?php if(isset($_SESSION['customer_username'])): ?>
-                                <a href="booking.php?room_name=Deluxe King Room&room_price=950" class="btn btn-primary">View & Book →</a>  
+                                <a href="<?php echo $is_available ? 'booking.php?room_name=Deluxe King Room&room_price=950' : '#'; ?>" 
+                                   class="btn btn-primary <?php echo !$is_available ? 'btn-disabled' : ''; ?>">
+                                   View & Book →
+                                </a>  
                                 <?php else: ?>
-                                <a href="../customer_login.php?redirect=bookingroom/booking.php&room_name=Deluxe King Room&room_price=950" class="btn btn-primary">View & Book →</a>
+                                <a href="<?php echo $is_available ? '../customer_login.php?redirect=bookingroom/booking.php&room_name=Deluxe King Room&room_price=950' : '#'; ?>" 
+                                   class="btn btn-primary <?php echo !$is_available ? 'btn-disabled' : ''; ?>">
+                                   View & Book →
+                                </a>
                                 <?php endif; ?>
                                 <a href="room-details-deluxe_king_room.php" class="btn btn-secondary">Room Details</a>
                             </div>
@@ -101,18 +169,30 @@ require_once "../db.php";
                             <p class="room-price">From RM 500 / night</p>
                             <p class="room-details-text">Spacious and modern accommodations tailored for families, offering interconnected options and ample space for a relaxed holiday.</p>
                             <?php
-                            $sql = "SELECT available_slots FROM rooms WHERE room_name = 'Family Room'";
+                            $sql = "SELECT available_slots, room_status FROM rooms WHERE room_name = 'Family Room'";
                             $result = $conn->query($sql);
                             $row = $result->fetch_assoc();
-                            if ($row['available_slots'] <= 0) {
-                                echo '<p style="color: red; font-weight: bold;">Sorry, this room is fully booked for the dates you selected.</p>';
+                            $is_available = true;
+                            
+                            if ($row['room_status'] == 'Unavailable for Booking') {
+                                echo '<span class="unavailable-badge">🚫 UNAVAILABLE FOR BOOKING</span>';
+                                $is_available = false;
+                            } elseif ($row['available_slots'] <= 0) {
+                                echo '<span class="fully-booked-badge">🔒 FULLY BOOKED</span>';
+                                $is_available = false;
                             }
                             ?>
                             <div class="cta-group">
                                 <?php if(isset($_SESSION['customer_username'])): ?>
-                                 <a href="booking.php?room_name=Family Room&room_price=500" class="btn btn-primary">View & Book →</a>
+                                 <a href="<?php echo $is_available ? 'booking.php?room_name=Family Room&room_price=500' : '#'; ?>" 
+                                    class="btn btn-primary <?php echo !$is_available ? 'btn-disabled' : ''; ?>">
+                                    View & Book →
+                                 </a>
                                 <?php else: ?>
-                                <a href="../customer_login.php?redirect=bookingroom/booking.php&room_name=Family Room&room_price=500" class="btn btn-primary">View & Book →</a>
+                                <a href="<?php echo $is_available ? '../customer_login.php?redirect=bookingroom/booking.php&room_name=Family Room&room_price=500' : '#'; ?>" 
+                                   class="btn btn-primary <?php echo !$is_available ? 'btn-disabled' : ''; ?>">
+                                   View & Book →
+                                </a>
                                 <?php endif; ?>
                                 <a href="room-details-family_room.php" class="btn btn-secondary">Room Details</a>
                             </div>
@@ -128,18 +208,30 @@ require_once "../db.php";
                             <p class="room-price">From RM 420 / night</p>
                             <p class="room-details-text">Pamper yourself with premium toiletries and cozy bathrobes. Unwind with in-room entertainment and exclusive executive lounge access.</p>
                             <?php
-                            $sql = "SELECT available_slots FROM rooms WHERE room_name = 'Executive Deluxe King'";
+                            $sql = "SELECT available_slots, room_status FROM rooms WHERE room_name = 'Executive Deluxe King'";
                             $result = $conn->query($sql);
                             $row = $result->fetch_assoc();
-                            if ($row['available_slots'] <= 0) {
-                                echo '<p style="color: red; font-weight: bold;">Sorry, this room is fully booked for the dates you selected.</p>';
+                            $is_available = true;
+                            
+                            if ($row['room_status'] == 'Unavailable for Booking') {
+                                echo '<span class="unavailable-badge">🚫 UNAVAILABLE FOR BOOKING</span>';
+                                $is_available = false;
+                            } elseif ($row['available_slots'] <= 0) {
+                                echo '<span class="fully-booked-badge">🔒 FULLY BOOKED</span>';
+                                $is_available = false;
                             }
                             ?>
                             <div class="cta-group">
                                 <?php if(isset($_SESSION['customer_username'])): ?>
-                                 <a href="booking.php?room_name=Executive Deluxe King&room_price=420" class="btn btn-primary">View & Book →</a>
+                                 <a href="<?php echo $is_available ? 'booking.php?room_name=Executive Deluxe King&room_price=420' : '#'; ?>" 
+                                    class="btn btn-primary <?php echo !$is_available ? 'btn-disabled' : ''; ?>">
+                                    View & Book →
+                                 </a>
                                 <?php else: ?>
-                                <a href="../customer_login.php?redirect=bookingroom/booking.php&room_name=Executive Deluxe King&room_price=420" class="btn btn-primary">View & Book →</a>
+                                <a href="<?php echo $is_available ? '../customer_login.php?redirect=bookingroom/booking.php&room_name=Executive Deluxe King&room_price=420' : '#'; ?>" 
+                                   class="btn btn-primary <?php echo !$is_available ? 'btn-disabled' : ''; ?>">
+                                   View & Book →
+                                </a>
                                 <?php endif; ?>
                                  <a href="room-details-executive_deluxe_king.php" class="btn btn-secondary">Room Details</a>
                             </div>
@@ -159,12 +251,31 @@ require_once "../db.php";
                             <h3 class="room-name">Standard Double Room</h3>
                             <p class="room-price">From RM 150 / night</p>
                             <p class="room-details-text">Cozy and affordable accommodation. Enjoy a practical lodging experience without compromising on essential comfort and free Wi-Fi.</p>
+                            <?php
+                            $sql = "SELECT available_slots, room_status FROM rooms WHERE room_name = 'Standard Double Room'";
+                            $result = $conn->query($sql);
+                            $row = $result->fetch_assoc();
+                            $is_available = true;
                             
+                            if ($row['room_status'] == 'Unavailable for Booking') {
+                                echo '<span class="unavailable-badge">🚫 UNAVAILABLE FOR BOOKING</span>';
+                                $is_available = false;
+                            } elseif ($row['available_slots'] <= 0) {
+                                echo '<span class="fully-booked-badge">🔒 FULLY BOOKED</span>';
+                                $is_available = false;
+                            }
+                            ?>
                             <div class="cta-group">
                                 <?php if(isset($_SESSION['customer_username'])): ?>
-                                 <a href="booking.php?room_name=Standard Double Room&room_price=150" class="btn btn-primary">View & Book →</a>
+                                 <a href="<?php echo $is_available ? 'booking.php?room_name=Standard Double Room&room_price=150' : '#'; ?>" 
+                                    class="btn btn-primary <?php echo !$is_available ? 'btn-disabled' : ''; ?>">
+                                    View & Book →
+                                 </a>
                                 <?php else: ?>
-                                <a href="../customer_login.php?redirect=bookingroom/booking.php&room_name=Standard Double Room&room_price=150" class="btn btn-primary">View & Book →</a>
+                                <a href="<?php echo $is_available ? '../customer_login.php?redirect=bookingroom/booking.php&room_name=Standard Double Room&room_price=150' : '#'; ?>" 
+                                   class="btn btn-primary <?php echo !$is_available ? 'btn-disabled' : ''; ?>">
+                                   View & Book →
+                                </a>
                                 <?php endif; ?>
                                  <a href="room-details-standard_doubleroom.php" class="btn btn-secondary">Room Details</a>
                             </div>
@@ -180,18 +291,30 @@ require_once "../db.php";
                             <p class="room-price">From RM 120 / night</p>
                             <p class="room-details-text">An economical choice offering clean twin beds, a private bathroom, and a work area, perfect for the efficient traveler.</p>
                             <?php
-                            $sql = "SELECT available_slots FROM rooms WHERE room_name = 'Budget Twin Room'";
+                            $sql = "SELECT available_slots, room_status FROM rooms WHERE room_name = 'Budget Twin Room'";
                             $result = $conn->query($sql);
                             $row = $result->fetch_assoc();
-                            if ($row['available_slots'] <= 0) {
-                                echo '<p style="color: red; font-weight: bold;">Sorry, this room is fully booked for the dates you selected.</p>';
+                            $is_available = true;
+                            
+                            if ($row['room_status'] == 'Unavailable for Booking') {
+                                echo '<span class="unavailable-badge">🚫 UNAVAILABLE FOR BOOKING</span>';
+                                $is_available = false;
+                            } elseif ($row['available_slots'] <= 0) {
+                                echo '<span class="fully-booked-badge">🔒 FULLY BOOKED</span>';
+                                $is_available = false;
                             }
                             ?>
                             <div class="cta-group">
                                 <?php if(isset($_SESSION['customer_username'])): ?>
-                                 <a href="booking.php?room_name=Budget Twin Room&room_price=120" class="btn btn-primary">View & Book →</a>
+                                 <a href="<?php echo $is_available ? 'booking.php?room_name=Budget Twin Room&room_price=120' : '#'; ?>" 
+                                    class="btn btn-primary <?php echo !$is_available ? 'btn-disabled' : ''; ?>">
+                                    View & Book →
+                                 </a>
                                 <?php else: ?>
-                                <a href="../customer_login.php?redirect=bookingroom/booking.php&room_name=Budget Twin Room&room_price=120" class="btn btn-primary">View & Book →</a>
+                                <a href="<?php echo $is_available ? '../customer_login.php?redirect=bookingroom/booking.php&room_name=Budget Twin Room&room_price=120' : '#'; ?>" 
+                                   class="btn btn-primary <?php echo !$is_available ? 'btn-disabled' : ''; ?>">
+                                   View & Book →
+                                </a>
                                 <?php endif; ?>
                                 <a href="room-details-budget_twinroom.php" class="btn btn-secondary">Room Details</a>
                             </div>
