@@ -93,6 +93,7 @@ body { margin: 0; height: 100vh; background: linear-gradient(135deg, #111827, #1
         <input type="text" name="username" placeholder="Username" required>
         <input type="password" name="password" placeholder="Password" required>
         <button type="submit">Sign In</button>
+        <p><a href="customer_forgotpassword.php">Forgot password?</a></p>
     </form>
 
     <p>No account yet? <a href="customer_register.php">Create one</a></p>
