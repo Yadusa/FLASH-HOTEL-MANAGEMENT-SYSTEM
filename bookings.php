@@ -73,6 +73,17 @@ if (isset($_POST['create_manual_booking'])) {
     }
 }
 
+// Handle blocked date removal
+if (isset($_POST['delete_blocked_date'])) {
+    $blocked_id = (int)$_POST['blocked_id'];
+    $delete_sql = "DELETE FROM room_blocked_dates WHERE id = ?";
+    $stmt = $conn->prepare($delete_sql);
+    $stmt->bind_param("i", $blocked_id);
+    $stmt->execute();
+    $stmt->close();
+    $success_message = "Blocked date removed successfully!";
+}
+
 // 2. Fetch all bookings
 $sql = "SELECT * FROM bookings ORDER BY created_at DESC";
 $result = $conn->query($sql);
@@ -80,6 +91,10 @@ $result = $conn->query($sql);
 // 3. Fetch all rooms for the room status section
 $rooms_sql = "SELECT id, room_name, room_status, available_slots, total_slots FROM rooms ORDER BY room_name";
 $rooms_result = $conn->query($rooms_sql);
+
+// 4. Fetch all blocked dates
+$blocked_sql = "SELECT id, room_name, blocked_date FROM room_blocked_dates ORDER BY blocked_date ASC";
+$blocked_result = $conn->query($blocked_sql);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -367,6 +382,52 @@ $rooms_result = $conn->query($rooms_sql);
                     </td>
                 </tr>
                 <?php endwhile; ?>
+            </tbody>
+        </table>
+    </div>
+    <?php } ?>
+
+    <!-- Blocked Dates Section -->
+    <?php if ($adminRole === "superadmin") { ?>
+    <div class="table-box">
+        <h4 style="margin: 0 0 15px; font-size: 1.1rem; color: #555;">
+            <i class="fas fa-calendar-times"></i> Blocked Dates Management
+        </h4>
+        <table class="booking-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Room Name</th>
+                    <th>Blocked Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if ($blocked_result && $blocked_result->num_rows > 0): ?>
+                    <?php while($blocked = $blocked_result->fetch_assoc()): ?>
+                    <tr>
+                        <td>#<?php echo $blocked['id']; ?></td>
+                        <td><strong><?php echo htmlspecialchars($blocked['room_name']); ?></strong></td>
+                        <td><?php echo date('M d, Y', strtotime($blocked['blocked_date'])); ?></td>
+                        <td>
+                            <form method="POST" style="display: inline;">
+                                <input type="hidden" name="blocked_id" value="<?php echo $blocked['id']; ?>">
+                                <button type="submit" name="delete_blocked_date" class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;"
+                                        onclick="return confirm('Are you sure you want to unblock this date?');">
+                                    <i class="fas fa-trash"></i> Remove Block
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="4" style="text-align:center; padding: 40px; color: #999;">
+                            <i class="fas fa-check-circle" style="font-size: 40px; margin-bottom: 10px; display: block;"></i>
+                            No blocked dates found.
+                        </td>
+                    </tr>
+                <?php endif; ?>
             </tbody>
         </table>
     </div>
