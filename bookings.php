@@ -344,7 +344,8 @@ $result = $conn->query($sql);
                 <?php if ($result && $result->num_rows > 0): ?>
                     <?php while($row = $result->fetch_assoc()):
                         // Determine CSS class based on payment status
-                        $statusRaw = isset($row['payment_status']) ? strtolower($row['payment_status']) : 'pending';
+                        $payment_status = isset($row['payment_status']) ? $row['payment_status'] : 'Pending';
+                        $statusRaw = strtolower($payment_status);
                         $statusClass = 'status-pending'; // default
 
                         if ($statusRaw == 'paid' || $statusRaw == 'confirmed') {
@@ -370,7 +371,7 @@ $result = $conn->query($sql);
                             
                             <td>
                                 <span class="status-badge <?php echo $statusClass; ?>">
-                                    <?php echo htmlspecialchars($row['payment_status'] ?? 'Pending'); ?>
+                                    <?php echo htmlspecialchars($payment_status); ?>
                                 </span>
                             </td>
                             
@@ -382,7 +383,7 @@ $result = $conn->query($sql);
                                 <a href="edit_booking.php?id=<?php echo $row['id']; ?>" class="action-link edit-link" title="Edit Booking">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>
-                                <?php if ($row['payment_status'] === 'Cancelled'): ?>
+                                <?php if ($payment_status === 'Cancelled'): ?>
                                     <a href="undo_booking.php?id=<?php echo $row['id']; ?>" class="action-link" style="color: #28a745;" title="Undo Cancellation">
                                         <i class="fas fa-undo"></i> Undo
                                     </a>
