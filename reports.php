@@ -303,7 +303,7 @@ if (isset($_POST['generate_report'])) {
             </div>
             <div class="stat-card stat-revenue">
                 <h3>Total Revenue</h3>
-                <p>$<?php echo number_format($totalRevenue, 2); ?></p>
+                <p>RM<?php echo number_format($totalRevenue, 2); ?></p>
             </div>
         </div>
 
@@ -327,7 +327,7 @@ if (isset($_POST['generate_report'])) {
                             <td><?php echo date('Y-m-d', strtotime($row['created_at'])); ?></td>
                             <td><strong><?php echo htmlspecialchars($row['customer_username']); ?></strong></td>
                             <td><?php echo htmlspecialchars($row['room_name']); ?></td>
-                            <td style="font-weight:bold;">$<?php echo number_format($row['total_price'], 2); ?></td>
+                            <td style="font-weight:bold;">RM<?php echo number_format($row['total_price'], 2); ?></td>
                         </tr>
                     <?php endforeach; ?>
                     <?php if (empty($results)) echo "<tr><td colspan='4' style='text-align:center; padding:30px; color:#999;'>No transactions found for the selected dates.</td></tr>"; ?>
