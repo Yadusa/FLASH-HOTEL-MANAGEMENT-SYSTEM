@@ -25,8 +25,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // Plain-text password comparison
            if (password_verify($password, $dbPassword)) {
+            session_regenerate_id(true);
             $_SESSION['customer_id'] = $id;
             $_SESSION['customer_username'] = $username;
+            $_SESSION['login_success'] = true;
 
             // Determine destination
             $redirect_url = "hotel.php"; // Default
@@ -38,12 +40,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $redirect_url = $target . "?" . $queryString;
             }
 
-            // Show success message and then redirect
-            echo "<script>
-                    alert('Login Successful! Welcome, " . htmlspecialchars($username) . ".');
-                    window.location.href = '$redirect_url';
-                  </script>";
-            exit();
+            header("Location: $redirect_url");
+exit();
+
         } else {
             $error = "Incorrect password.";
         }

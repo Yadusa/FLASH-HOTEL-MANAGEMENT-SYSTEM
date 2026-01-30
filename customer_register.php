@@ -9,11 +9,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $cust_name       = trim($_POST['cust_name']);
     $cust_email      = trim($_POST['cust_email']);
     $contact_number  = trim($_POST['contact_number']);
+    $address = trim($_POST['address']);
     $password        = $_POST['password'];
     $confirmPassword = $_POST['confirm_password'];
 
     // 1. Basic validation
-    if (empty($username) || empty($cust_name) || empty($cust_email) || empty($password)) {
+    if (empty($username) || empty($cust_name) || empty($cust_email) || empty($contact_number) || empty($address) || empty($password)) {
+
         $message = "error_empty";
     } elseif ($password !== $confirmPassword) {
         $message = "error_mismatch";
@@ -27,8 +29,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         } else {
             // 3. Hash and Insert
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            $stmt = $conn->prepare("INSERT INTO customer (username, cust_name, cust_email, contact_number, password_hash, created_at) VALUES (?, ?, ?, ?, ?, NOW())");
-            $stmt->bind_param("sssss", $username, $cust_name, $cust_email, $contact_number, $hashedPassword);
+            $stmt = $conn->prepare(
+    "INSERT INTO customer 
+    (username, cust_name, cust_email, contact_number, address, password_hash, created_at) 
+    VALUES (?, ?, ?, ?, ?, ?, NOW())"
+);
+            $stmt->bind_param("ssssss", 
+    $username, 
+    $cust_name, 
+    $cust_email, 
+    $contact_number, 
+    $address,
+    $hashedPassword
+);
+
 
             if ($stmt->execute()) {
                 // Success! Redirect with a success flag

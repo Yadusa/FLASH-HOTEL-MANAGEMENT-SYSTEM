@@ -1,13 +1,12 @@
 <?php
 session_start();
 
-// Remove only customer-related session variables
-unset($_SESSION['customer_id']);
-unset($_SESSION['customer_username']);
+// Remove all session variables
+session_unset();
 
-// Optionally destroy session if you only use it for customers
-// session_destroy(); 
+// Destroy the session
+session_destroy();
 
-// Redirect back to hotel page or login page
+// Redirect to hotel main page
 header("Location: hotel.php");
 exit();
