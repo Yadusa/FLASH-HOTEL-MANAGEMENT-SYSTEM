@@ -11,20 +11,6 @@ if (!isset($_SESSION["admin_id"])) {
 $adminName = $_SESSION["admin_name"];
 $adminRole = $_SESSION["admin_role"];
 
-// Handle room blocking/unblocking
-if (isset($_POST['toggle_room_booking'])) {
-    $room_id = (int)$_POST['room_id'];
-    $new_status = $_POST['new_status']; // 'Available' or 'Unavailable for Booking'
-    
-    $update_sql = "UPDATE rooms SET room_status = ? WHERE id = ?";
-    $stmt = $conn->prepare($update_sql);
-    $stmt->bind_param("si", $new_status, $room_id);
-    $stmt->execute();
-    $stmt->close();
-    
-    $success_message = "Room status updated successfully!";
-}
-
 // Handle manual booking creation
 if (isset($_POST['create_manual_booking'])) {
     $customer_username = trim($_POST['manual_customer_username']);
@@ -73,28 +59,9 @@ if (isset($_POST['create_manual_booking'])) {
     }
 }
 
-// Handle blocked date removal
-if (isset($_POST['delete_blocked_date'])) {
-    $blocked_id = (int)$_POST['blocked_id'];
-    $delete_sql = "DELETE FROM room_blocked_dates WHERE id = ?";
-    $stmt = $conn->prepare($delete_sql);
-    $stmt->bind_param("i", $blocked_id);
-    $stmt->execute();
-    $stmt->close();
-    $success_message = "Blocked date removed successfully!";
-}
-
 // 2. Fetch all bookings
 $sql = "SELECT * FROM bookings ORDER BY created_at DESC";
 $result = $conn->query($sql);
-
-// 3. Fetch all rooms for the room status section
-$rooms_sql = "SELECT id, room_name, room_status, available_slots, total_slots FROM rooms ORDER BY room_name";
-$rooms_result = $conn->query($rooms_sql);
-
-// 4. Fetch all blocked dates
-$blocked_sql = "SELECT id, room_name, blocked_date FROM room_blocked_dates ORDER BY blocked_date ASC";
-$blocked_result = $conn->query($blocked_sql);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -234,10 +201,6 @@ $blocked_result = $conn->query($blocked_sql);
         .status-pending { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
         .status-paid { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .status-cancelled { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        .status-available { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .status-unavailable { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        .status-maintenance { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
-        .status-occupied { background: #e2e3e5; color: #383d41; border: 1px solid #d6d8db; }
 
         /* Action Buttons */
         .action-link {
@@ -266,10 +229,6 @@ $blocked_result = $conn->query($blocked_sql);
         .btn:hover { background: #0056b3; }
         .btn-success { background: #28a745; }
         .btn-success:hover { background: #218838; }
-        .btn-danger { background: #dc3545; }
-        .btn-danger:hover { background: #c82333; }
-        .btn-warning { background: #ffc107; color: #333; }
-        .btn-warning:hover { background: #e0a800; }
 
     </style>
 </head>
@@ -325,113 +284,6 @@ $blocked_result = $conn->query($blocked_sql);
             <i class="fas fa-exclamation-circle"></i> <?php echo htmlspecialchars($error_message); ?>
         </div>
     <?php endif; ?>
-
-    <!-- Room Availability Status Section -->
-    <?php if ($adminRole === "superadmin") { ?>
-    <div class="table-box">
-        <h4 style="margin: 0 0 15px; font-size: 1.1rem; color: #555;">
-            <i class="fas fa-door-open"></i> Room Booking Availability
-        </h4>
-        <table class="booking-table">
-            <thead>
-                <tr>
-                    <th>Room Name</th>
-                    <th>Available Slots</th>
-                    <th>Current Status</th>
-                    <th>Booking Availability</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php while($room = $rooms_result->fetch_assoc()): ?>
-                <tr>
-                    <td><strong><?php echo htmlspecialchars($room['room_name']); ?></strong></td>
-                    <td><?php echo $room['available_slots']; ?> / <?php echo $room['total_slots']; ?></td>
-                    <td>
-                        <span class="status-badge status-<?php echo strtolower(str_replace(' ', '', $room['room_status'])); ?>">
-                            <?php echo htmlspecialchars($room['room_status']); ?>
-                        </span>
-                    </td>
-                    <td>
-                        <?php if ($room['room_status'] == 'Unavailable for Booking'): ?>
-                            <span style="color: #dc3545; font-weight: bold;">
-                                <i class="fas fa-ban"></i> UNAVAILABLE FOR BOOKING
-                            </span>
-                        <?php else: ?>
-                            <span style="color: #28a745; font-weight: bold;">
-                                <i class="fas fa-check-circle"></i> Open for Booking
-                            </span>
-                        <?php endif; ?>
-                    </td>
-                    <td>
-                        <form method="POST" style="display: inline;">
-                            <input type="hidden" name="room_id" value="<?php echo $room['id']; ?>">
-                            <?php if ($room['room_status'] == 'Unavailable for Booking'): ?>
-                                <input type="hidden" name="new_status" value="Available">
-                                <button type="submit" name="toggle_room_booking" class="btn btn-success" style="padding: 6px 12px; font-size: 12px;">
-                                    <i class="fas fa-unlock"></i> Enable Booking
-                                </button>
-                            <?php else: ?>
-                                <input type="hidden" name="new_status" value="Unavailable for Booking">
-                                <button type="submit" name="toggle_room_booking" class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;" 
-                                        onclick="return confirm('Block this room from customer bookings?');">
-                                    <i class="fas fa-ban"></i> Block Booking
-                                </button>
-                            <?php endif; ?>
-                        </form>
-                    </td>
-                </tr>
-                <?php endwhile; ?>
-            </tbody>
-        </table>
-    </div>
-    <?php } ?>
-
-    <!-- Blocked Dates Section -->
-    <?php if ($adminRole === "superadmin") { ?>
-    <div class="table-box">
-        <h4 style="margin: 0 0 15px; font-size: 1.1rem; color: #555;">
-            <i class="fas fa-calendar-times"></i> Blocked Dates Management
-        </h4>
-        <table class="booking-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Room Name</th>
-                    <th>Blocked Date</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if ($blocked_result && $blocked_result->num_rows > 0): ?>
-                    <?php while($blocked = $blocked_result->fetch_assoc()): ?>
-                    <tr>
-                        <td>#<?php echo $blocked['id']; ?></td>
-                        <td><strong><?php echo htmlspecialchars($blocked['room_name']); ?></strong></td>
-                        <td><?php echo date('M d, Y', strtotime($blocked['blocked_date'])); ?></td>
-                        <td>
-                            <form method="POST" style="display: inline;">
-                                <input type="hidden" name="blocked_id" value="<?php echo $blocked['id']; ?>">
-                                <button type="submit" name="delete_blocked_date" class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;"
-                                        onclick="return confirm('Are you sure you want to unblock this date?');">
-                                    <i class="fas fa-trash"></i> Remove Block
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    <?php endwhile; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="4" style="text-align:center; padding: 40px; color: #999;">
-                            <i class="fas fa-check-circle" style="font-size: 40px; margin-bottom: 10px; display: block;"></i>
-                            No blocked dates found.
-                        </td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-    </div>
-    <?php } ?>
 
     <!-- All Bookings Section -->
     <div class="table-box">
