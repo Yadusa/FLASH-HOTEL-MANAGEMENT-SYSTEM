@@ -13,6 +13,73 @@ $adminRole = $_SESSION["admin_role"];
 $currentDate = date('Y-m-d');
 
 // ===============================
+// HANDLE ADD ROOM
+// ===============================
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_room'])) {
+    $room_name = trim($_POST['room_name']);
+    $total_slots = intval($_POST['total_slots']);
+    
+    if (!empty($room_name) && $total_slots > 0) {
+        // Check if room already exists
+        $checkSql = "SELECT id FROM rooms WHERE room_name = ?";
+        $checkStmt = $conn->prepare($checkSql);
+        $checkStmt->bind_param("s", $room_name);
+        $checkStmt->execute();
+        $checkResult = $checkStmt->get_result();
+        
+        if ($checkResult->num_rows > 0) {
+            $message = "<div class='alert alert-danger'>Room name already exists!</div>";
+        } else {
+            $insertSql = "INSERT INTO rooms (room_name, total_slots, available_slots, room_status) VALUES (?, ?, ?, 'Available')";
+            $insertStmt = $conn->prepare($insertSql);
+            $insertStmt->bind_param("sii", $room_name, $total_slots, $total_slots);
+            
+            if ($insertStmt->execute()) {
+                $message = "<div class='alert alert-success'>Room added successfully!</div>";
+            } else {
+                $message = "<div class='alert alert-danger'>Error adding room: " . $conn->error . "</div>";
+            }
+            $insertStmt->close();
+        }
+        $checkStmt->close();
+    } else {
+        $message = "<div class='alert alert-danger'>Please fill all fields correctly!</div>";
+    }
+}
+
+// ===============================
+// HANDLE DELETE ROOM
+// ===============================
+if (isset($_GET['delete_room_id'])) {
+    $room_id = intval($_GET['delete_room_id']);
+    
+    // Check if room has active bookings
+    $checkBookings = "SELECT COUNT(*) as count FROM bookings b 
+                      JOIN rooms r ON b.room_name = r.room_name 
+                      WHERE r.id = ? AND b.checkout >= CURDATE()";
+    $checkStmt = $conn->prepare($checkBookings);
+    $checkStmt->bind_param("i", $room_id);
+    $checkStmt->execute();
+    $result = $checkStmt->get_result()->fetch_assoc();
+    
+    if ($result['count'] > 0) {
+        $message = "<div class='alert alert-danger'>Cannot delete room with active bookings!</div>";
+    } else {
+        $deleteSql = "DELETE FROM rooms WHERE id = ?";
+        $deleteStmt = $conn->prepare($deleteSql);
+        $deleteStmt->bind_param("i", $room_id);
+        
+        if ($deleteStmt->execute()) {
+            $message = "<div class='alert alert-success'>Room deleted successfully!</div>";
+        } else {
+            $message = "<div class='alert alert-danger'>Error deleting room: " . $conn->error . "</div>";
+        }
+        $deleteStmt->close();
+    }
+    $checkStmt->close();
+}
+
+// ===============================
 // DATE FILTER
 // ===============================
 // Ensure startDate and endDate are set
@@ -22,8 +89,10 @@ $endDate   = $_GET['end_date']   ?? date('Y-m-d', strtotime($startDate . ' +1 da
 // Room query: count bookings that overlap with the selected dates
 $roomSql = "
 SELECT 
+    r.id,
     r.room_name,
     r.total_slots,
+    r.room_status,
     (r.total_slots - IFNULL(SUM(
         CASE 
             WHEN b.id IS NOT NULL THEN 1
@@ -41,7 +110,7 @@ LEFT JOIN bookings b
     ON r.room_name = b.room_name
     AND b.checkin < '$endDate'
     AND b.checkout > '$startDate'
-GROUP BY r.room_name
+GROUP BY r.id, r.room_name, r.total_slots, r.room_status
 ";
 
 $roomResult = $conn->query($roomSql);
@@ -54,10 +123,12 @@ $total_rooms = 0;
 $available_rooms = 0;
 $roomDetails = [];
 
+// Store results for later use
+$tempRooms = [];
 while ($row = $roomResult->fetch_assoc()) {
     $total_rooms += (int)$row['total_slots'];
     $available_rooms += max(0, (int)$row['available_slots']);
-    $roomDetails[] = $row;
+    $tempRooms[] = $row;
 }
 
 $occupied_rooms = $total_rooms - $available_rooms;
@@ -138,9 +209,27 @@ if (!$arrivalsResult) {
         .user-profile { display: flex; align-items: center; gap: 15px; background: white; padding: 8px 15px; border-radius: 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .avatar-circle { width: 35px; height: 35px; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
 
+        /* Alerts */
+        .alert { padding: 12px 20px; margin-bottom: 20px; border-radius: 5px; font-size: 14px; }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-danger { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
         /* Form */
         .filter-form { margin-bottom:20px; display:flex; gap:10px; }
-        .btn-sm { padding: 6px 12px; font-size: 12px; background: var(--primary); color: white; border-radius: 4px; text-decoration: none; cursor: pointer; }
+        .btn-sm { padding: 8px 15px; font-size: 13px; background: var(--primary); color: white; border-radius: 4px; text-decoration: none; cursor: pointer; border: none; }
+        .btn-sm:hover { background: #1a252f; }
+        .btn-success { background: var(--success); }
+        .btn-success:hover { background: #218838; }
+        .btn-danger { background: var(--danger); }
+        .btn-danger:hover { background: #c82333; }
+
+        /* Add Room Form */
+        .add-room-form { background: white; padding: 20px; border-radius: 10px; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+        .add-room-form h4 { margin: 0 0 15px; color: var(--text-dark); }
+        .form-row { display: flex; gap: 15px; align-items: end; }
+        .form-group { flex: 1; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 13px; color: #666; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
 
         /* Stats Cards */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px; }
@@ -168,7 +257,16 @@ if (!$arrivalsResult) {
         .status-badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
         .status-confirmed { background: #e3fcef; color: #006644; }
         .status-pending { background: #fff8c5; color: #856404; }
+        .status-available { background: #d4edda; color: #155724; }
+        .status-maintenance { background: #fff3cd; color: #856404; }
+        .status-occupied { background: #f8d7da; color: #721c24; }
     </style>
+
+    <script>
+    function confirmDelete(roomName) {
+        return confirm("Are you sure you want to delete the room: " + roomName + "?\n\nThis action cannot be undone!");
+    }
+    </script>
 </head>
 <body>
 
@@ -206,11 +304,38 @@ if (!$arrivalsResult) {
         </div>
     </div>
 
+    <!-- MESSAGES -->
+    <?php if (isset($message)) echo $message; ?>
+
+    <!-- ADD ROOM FORM -->
+    <?php if ($adminRole === "superadmin") { ?>
+    <div class="add-room-form">
+        <h4><i class="fas fa-plus-circle"></i> Add New Room</h4>
+        <form method="POST" action="">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Room Name</label>
+                    <input type="text" name="room_name" placeholder="e.g., Presidential Suite" required>
+                </div>
+                <div class="form-group">
+                    <label>Total Slots</label>
+                    <input type="number" name="total_slots" min="1" max="20" placeholder="5" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit" name="add_room" class="btn-sm btn-success">
+                        <i class="fas fa-plus"></i> Add Room
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <?php } ?>
+
     <!-- DATE FILTER FORM -->
     <form class="filter-form" method="GET">
         <input type="date" name="start_date" value="<?php echo $startDate; ?>" required>
         <input type="date" name="end_date" value="<?php echo $endDate; ?>" required>
-        <button class="btn-sm">Apply</button>
+        <button class="btn-sm">Apply Filter</button>
     </form>
 
     <!-- STATS CARDS -->
@@ -254,87 +379,93 @@ if (!$arrivalsResult) {
 
     <!-- DASHBOARD ROW -->
     <div class="dashboard-row">
-        <!-- Today's Arrivals Table -->
+        <!-- All Rooms Table -->
         <div class="section-box" style="flex: 2;">
             <div class="section-header">
-                <h3><i class="fas fa-concierge-bell"></i> Today's Arrivals</h3>
-                <a href="bookings.php" class="btn-sm">View All Bookings</a>
+                <h3><i class="fas fa-bed"></i> All Rooms</h3>
             </div>
-           <table class="table-clean">
-    <thead>
-        <tr>
-            <th>Room Name</th>
-            <th>Total Slots</th>
-            <th>Booked</th>
-            <th>Available</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php while($row = $roomResult->fetch_assoc()): ?>
-        <tr>
-            <td><?php echo htmlspecialchars($row['room_name']); ?></td>
-            <td><?php echo (int)$row['total_slots']; ?></td>
-            <td><?php echo (int)$row['booked_count']; ?></td>
-            <td><?php echo max(0, (int)$row['available_slots']); ?></td>
-        </tr>
-        <?php endwhile; ?>
-    </tbody>
-</table>
-
-<tbody>
-    <?php if ($arrivalsResult->num_rows > 0): ?>
-        <?php while($row = $arrivalsResult->fetch_assoc()): ?>
-        <tr>
-            <td>#<?php echo $row['id']; ?></td>
-            <td><strong><?php echo htmlspecialchars($row['cust_name'] ?? $row['customer_username']); ?></strong></td>
-            <td><?php echo htmlspecialchars($row['room_name']); ?></td>
-            <td>
-                <a href="bookings.php?checkin_id=<?php echo $row['id']; ?>" style="color:var(--primary); font-size:14px;">
-                    <i class="fas fa-check-circle"></i> Check In
-                </a>
-            </td>
-        </tr>
-        <?php endwhile; ?>
-    <?php else: ?>
-        <tr>
-            <td colspan="4" style="text-align:center; color:#999; padding:20px;">
-                No arrivals scheduled for today (<?php echo $currentDate; ?>).
-            </td>
-        </tr>
-    <?php endif; ?>
-</tbody>
-
+            <table class="table-clean">
+                <thead>
+                    <tr>
+                        <th>Room Name</th>
+                        <th>Total Slots</th>
+                        <th>Booked</th>
+                        <th>Available</th>
+                        <th>Status</th>
+                        <?php if ($adminRole === "superadmin") { ?>
+                        <th>Actions</th>
+                        <?php } ?>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (count($tempRooms) > 0): ?>
+                        <?php foreach($tempRooms as $row): ?>
+                        <tr>
+                            <td><strong><?php echo htmlspecialchars($row['room_name']); ?></strong></td>
+                            <td><?php echo (int)$row['total_slots']; ?></td>
+                            <td><?php echo (int)$row['booked_count']; ?></td>
+                            <td><?php echo max(0, (int)$row['available_slots']); ?></td>
+                            <td>
+                                <span class="status-badge status-<?php echo strtolower($row['room_status']); ?>">
+                                    <?php echo $row['room_status']; ?>
+                                </span>
+                            </td>
+                            <?php if ($adminRole === "superadmin") { ?>
+                            <td>
+                                <a href="?delete_room_id=<?php echo $row['id']; ?>" 
+                                   class="btn-sm btn-danger" 
+                                   style="font-size:11px; padding:5px 10px;"
+                                   onclick="return confirmDelete('<?php echo htmlspecialchars($row['room_name']); ?>')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                            <?php } ?>
+                        </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="6" style="text-align:center; color:#999; padding:20px;">
+                                No rooms available. Add a new room above!
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
             </table>
         </div>
 
-        <!-- Room Status -->
+        <!-- Today's Arrivals -->
         <div class="section-box" style="flex: 1;">
             <div class="section-header">
-                <h3><i class="fas fa-bed"></i> Room Status</h3>
-                <a href="manage_rooms.php" class="btn-sm">Manage</a>
+                <h3><i class="fas fa-concierge-bell"></i> Today's Arrivals</h3>
+                <a href="bookings.php" class="btn-sm">View All</a>
             </div>
-            <div style="margin-bottom: 15px;">
-                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                    <span>Available</span>
-                    <strong><?php echo $available_rooms; ?></strong>
-                </div>
-                <div style="height:8px; background:#eee; border-radius:4px; overflow:hidden;">
-                    <div style="width: <?php echo ($total_rooms > 0) ? (100 - $occupancy_rate) : 0; ?>%; background: var(--success); height:100%;"></div>
-                </div>
-            </div>
-            <div style="margin-bottom: 15px;">
-                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                    <span>Occupied</span>
-                    <strong><?php echo $occupied_rooms; ?></strong>
-                </div>
-                <div style="height:8px; background:#eee; border-radius:4px; overflow:hidden;">
-                    <div style="width: <?php echo $occupancy_rate; ?>%; background: var(--info); height:100%;"></div>
-                </div>
-            </div>
-            <div style="margin-top: 30px; padding: 15px; background: #f8f9fa; border-radius: 5px; text-align: center;">
-                <h4 style="margin:0 0 5px; color: #333;">Total Capacity</h4>
-                <p style="margin:0; font-size:16px; color:#555;"><?php echo $total_rooms; ?> Total Rooms</p>
-            </div>
+            <table class="table-clean">
+                <tbody>
+                    <?php if ($arrivalsResult->num_rows > 0): ?>
+                        <?php while($row = $arrivalsResult->fetch_assoc()): ?>
+                        <tr>
+                            <td>
+                                <strong><?php echo htmlspecialchars($row['cust_name'] ?? $row['customer_username']); ?></strong><br>
+                                <small style="color:#999;"><?php echo htmlspecialchars($row['room_name']); ?></small>
+                            </td>
+                            <td style="text-align:right;">
+                                <a href="bookings.php?checkin_id=<?php echo $row['id']; ?>" 
+                                   class="btn-sm btn-success" 
+                                   style="font-size:11px; padding:5px 10px;">
+                                    <i class="fas fa-check-circle"></i> Check In
+                                </a>
+                            </td>
+                        </tr>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td style="text-align:center; color:#999; padding:20px;">
+                                No arrivals today
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
         </div>
     </div>
 

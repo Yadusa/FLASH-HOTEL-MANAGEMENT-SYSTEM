@@ -37,13 +37,28 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($totalGuests > 5) {
         $error_message = "Total guests (adults + children) cannot exceed 5 per room.";
     } else {
-        $diff = strtotime($checkout) - strtotime($checkin);
-        $nights = max(1, ceil($diff / (60*60*24)));
-        $total_price = $nights * $room_price;
+        // Check for blocked dates
+        $blocked_check = $conn->prepare("SELECT COUNT(*) as blocked_count FROM room_blocked_dates WHERE room_name = ? AND blocked_date BETWEEN ? AND ?");
+        $blocked_check->bind_param("sss", $room_name, $checkin, $checkout);
+        $blocked_check->execute();
+        $blocked_result = $blocked_check->get_result()->fetch_assoc();
 
-        $stmt = $conn->prepare("INSERT INTO bookings (customer_username, room_name, room_price, checkin, checkout, adults, children, total_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssissiii", $customer_username, $room_name, $room_price, $checkin, $checkout, $adults, $children, $total_price);
+        if ($blocked_result['blocked_count'] > 0) {
+            $error_message = "Sorry, this room is currently unavailable.";
+        }
+            $diff = strtotime($checkout) - strtotime($checkin);
+            $nights = max(1, ceil($diff / (60*60*24)));
+            $total_price = $nights * $room_price;
 
+           $stmt = $conn->prepare("INSERT INTO bookings (customer_username, room_name, room_price, checkin, checkout, adults, children, total_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+
+if (!$stmt) {
+    echo "SQL Error: " . $conn->error . "<br>";
+    echo "Error Number: " . $conn->errno . "<br>";
+    die();
+}
+
+$stmt->bind_param("ssdssiii", $customer_username, $room_name, $room_price, $checkin, $checkout, $adults, $children, $total_price);
         if ($stmt->execute()) {
             
             // --- INSERTED CODE START ---
@@ -68,9 +83,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error_message = "Error while booking: " . $conn->error;
         }
 
-        $stmt->close();
+        $stmt->close();}
     }
-}
+
 ?>
 
 
@@ -371,4 +386,3 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </body>
 </html>
-

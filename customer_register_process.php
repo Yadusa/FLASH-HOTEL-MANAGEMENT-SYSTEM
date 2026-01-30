@@ -9,13 +9,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $cust_name       = trim($_POST['cust_name']);
     $cust_email      = trim($_POST['cust_email']);
     $contact_number  = trim($_POST['contact_number']);
+    $address         = trim($_POST['address']);
     $password        = $_POST['password'];
     $confirmPassword = $_POST['confirm_password'];
 
     /* 1️⃣ Basic validation */
     if (
         empty($username) || empty($cust_name) || empty($cust_email) ||
-        empty($contact_number) || empty($password) || empty($confirmPassword)
+        empty($contact_number) || empty($address) || empty($password) || empty($confirmPassword)
     ) {
         header("Location: customer_register.php?error=empty");
         exit;
@@ -45,17 +46,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     /* 5️⃣ Insert customer */
     $stmt = $conn->prepare(
-        "INSERT INTO customer 
-        (username, cust_name, cust_email, contact_number, password_hash, created_at)
-        VALUES (?, ?, ?, ?, ?, NOW())"
+        "INSERT INTO customer
+        (username, cust_name, cust_email, contact_number, address, password_hash, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, NOW())"
     );
 
     $stmt->bind_param(
-        "sssss",
+        "ssssss",
         $username,
         $cust_name,
         $cust_email,
         $contact_number,
+        $address,
         $hashedPassword
     );
 

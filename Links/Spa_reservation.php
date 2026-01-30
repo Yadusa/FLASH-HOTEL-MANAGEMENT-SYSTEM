@@ -1,13 +1,53 @@
 <?php
-// ---------------------------
-// Handle form submission ONLY
-// ---------------------------
+// ---------------------------------------------------------
+// 1. DATABASE CONFIGURATION
+// ---------------------------------------------------------
+$host     = "localhost";
+$db_user  = "root";      // Default for XAMPP
+$db_pass  = "";          // Default for XAMPP
+$db_name  = "obsidian_spa";
+
+// Create Connection
+$conn = new mysqli($host, $db_user, $db_pass, $db_name);
+
+// Check Connection
+if ($conn->connect_error) {
+    die("Database Connection Failed: " . $conn->connect_error);
+}
+
+// ---------------------------------------------------------
+// 2. HANDLE FORM SUBMISSION
+// ---------------------------------------------------------
 $show_popup = false;
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // No database — just trigger popup
-    $show_popup = true;
+    // Capture and basic sanitization
+    $full_name      = htmlspecialchars($_POST['full_name']);
+    $contact_number = htmlspecialchars($_POST['contact_number']);
+    $email          = htmlspecialchars($_POST['email']);
+    $room_number    = htmlspecialchars($_POST['room_number']);
+    $appt_date      = $_POST['appointment_date'];
+    $time_slot      = $_POST['time_slot'];
+    $service        = $_POST['service'];
+    $guests         = intval($_POST['guests']);
+    $concerns       = htmlspecialchars($_POST['concerns']);
+
+    // Prepared Statement for Security
+    $sql  = "INSERT INTO reservations (full_name, contact_number, email, room_number, appointment_date, time_slot, service, guests, concerns) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sssssssis", $full_name, $contact_number, $email, $room_number, $appt_date, $time_slot, $service, $guests, $concerns);
+
+    if ($stmt->execute()) {
+        $show_popup = true;
+    } else {
+        echo "<script>alert('Error: Could not save reservation.');</script>";
+    }
+
+    $stmt->close();
 }
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -138,8 +178,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <body>
 
-
-
 <h2>The Obsidian Spa Reservation</h2>
 <div class="top-nav">
     <a href="../hotel.php" class="back-link">← Back to Main</a>
@@ -159,11 +197,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <input type="text" name="room_number" required>
 
     <label>Appointment Date</label>
-    <input type="date" name="appointment_date" required>
+    <input type="date" name="appointment_date" min="<?php echo date('Y-m-d'); ?>" max="<?php echo date('Y-12-31'); ?>" required>
 
     <label>Preferred Time Slot</label>
     <select name="time_slot" required>
-        <option disabled selected>Select Time</option>
+        <option disabled selected value="">Select Time</option>
         <option>10:00 AM - 12:00 PM</option>
         <option>12:00 PM - 2:00 PM</option>
         <option>2:00 PM - 4:00 PM</option>
@@ -173,7 +211,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <label>Service</label>
     <select name="service" required>
-        <option disabled selected>Select Service</option>
+        <option disabled selected value="">Select Service</option>
         <option>Traditional Malay Massage</option>
         <option>Aromatherapy Oil Massage</option>
         <option>Deep Tissue Massage</option>
@@ -184,18 +222,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <input type="number" name="guests" min="1" value="1" required>
 
     <label>Concerns</label>
-    <textarea name="concerns" rows="4"></textarea>
+    <textarea name="concerns" rows="4" placeholder="Any allergies or specific focus areas?"></textarea>
 
     <button type="submit" class="submit-btn">Submit Reservation</button>
 </form>
 
 <div class="popup-overlay">
     <div class="popup-card">
-        
-
         <div style="font-size:50px;">🌿</div>
         <h3>Relaxation Awaits!</h3>
-        <p>Your reservation has been submitted successfully.</p>
+        <p>Your reservation has been submitted successfully. We look forward to seeing you.</p>
         <a href="../hotel.php" class="popup-btn">Back to Main</a>
     </div>
 </div>

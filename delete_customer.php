@@ -12,7 +12,13 @@ if (!isset($_SESSION["admin_id"]) || $_SESSION["admin_role"] !== "superadmin") {
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
 
-    // ✅ FIX: Changed 'customer_id' to 'id' to match your database schema
+    // First, delete associated bookings
+    $deleteBookingsStmt = $conn->prepare("DELETE FROM bookings WHERE customer_username = (SELECT username FROM customer WHERE id = ?)");
+    $deleteBookingsStmt->bind_param("i", $id);
+    $deleteBookingsStmt->execute();
+    $deleteBookingsStmt->close();
+
+    // Then delete the customer
     $stmt = $conn->prepare("DELETE FROM customer WHERE id = ?");
     $stmt->bind_param("i", $id);
 
