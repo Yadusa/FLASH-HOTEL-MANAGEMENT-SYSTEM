@@ -44,11 +44,11 @@ if (isset($_POST['download_txt'])) {
     while ($row = $res->fetch_assoc()) {
         $fileTotalCount++;
         $fileTotalRev += $row['total_price'];
-        $dataRows .= $row['created_at'] . " | " . $row['customer_username'] . " | " . $row['room_name'] . " | $" . $row['total_price'] . "\r\n";
+        $dataRows .= $row['created_at'] . " | " . $row['customer_username'] . " | " . $row['room_name'] . " | RM" . $row['total_price'] . "\r\n";
     }
 
     echo "Total Bookings: $fileTotalCount\r\n";
-    echo "Total Revenue:  $" . number_format($fileTotalRev, 2) . "\r\n";
+    echo "Total Revenue:  RM" . number_format($fileTotalRev, 2) . "\r\n";
     echo "------------------------------------------------------------\r\n";
     echo "Date                | Customer        | Room                | Amount\r\n";
     echo "------------------------------------------------------------\r\n";
