@@ -22,7 +22,9 @@ if (isset($_GET['deleted'])) {
 // 2. Fetch Customers
 $sql = "SELECT id, username, cust_name, cust_email, contact_number, created_at 
         FROM customer
+        WHERE status = 'active'
         ORDER BY created_at DESC";
+
 $result = $conn->query($sql);
 ?>
 
@@ -217,14 +219,12 @@ $result = $conn->query($sql);
                     <td><?php echo htmlspecialchars($row['contact_number']); ?></td>
                     <td style="color: #777; font-size: 0.9em;"><?php echo date('M d, Y', strtotime($row['created_at'])); ?></td>
                     <td>
-                        <a href="edit_customer.php?id=<?php echo $row['id']; ?>" class="action-link edit-link">
-                            <i class="fas fa-edit"></i> Edit
+                       <a href="deactivate_customer.php?id=<?php echo $row['id']; ?>"
+                        class="action-link delete-link"
+                        onclick="return confirm('Are you sure you want to deactivate this customer? They will no longer be able to log in.');">
+                            <i class="fas fa-user-slash"></i> Deactivate
                         </a>
-                        <a href="delete_customer.php?id=<?php echo $row['id']; ?>"
-                           class="action-link delete-link"
-                           onclick="return confirm('WARNING: Are you sure you want to delete this customer record? This cannot be undone.');">
-                            <i class="fas fa-trash-alt"></i> Delete
-                        </a>
+
                     </td>
                 </tr>
                 <?php 
