@@ -8,6 +8,8 @@ if (!isset($_SESSION["admin_id"])) {
     exit;
 }
 
+// Fetch session data for the sidebar display
+$adminName = $_SESSION["admin_name"] ?? 'Admin';
 $adminRole = $_SESSION["admin_role"] ?? 'staff';
 $selected_date = $_GET['date'] ?? date('Y-m-d');
 
@@ -48,41 +50,150 @@ $result = $conn->query($sql);
     <title>Manage Rooms | FLASH Hotel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Updated Styles for a cleaner look like your first image */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; display: flex; }
-        .sidebar { width: 240px; background: #2c3e50; color: white; height: 100vh; padding: 20px; position: fixed; }
-        .sidebar a { color: white; text-decoration: none; display: block; padding: 12px; margin-bottom: 5px; border-radius: 4px; }
-        .sidebar a.active { background: #34495e; border-left: 4px solid #3498db; }
-        .main-content { margin-left: 280px; padding: 40px; width: calc(100% - 320px); }
-        .admin-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        /* --- DESIGN SYSTEM (MATCHING BOOKING.PHP) --- */
+        :root {
+            --primary: #2c3e50;    /* Dark Blue/Obsidian Sidebar */
+            --accent: #b89241;     /* Gold Brand Color */
+            --bg-light: #f4f6f9;   /* Light Gray Background */
+            --text-dark: #333;
+            --white: #ffffff;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: var(--bg-light); 
+            margin: 0; 
+            display: flex; 
+        }
+
+        /* --- SIDEBAR STYLE --- */
+        .sidebar {
+            width: 260px;
+            background: var(--primary);
+            color: white;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        .brand {
+            padding: 25px;
+            background: rgba(0,0,0,0.1);
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .brand h2 { margin: 0; font-size: 24px; color: var(--accent); letter-spacing: 1px; }
+        .brand .role { margin: 5px 0 0; font-size: 12px; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .sidebar a {
+            padding: 15px 25px;
+            text-decoration: none;
+            color: #b0b8c1;
+            display: flex;
+            align-items: center;
+            transition: 0.3s;
+            border-left: 4px solid transparent;
+        }
+        .sidebar a i { margin-right: 12px; width: 20px; text-align: center; }
+        .sidebar a:hover, .sidebar a.active {
+            background: rgba(255,255,255,0.05);
+            color: white;
+            border-left-color: var(--accent);
+        }
+        .sidebar .logout { margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); color: #ffadad; }
+        .sidebar .logout:hover { background: #3d2a2a; border-left-color: #dc3545; }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content { 
+            margin-left: 260px; 
+            padding: 40px; 
+            width: calc(100% - 260px); 
+            box-sizing: border-box;
+        }
+
+        .topbar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 30px; 
+        }
+        .topbar h3 { margin: 0; font-size: 24px; color: var(--text-dark); }
+        
+        .user-profile {
+            display: flex; align-items: center; gap: 15px; 
+            background: white; padding: 8px 15px; 
+            border-radius: 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .admin-card { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 12px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+        }
+
+        /* --- TABLE STYLING --- */
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th { background: #34495e; color: white; padding: 15px; text-align: left; }
-        td { padding: 15px; border-bottom: 1px solid #eee; }
-        .status-pill { padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: bold; }
+        th { background: #f8f9fa; color: #555; padding: 15px; text-align: left; border-bottom: 2px solid #eee; }
+        td { padding: 15px; border-bottom: 1px solid #eee; color: #444; }
+        
+        .status-pill { padding: 5px 12px; border-radius: 15px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
         .available { background: #d4edda; color: #155724; }
         .occupied { background: #f8d7da; color: #721c24; }
-        .btn-restore { background: #6c757d; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; }
-        .btn-restore:hover { background: #5a6268; }
+        .maintenance { background: #fff3cd; color: #856404; }
+
+        .btn-restore { 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            padding: 8px 15px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 12px;
+            transition: 0.3s;
+        }
+        .btn-restore:hover:not(:disabled) { background: var(--accent); }
+        .btn-restore:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        select {
+            padding: 6px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
     </style>
 </head>
 <body>
 
 <div class="sidebar">
-    <h2>FLASH HOTEL</h2>
-    <p>Logged as: <?php echo ucfirst($adminRole); ?></p>
-    <hr>
-    <a href="dashboard.php">Dashboard</a>
-    <a href="manage_rooms.php" class="active">Manage Rooms</a>
-    <a href="logout.php">Logout</a>
+    <div class="brand">
+        <h2>FLASH HOTEL</h2>
+        <p class="role"><?php echo ucfirst($adminRole); ?></p>
+    </div>
+
+    <a href="dashboard.php"><i class="fas fa-home"></i> Dashboard</a>
+    <a href="manage_rooms.php" class="active"><i class="fas fa-bed"></i> Manage Rooms</a>
+    <a href="bookings.php"><i class="fas fa-calendar-check"></i> Bookings</a>
+
+    <a href="logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
 </div>
 
 <div class="main-content">
+    
+    <div class="topbar">
+        <h3><i class="fas fa-bed"></i> Room Inventory Management</h3>
+        <div class="user-profile">
+            <span><?php echo htmlspecialchars($adminName); ?></span>
+            <div style="width:30px;height:30px;border-radius:50%;background:var(--accent);color:white;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;">
+                <?php echo strtoupper(substr($adminName, 0, 1)); ?>
+            </div>
+        </div>
+    </div>
+
     <div class="admin-card">
-        <h2>Room Inventory Management</h2>
-        
-        <form method="GET" style="margin-bottom: 20px;">
-            <label>Check Date: </label>
-            <input type="date" name="date" value="<?php echo $selected_date; ?>" onchange="this.form.submit()">
+        <form method="GET" style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+            <label style="font-weight: 600; color: #666;">Check Date Inventory: </label>
+            <input type="date" name="date" value="<?php echo $selected_date; ?>" onchange="this.form.submit()" style="padding: 8px; border-radius: 5px; border: 1px solid #ddd;">
         </form>
 
         <table>
@@ -96,23 +207,14 @@ $result = $conn->query($sql);
                 </tr>
             </thead>
             <tbody>
-                <?php while($row = $result->fetch_assoc()): 
-                    // Calculate bookings safely
-                    $count_query = "SELECT COUNT(*) as booked_count FROM bookings WHERE room_id = ? AND ? BETWEEN start_date AND end_date";
-                    $stmt_count = $conn->prepare($count_query);
-                    
-                    if ($stmt_count) {
-                        $stmt_count->bind_param("is", $row['id'], $selected_date);
-                        $stmt_count->execute();
-                        $count_res = $stmt_count->get_result()->fetch_assoc();
-                        $booked = $count_res['booked_count'];
-                    } else {
-                        $booked = 0; // Fallback if query fails
-                    }
-                ?>
+                <?php while($row = $result->fetch_assoc()): ?>
                 <tr>
-                    <td><strong><?php echo $row['room_name']; ?></strong></td>
-                    <td><?php echo $row['available_slots']; ?> / <?php echo $row['total_slots']; ?></td>
+                    <td><strong><?php echo htmlspecialchars($row['room_name']); ?></strong></td>
+                    <td>
+                        <span style="font-weight: bold; color: var(--accent);">
+                            <?php echo $row['available_slots']; ?>
+                        </span> / <?php echo $row['total_slots']; ?>
+                    </td>
                     <td>
                         <span class="status-pill <?php echo strtolower($row['room_status']); ?>">
                             <?php echo $row['room_status']; ?>
@@ -133,7 +235,7 @@ $result = $conn->query($sql);
                         <form method="POST">
                             <input type="hidden" name="room_id" value="<?php echo $row['id']; ?>">
                             <button type="submit" name="restore_slot" class="btn-restore" <?php echo ($row['available_slots'] >= $row['total_slots']) ? 'disabled' : ''; ?>>
-                                + Restore Slot
+                                <i class="fas fa-plus-circle"></i> Restore Slot
                             </button>
                         </form>
                     </td>
