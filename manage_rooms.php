@@ -24,15 +24,6 @@ if (isset($_POST['add_room_trigger']) && $adminRole === 'superadmin') {
     exit;
 }
 
-// --- HANDLE SLOT RESTORATION ---
-if (isset($_POST['restore_slot'])) {
-    $room_id = $_POST['room_id'];
-    $restore_sql = "UPDATE rooms SET available_slots = available_slots + 1 WHERE id = ? AND available_slots < total_slots";
-    $stmt = $conn->prepare($restore_sql);
-    $stmt->bind_param("i", $room_id);
-    $stmt->execute();
-}
-
 // --- HANDLE DELETE ROOM (Superadmin Only) ---
 if (isset($_POST['delete_room_trigger']) && $adminRole === 'superadmin') {
     $room_id = $_POST['room_id'];
@@ -186,7 +177,6 @@ $result = $conn->query($sql);
                     <td>
                         <form method="POST" style="display:inline;">
                           <input type="hidden" name="room_id" value="<?php echo $row['id']; ?>">
-                          <button type="submit" name="restore_slot" class="btn-restore" <?php echo ($row['available_slots'] >= $row['total_slots']) ? 'disabled' : ''; ?>>Reset Inventory</button>
                         </form>
 
                         <?php if ($adminRole === 'superadmin'): ?>
