@@ -3,6 +3,17 @@
 session_start();
 ?>
 
+<?php
+if (isset($_SESSION['login_success'])) {
+    echo "<script>
+        alert('Login Successful! Welcome, " . 
+        htmlspecialchars($_SESSION['customer_username']) . 
+        "');
+    </script>";
+    unset($_SESSION['login_success']); // show once only
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -38,9 +49,17 @@ session_start();
         <div class="header-right-actions">
             <div class="auth-links">
                 <?php if(isset($_SESSION['customer_username'])): ?>
-                    Welcome, <?php echo htmlspecialchars($_SESSION['customer_username']); ?> |
-                    <a href="customer_logout.php" onclick="return confirmLogout();" class="nav-link">Logout</a>
-                <?php else: ?> 
+    <span>Hi, <?= htmlspecialchars($_SESSION['customer_username']); ?></span>
+
+    <a href="profile/customer_profile.php" class="nav-link">
+        👤 Profile
+    </a>
+
+    <a href="customer_logout.php" onclick="return confirmLogout();" class="nav-link">
+        Logout
+    </a>
+<?php else: ?>
+
                     <a href="customer_login.php" onclick="showAdminLogin()" class="nav-link">Login</a>
                     <span>|</span>
                     <a href="customer_register.php" class="nav-link">Register</a>
