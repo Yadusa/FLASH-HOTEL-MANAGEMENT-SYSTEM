@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once('db.php');
+require "db.php"; // Ensure this file connects to your database ($conn)
 
 // 1. Security Check
 if (!isset($_SESSION["admin_id"])) {
@@ -10,225 +10,139 @@ if (!isset($_SESSION["admin_id"])) {
 
 $adminName = $_SESSION["admin_name"];
 $adminRole = $_SESSION["admin_role"];
+$currentDate = date('Y-m-d'); // Today's date for queries
 
-// Handle manual booking creation
-if (isset($_POST['create_manual_booking'])) {
-    $customer_username = trim($_POST['manual_customer_username']);
-    $room_name = $_POST['manual_room_name'];
-    $checkin = $_POST['manual_checkin'];
-    $checkout = $_POST['manual_checkout'];
-    $adults = (int)$_POST['manual_adults'];
-    $children = (int)$_POST['manual_children'];
-    $room_price = (float)$_POST['manual_room_price'];
+// =========================================================
+// 2. LIVE DATABASE QUERIES
+// =========================================================
 
-    // Check if room is available for booking
-    $room_check = $conn->prepare("SELECT room_status FROM rooms WHERE room_name = ?");
-    if ($room_check === false) {
-        $error_message = "Database error: " . $conn->error;
-    } else {
-        $room_check->bind_param("s", $room_name);
-        $room_check->execute();
-        $room_check_result = $room_check->get_result();
-        $room_info = $room_check_result->fetch_assoc();
+// A. CALCULATE ROOM STATISTICS
+// We sum up 'total_slots' and 'available_slots' from the rooms table
+$roomSql = "SELECT 
+                SUM(total_slots) as total_capacity, 
+                SUM(CASE 
+                    WHEN room_status = 'Available' THEN available_slots 
+                    ELSE 0 
+                END) as real_available 
+            FROM rooms";
 
-        if ($room_info['room_status'] == 'Unavailable for Booking') {
-            $error_message = "This room is currently unavailable for booking!";
-        } else {
-            // Calculate total price
-            $diff = strtotime($checkout) - strtotime($checkin);
-            $nights = max(1, ceil($diff / (60*60*24)));
-            $total_price = $nights * $room_price;
+$roomResult = $conn->query($roomSql);
+$roomData = $roomResult->fetch_assoc();
 
-            // Insert booking
-            $insert_sql = "INSERT INTO bookings (customer_username, room_name, room_price, checkin, checkout, adults, children, total_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            $stmt = $conn->prepare($insert_sql);
-            $stmt->bind_param("ssdssiii", $customer_username, $room_name, $room_price, $checkin, $checkout, $adults, $children, $total_price);
-            $stmt->execute();
+// Assign variables (default to 0 if null)
+$total_rooms = $roomData['total_capacity'] ?? 0;
+$available_rooms = $roomData['real_available'] ?? 0;
 
-            // Update available slots
-            $update_slots = "UPDATE rooms SET available_slots = available_slots - 1 WHERE room_name = ?";
-            $update_stmt = $conn->prepare($update_slots);
-            $update_stmt->bind_param("s", $room_name);
-            $update_stmt->execute();
+// Occupied = Total - Available
+// This now includes rooms that are booked AND rooms marked as 'Maintenance/Occupied'
+$occupied_rooms = $total_rooms - $available_rooms;
 
-            // Set status if full
-            $conn->query("UPDATE rooms SET room_status = 'Occupied' WHERE available_slots <= 0 AND room_status = 'Available'");
+// Avoid division by zero for the percentage calculation
+$occupancy_rate = ($total_rooms > 0) ? round(($occupied_rooms / $total_rooms) * 100) : 0;
 
-            $success_message = "Booking created successfully!";
-        }
-    }
-}
+// Avoid division by zero error
+$occupancy_rate = ($total_rooms > 0) ? round(($occupied_rooms / $total_rooms) * 100) : 0;
 
-// 2. Fetch all bookings
-$sql = "SELECT * FROM bookings ORDER BY created_at DESC";
-$result = $conn->query($sql);
+// B. GET TODAY'S ARRIVALS (Check-ins)
+$arrSql = "SELECT COUNT(*) as count FROM bookings WHERE checkin = '$currentDate'";
+$arrResult = $conn->query($arrSql);
+$today_arrivals = $arrResult->fetch_assoc()['count'];
+
+// C. GET TODAY'S DEPARTURES (Check-outs)
+$depSql = "SELECT COUNT(*) as count FROM bookings WHERE checkout = '$currentDate'";
+$depResult = $conn->query($depSql);
+$today_departures = $depResult->fetch_assoc()['count'];
+
+// D. GET PENDING BOOKINGS
+$pendingSql = "SELECT COUNT(*) as count FROM bookings WHERE payment_status = 'Pending'";
+$pendingResult = $conn->query($pendingSql);
+$pending_bookings = $pendingResult->fetch_assoc()['count'];
+
+// E. FETCH TABLE DATA: TODAY'S ARRIVALS LIST
+// Joins 'bookings' with 'customer' to get the real name instead of just username
+$listSql = "SELECT b.id, c.cust_name, b.room_name, b.payment_status 
+            FROM bookings b 
+            LEFT JOIN customer c ON b.customer_username = c.username 
+            WHERE b.checkin = '$currentDate' 
+            ORDER BY b.id DESC";
+$arrivalsResult = $conn->query($listSql);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Bookings | FLASH Hotel Admin</title>
+    <title>Dashboard | FLASH Hotel Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --primary: #2c3e50;    /* Dark Blue Sidebar */
-            --accent: #b89241;     /* Gold Brand Color */
-            --bg-light: #f4f6f9;   /* Light Gray Background */
+            --primary: #2c3e50;
+            --accent: #b89241;
+            --bg-light: #f4f6f9;
             --text-dark: #333;
-            --white: #ffffff;
-            --success: #28a745;    /* Green */
-            --warning: #ffc107;    /* Yellow/Orange */
-            --danger: #dc3545;     /* Red */
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
         }
 
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-light);
-            display: flex;
-        }
+        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-light); display: flex; }
 
-        /* --- SIDEBAR STYLE (MATCHING DASHBOARD) --- */
-        .sidebar {
-            width: 260px;
-            background: var(--primary);
-            color: white;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-        }
-        .brand {
-            padding: 25px;
-            background: rgba(0,0,0,0.1);
-            text-align: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
+        /* SIDEBAR */
+        .sidebar { width: 260px; background: var(--primary); color: white; min-height: 100vh; display: flex; flex-direction: column; position: fixed; }
+        .brand { padding: 25px; background: rgba(0,0,0,0.1); text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .brand h2 { margin: 0; font-size: 24px; color: var(--accent); letter-spacing: 1px; }
-        .brand .role { margin: 5px 0 0; font-size: 12px; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; }
+        .brand .role { margin: 5px 0 0; font-size: 12px; opacity: 0.7; text-transform: uppercase; }
         
-        .sidebar a {
-            padding: 15px 25px;
-            text-decoration: none;
-            color: #b0b8c1;
-            display: flex;
-            align-items: center;
-            transition: 0.3s;
-            border-left: 4px solid transparent;
-        }
+        .sidebar a { padding: 15px 25px; text-decoration: none; color: #b0b8c1; display: flex; align-items: center; transition: 0.3s; border-left: 4px solid transparent; }
         .sidebar a i { margin-right: 12px; width: 20px; text-align: center; }
-        .sidebar a:hover, .sidebar a.active {
-            background: rgba(255,255,255,0.05);
-            color: white;
-            border-left-color: var(--accent);
-        }
+        .sidebar a:hover, .sidebar a.active { background: rgba(255,255,255,0.05); color: white; border-left-color: var(--accent); }
         .sidebar .logout { margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); color: #ffadad; }
         .sidebar .logout:hover { background: #3d2a2a; border-left-color: #dc3545; }
 
-        /* --- MAIN CONTENT STYLE --- */
-        .main-content {
-            margin-left: 260px;
-            flex: 1;
-            padding: 25px;
-        }
+        /* MAIN CONTENT */
+        .main-content { margin-left: 260px; flex: 1; padding: 25px; }
 
         /* Top Bar */
-        .topbar { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin-bottom: 30px; 
-        }
-        .topbar h3 { margin: 0; font-size: 24px; color: var(--text-dark); }
-        .user-profile {
-            display: flex; align-items: center; gap: 15px; 
-            background: white; padding: 8px 15px; 
-            border-radius: 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        /* Alerts */
-        .alert {
-            padding: 12px 20px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .alert-danger { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-
-        /* --- TABLE STYLES --- */
-        .table-box {
-            background: white;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            margin-bottom: 25px;
-        }
-
-        .booking-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        .booking-table th {
-            background-color: #f8f9fa;
-            color: #555;
-            font-weight: 600;
-            padding: 15px;
-            text-align: left;
-            border-bottom: 2px solid #eee;
-        }
-        .booking-table td {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            vertical-align: middle;
-            color: #444;
-        }
-        .booking-table tr:last-child td { border-bottom: none; }
-        .booking-table tr:hover { background-color: #fafafa; }
-
-        /* Status Badges */
-        .status-badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            display: inline-block;
-        }
-        .status-pending { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
-        .status-paid { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .status-cancelled { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-
-        /* Action Buttons */
-        .action-link {
-            text-decoration: none;
-            margin-right: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            transition: 0.2s;
-        }
-        .edit-link { color: #f0ad4e; }
-        .edit-link:hover { color: #d58512; }
+        .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .welcome-text h3 { margin: 0; font-size: 24px; color: var(--text-dark); }
+        .welcome-text p { margin: 5px 0 0; color: #666; font-size: 14px; }
         
-        .delete-link { color: #d9534f; }
-        .delete-link:hover { color: #c9302c; }
+        .user-profile { display: flex; align-items: center; gap: 15px; background: white; padding: 8px 15px; border-radius: 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .avatar-circle { width: 35px; height: 35px; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
 
-        .btn {
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: 0.3s;
-        }
-        .btn:hover { background: #0056b3; }
-        .btn-success { background: #28a745; }
-        .btn-success:hover { background: #218838; }
+        /* Stats Cards */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); display: flex; align-items: center; justify-content: space-between; border-bottom: 4px solid transparent; transition: transform 0.2s; }
+        .card:hover { transform: translateY(-5px); }
+        .card-info h4 { margin: 0 0 5px; color: #666; font-size: 14px; font-weight: normal; }
+        .card-info h2 { margin: 0; font-size: 28px; color: var(--text-dark); }
+        .card-icon { width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+
+        /* Card Colors */
+        .card.blue { border-color: var(--info); } .card.blue .card-icon { background: #e0f7fa; color: var(--info); }
+        .card.green { border-color: var(--success); } .card.green .card-icon { background: #d4edda; color: var(--success); }
+        .card.orange { border-color: var(--warning); } .card.orange .card-icon { background: #fff3cd; color: var(--warning); }
+        .card.red { border-color: var(--danger); } .card.red .card-icon { background: #f8d7da; color: var(--danger); }
+
+        /* Dashboard Sections */
+        .dashboard-row { display: flex; gap: 25px; flex-wrap: wrap; }
+        .section-box { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); flex: 1; min-width: 300px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .section-header h3 { margin: 0; font-size: 18px; color: var(--primary); }
+        .btn-sm { padding: 6px 12px; font-size: 12px; background: var(--primary); color: white; border-radius: 4px; text-decoration: none; }
+
+        /* Tables */
+        .table-clean { width: 100%; border-collapse: collapse; }
+        .table-clean th { text-align: left; color: #888; font-size: 12px; padding: 10px 5px; font-weight: 600; }
+        .table-clean td { padding: 12px 5px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+        .table-clean tr:last-child td { border-bottom: none; }
+        
+        .status-badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+        .status-confirmed { background: #e3fcef; color: #006644; } /* Matches 'Paid' or 'Confirmed' if you have it */
+        .status-pending { background: #fff8c5; color: #856404; }
 
     </style>
 </head>
@@ -240,9 +154,9 @@ $result = $conn->query($sql);
         <p class="role"><?php echo ucfirst($adminRole); ?></p>
     </div>
 
-    <a href="dashboard.php"><i class="fas fa-home"></i> Dashboard</a>
+    <a href="dashboard.php" class="active"><i class="fas fa-home"></i> Dashboard</a>
     <a href="manage_rooms.php"><i class="fas fa-bed"></i> Manage Rooms</a>
-    <a href="bookings.php" class="active"><i class="fas fa-calendar-check"></i> Bookings</a>
+     <a href="bookings.php"><i class="fas fa-calendar-check"></i> Bookings</a>
 
     <?php if ($adminRole === "superadmin") { ?>
         <a href="manage_subadmins.php"><i class="fas fa-user-shield"></i> Subadmins</a>
@@ -255,168 +169,143 @@ $result = $conn->query($sql);
 </div>
 
 <div class="main-content">
-    
+
     <div class="topbar">
-        <h3><i class="fas fa-list-alt"></i> Booking Management</h3>
+        <div class="welcome-text">
+            <h3>Good Evening, <?php echo htmlspecialchars($adminName); ?>.</h3>
+            <p><?php echo date("l, d F Y"); ?> | System Status: <span style="color:var(--success)">● Online</span></p>
+        </div>
         <div class="user-profile">
             <span><?php echo htmlspecialchars($adminName); ?></span>
-            <div style="width:30px;height:30px;border-radius:50%;background:var(--accent);color:white;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;">
+            <div class="avatar-circle">
                 <?php echo strtoupper(substr($adminName, 0, 1)); ?>
             </div>
         </div>
     </div>
 
-    <!-- Success/Error Messages -->
-    <?php if (isset($success_message)): ?>
-        <div class="alert alert-success">
-            <i class="fas fa-check-circle"></i> <?php echo htmlspecialchars($success_message); ?>
-        </div>
-    <?php endif; ?>
-
-    <?php if (isset($_GET['undone'])): ?>
-        <div class="alert alert-success">
-            <i class="fas fa-check-circle"></i> Booking cancellation undone successfully!
-        </div>
-    <?php endif; ?>
-
-    <?php if (isset($error_message)): ?>
-        <div class="alert alert-danger">
-            <i class="fas fa-exclamation-circle"></i> <?php echo htmlspecialchars($error_message); ?>
-        </div>
-    <?php endif; ?>
-
-    <!-- All Bookings Section -->
-    <div class="table-box">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <h4 style="margin: 0; font-size: 1.1rem; color: #555;">All Room Reservations</h4>
-            <button onclick="toggleManualBookingForm()" class="btn">+ Manual Booking</button>
+    <div class="stats-grid">
+        <div class="card blue">
+            <div class="card-info">
+                <h4>Total Occupancy</h4>
+                <h2><?php echo $occupancy_rate; ?>%</h2>
+                <small><?php echo $occupied_rooms; ?> / <?php echo $total_rooms; ?> Rooms</small>
+            </div>
+            <div class="card-icon"><i class="fas fa-chart-pie"></i></div>
         </div>
 
-        <!-- Manual Booking Form (Hidden by default) -->
-        <div id="manualBookingForm" style="display: none; margin-bottom: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background: #f9f9f9;">
-            <h4>Create Manual Booking</h4>
-            <form method="POST">
-                <label>Customer Username: </label>
-                <input type="text" name="manual_customer_username" required><br><br>
-                <label>Room: </label>
-                <select name="manual_room_name" required>
-                    <?php
-                    $room_result = $conn->query("SELECT room_name, room_status FROM rooms");
-                    while($room = $room_result->fetch_assoc()) {
-                        $disabled = ($room['room_status'] == 'Unavailable for Booking') ? 'disabled' : '';
-                        $label = $room['room_name'];
-                        if ($room['room_status'] == 'Unavailable for Booking') {
-                            $label .= ' (UNAVAILABLE)';
-                        }
-                        echo "<option value='" . htmlspecialchars($room['room_name']) . "' $disabled>" . htmlspecialchars($label) . "</option>";
-                    }
-                    ?>
-                </select><br><br>
-                <label>Check-in Date: </label>
-                <input type="date" name="manual_checkin" required><br><br>
-                <label>Check-out Date: </label>
-                <input type="date" name="manual_checkout" required><br><br>
-                <label>Adults: </label>
-                <input type="number" name="manual_adults" min="1" value="1" required>
-                <label>Children: </label>
-                <input type="number" name="manual_children" min="0" value="0" required><br><br>
-                <label>Room Price (RM per night): </label>
-                <input type="number" name="manual_room_price" min="0" step="0.01" required><br><br>
-                <button type="submit" name="create_manual_booking" class="btn btn-success">Create Booking</button>
-            </form>
+        <div class="card green">
+            <div class="card-info">
+                <h4>Arriving Today</h4>
+                <h2><?php echo $today_arrivals; ?></h2>
+                <small>Check-ins due</small>
+            </div>
+            <div class="card-icon"><i class="fas fa-suitcase-rolling"></i></div>
         </div>
 
-        <table class="booking-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Customer</th>
-                    <th>Room Type</th>
-                    <th>Dates (In - Out)</th>
-                    <th>Guests</th>
-                    <th>Total Price</th>
-                    <th>Status</th>
-                    <th>Booked On</th>
-                    <th>Actions</th> 
-                </tr>
-            </thead>
-            <tbody>
-                <?php if ($result && $result->num_rows > 0): ?>
-                    <?php while($row = $result->fetch_assoc()):
-                        // Determine CSS class based on payment status
-                        $payment_status = isset($row['payment_status']) ? $row['payment_status'] : 'Pending';
-                        $statusRaw = strtolower($payment_status);
-                        $statusClass = 'status-pending'; // default
+        <div class="card orange">
+            <div class="card-info">
+                <h4>Departing Today</h4>
+                <h2><?php echo $today_departures; ?></h2>
+                <small>Check-outs due</small>
+            </div>
+            <div class="card-icon"><i class="fas fa-door-open"></i></div>
+        </div>
 
-                        if ($statusRaw == 'paid' || $statusRaw == 'confirmed') {
-                            $statusClass = 'status-paid';
-                        } elseif ($statusRaw == 'cancelled') {
-                            $statusClass = 'status-cancelled';
-                        }
-                    ?>
+        <div class="card red">
+            <div class="card-info">
+                <h4>Pending Bookings</h4>
+                <h2><?php echo $pending_bookings; ?></h2>
+                <small>Need payment/action</small>
+            </div>
+            <div class="card-icon"><i class="fas fa-bell"></i></div>
+        </div>
+    </div>
+
+    <div class="dashboard-row">
+        
+        <div class="section-box" style="flex: 2;">
+            <div class="section-header">
+                <h3><i class="fas fa-concierge-bell"></i> Today's Arrivals</h3>
+                <a href="bookings.php" class="btn-sm">View All Bookings</a>
+            </div>
+            
+            <table class="table-clean">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Guest Name</th>
+                        <th>Room Assigned</th>
+                        <th>Payment Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if ($arrivalsResult && $arrivalsResult->num_rows > 0): ?>
+                        <?php while($row = $arrivalsResult->fetch_assoc()): ?>
                         <tr>
                             <td>#<?php echo $row['id']; ?></td>
                             <td>
-                                <strong><?php echo htmlspecialchars($row['customer_username']); ?></strong>
+                                <strong><?php echo htmlspecialchars($row['cust_name'] ?? $row['customer_username']); ?></strong>
                             </td>
                             <td><?php echo htmlspecialchars($row['room_name']); ?></td>
                             <td>
-                                <div style="font-size: 0.9em; color: #666;">
-                                    <i class="fas fa-sign-in-alt"></i> <?php echo date('M d', strtotime($row['checkin'])); ?><br>
-                                    <i class="fas fa-sign-out-alt"></i> <?php echo date('M d', strtotime($row['checkout'])); ?>
-                                </div>
-                            </td>
-                            <td><?php echo $row['adults']; ?> <i class="fas fa-user"></i>, <?php echo $row['children']; ?> <i class="fas fa-child"></i></td>
-                            <td style="font-weight: bold; color: #333;">RM<?php echo number_format($row['total_price'], 2); ?></td>
-                            
-                            <td>
-                                <span class="status-badge <?php echo $statusClass; ?>">
-                                    <?php echo htmlspecialchars($payment_status); ?>
+                                <span class="status-badge <?php echo ($row['payment_status'] == 'Paid') ? 'status-confirmed' : 'status-pending'; ?>">
+                                    <?php echo htmlspecialchars($row['payment_status']); ?>
                                 </span>
                             </td>
-                            
-                            <td style="font-size: 0.85em; color: #888;">
-                                <?php echo date('M d, Y', strtotime($row['created_at'])); ?>
-                            </td>
-                            
                             <td>
-                                <a href="edit_booking.php?id=<?php echo $row['id']; ?>" class="action-link edit-link" title="Edit Booking">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
-                                <?php if ($payment_status === 'Cancelled'): ?>
-                                    <a href="undo_booking.php?id=<?php echo $row['id']; ?>" class="action-link" style="color: #28a745;" title="Undo Cancellation">
-                                        <i class="fas fa-undo"></i> Undo
-                                    </a>
-                                <?php endif; ?>
-                                <a href="delete_booking.php?id=<?php echo $row['id']; ?>" class="action-link delete-link"
-                                   title="Delete Booking" onclick="return confirm('WARNING: Are you sure you want to delete Booking #<?php echo $row['id']; ?>?');">
-                                    <i class="fas fa-trash-alt"></i> Delete
+                                <a href="bookings.php?checkin_id=<?php echo $row['id']; ?>" style="color:var(--primary); font-size:14px;">
+                                    <i class="fas fa-check-circle"></i> Check In
                                 </a>
                             </td>
                         </tr>
-                    <?php endwhile; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="9" style="text-align:center; padding: 40px; color: #999;">
-                            <i class="fas fa-inbox" style="font-size: 40px; margin-bottom: 10px; display: block;"></i>
-                            No bookings found in the database.
-                        </td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="5" style="text-align:center; color:#999; padding:20px;">
+                                No arrivals scheduled for today (<?php echo $currentDate; ?>).
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section-box" style="flex: 1;">
+            <div class="section-header">
+                <h3><i class="fas fa-bed"></i> Room Status</h3>
+                <a href="manage_rooms.php" class="btn-sm">Manage</a>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                    <span>Available</span>
+                    <strong><?php echo $available_rooms; ?></strong>
+                </div>
+                <div style="height:8px; background:#eee; border-radius:4px; overflow:hidden;">
+                    <div style="width: <?php echo ($total_rooms > 0) ? (100 - $occupancy_rate) : 0; ?>%; background: var(--success); height:100%;"></div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                    <span>Occupied</span>
+                    <strong><?php echo $occupied_rooms; ?></strong>
+                </div>
+                <div style="height:8px; background:#eee; border-radius:4px; overflow:hidden;">
+                    <div style="width: <?php echo $occupancy_rate; ?>%; background: var(--info); height:100%;"></div>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px; padding: 15px; background: #f8f9fa; border-radius: 5px; text-align: center;">
+                <h4 style="margin:0 0 5px; color: #333;">Total Capacity</h4>
+                <p style="margin:0; font-size:16px; color:#555;"><?php echo $total_rooms; ?> Total Rooms</p>
+            </div>
+        </div>
+
     </div>
+
 </div>
 
-<script>
-function toggleManualBookingForm() {
-    var form = document.getElementById('manualBookingForm');
-    if (form.style.display === 'none' || form.style.display === '') {
-        form.style.display = 'block';
-    } else {
-        form.style.display = 'none';
-    }
-}
-</script>
 </body>
 </html>
