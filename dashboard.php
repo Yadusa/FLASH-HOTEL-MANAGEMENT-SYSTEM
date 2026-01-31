@@ -307,29 +307,7 @@ if (!$arrivalsResult) {
     <!-- MESSAGES -->
     <?php if (isset($message)) echo $message; ?>
 
-    <!-- ADD ROOM FORM -->
-    <?php if ($adminRole === "superadmin") { ?>
-    <div class="add-room-form">
-        <h4><i class="fas fa-plus-circle"></i> Add New Room</h4>
-        <form method="POST" action="">
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Room Name</label>
-                    <input type="text" name="room_name" placeholder="e.g., Presidential Suite" required>
-                </div>
-                <div class="form-group">
-                    <label>Total Slots</label>
-                    <input type="number" name="total_slots" min="1" max="20" placeholder="5" required>
-                </div>
-                <div class="form-group">
-                    <button type="submit" name="add_room" class="btn-sm btn-success">
-                        <i class="fas fa-plus"></i> Add Room
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
-    <?php } ?>
+  
 
     <!-- DATE FILTER FORM -->
     <form class="filter-form" method="GET">

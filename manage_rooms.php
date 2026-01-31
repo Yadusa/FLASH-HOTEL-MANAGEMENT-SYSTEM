@@ -62,18 +62,6 @@ if (isset($_POST['update_status_trigger'])) {
     $stmt->execute();
 }
 
-// --- HANDLE ADD NEW ROOM ---
-if (isset($_POST['add_room'])) {
-    $room_name = trim($_POST['room_name']);
-    $total_slots = (int)$_POST['total_slots'];
-    if (!empty($room_name) && $total_slots > 0) {
-        $insert_sql = "INSERT INTO rooms (room_name, total_slots, available_slots, room_status) VALUES (?, ?, ?, 'Available')";
-        $stmt = $conn->prepare($insert_sql);
-        $stmt->bind_param("sii", $room_name, $total_slots, $total_slots);
-        $stmt->execute();
-    }
-}
-
 // --- HANDLE BLOCK DATE ---
 if (isset($_POST['block_date'])) {
     $room_name = $_POST['block_room_name'];
@@ -336,18 +324,6 @@ $blocked_result = $conn->query($blocked_sql);
 
     <div class="admin-card">
         <h2>Room Inventory Management</h2>
-
-        <!-- Add New Room Form -->
-        <div class="form-section">
-            <h3><i class="fas fa-plus-circle"></i> Add New Room</h3>
-            <form method="POST">
-                <label>Room Name: </label>
-                <input type="text" name="room_name" required>
-                <label>Total Slots: </label>
-                <input type="number" name="total_slots" min="1" required>
-                <button type="submit" name="add_room" class="btn btn-success">Add Room</button>
-            </form>
-        </div>
 
         <!-- Block Dates Form -->
         <div class="form-section">
