@@ -43,27 +43,33 @@ $occupied_rooms = $total_rooms - $available_rooms;
 // Avoid division by zero for the percentage calculation
 $occupancy_rate = ($total_rooms > 0) ? round(($occupied_rooms / $total_rooms) * 100) : 0;
 
-// Avoid division by zero error
-$occupancy_rate = ($total_rooms > 0) ? round(($occupied_rooms / $total_rooms) * 100) : 0;
-
 // B. GET TODAY'S ARRIVALS (Check-ins)
 $arrSql = "SELECT COUNT(*) as count FROM bookings WHERE checkin = '$currentDate'";
 $arrResult = $conn->query($arrSql);
-$today_arrivals = $arrResult->fetch_assoc()['count'];
+$today_arrivals = $arrResult ? $arrResult->fetch_assoc()['count'] : 0;
 
 // C. GET TODAY'S DEPARTURES (Check-outs)
 $depSql = "SELECT COUNT(*) as count FROM bookings WHERE checkout = '$currentDate'";
 $depResult = $conn->query($depSql);
-$today_departures = $depResult->fetch_assoc()['count'];
+$today_departures = $depResult ? $depResult->fetch_assoc()['count'] : 0;
 
 // D. GET PENDING BOOKINGS
-$pendingSql = "SELECT COUNT(*) as count FROM bookings WHERE payment_status = 'Pending'";
-$pendingResult = $conn->query($pendingSql);
-$pending_bookings = $pendingResult->fetch_assoc()['count'];
+// Check if payment_status column exists first
+$checkColumnSql = "SHOW COLUMNS FROM bookings LIKE 'payment_status'";
+$columnCheck = $conn->query($checkColumnSql);
+
+if ($columnCheck && $columnCheck->num_rows > 0) {
+    $pendingSql = "SELECT COUNT(*) as count FROM bookings WHERE payment_status = 'Pending'";
+    $pendingResult = $conn->query($pendingSql);
+    $pending_bookings = $pendingResult ? $pendingResult->fetch_assoc()['count'] : 0;
+} else {
+    // If payment_status column doesn't exist, just count all bookings
+    $pending_bookings = 0;
+}
 
 // E. FETCH TABLE DATA: TODAY'S ARRIVALS LIST
 // Joins 'bookings' with 'customer' to get the real name instead of just username
-$listSql = "SELECT b.id, c.cust_name, b.room_name, b.payment_status 
+$listSql = "SELECT b.id, c.cust_name, b.customer_username, b.room_name 
             FROM bookings b 
             LEFT JOIN customer c ON b.customer_username = c.username 
             WHERE b.checkin = '$currentDate' 
@@ -159,7 +165,7 @@ $arrivalsResult = $conn->query($listSql);
 
     <a href="dashboard.php" class="active"><i class="fas fa-home"></i> Dashboard</a>
     <a href="manage_rooms.php"><i class="fas fa-bed"></i> Manage Rooms</a>
-     <a href="bookings.php"><i class="fas fa-calendar-check"></i> Bookings</a>
+    <a href="bookings.php"><i class="fas fa-calendar-check"></i> Bookings</a>
 
     <?php if ($adminRole === "superadmin") { ?>
         <a href="manage_subadmins.php"><i class="fas fa-user-shield"></i> Subadmins</a>
@@ -216,11 +222,11 @@ $arrivalsResult = $conn->query($listSql);
 
         <div class="card red">
             <div class="card-info">
-                <h4>Pending Bookings</h4>
+                <h4>Total Bookings</h4>
                 <h2><?php echo $pending_bookings; ?></h2>
-                <small>Need payment/action</small>
+                <small>All reservations</small>
             </div>
-            <div class="card-icon"><i class="fas fa-bell"></i></div>
+            <div class="card-icon"><i class="fas fa-calendar-alt"></i></div>
         </div>
     </div>
 
@@ -238,7 +244,6 @@ $arrivalsResult = $conn->query($listSql);
                         <th>ID</th>
                         <th>Guest Name</th>
                         <th>Room Assigned</th>
-                        <th>Payment Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -252,12 +257,7 @@ $arrivalsResult = $conn->query($listSql);
                             </td>
                             <td><?php echo htmlspecialchars($row['room_name']); ?></td>
                             <td>
-                                <span class="status-badge <?php echo ($row['payment_status'] == 'Paid') ? 'status-confirmed' : 'status-pending'; ?>">
-                                    <?php echo htmlspecialchars($row['payment_status']); ?>
-                                </span>
-                            </td>
-                            <td>
-                                <a href="bookings.php?checkin_id=<?php echo $row['id']; ?>" style="color:var(--primary); font-size:14px;">
+                                <a href="bookings.php?checkin_id=<?php echo $row['id']; ?>" style="color:var(--success); font-size:14px; font-weight:600;">
                                     <i class="fas fa-check-circle"></i> Check In
                                 </a>
                             </td>
@@ -265,7 +265,7 @@ $arrivalsResult = $conn->query($listSql);
                         <?php endwhile; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="5" style="text-align:center; color:#999; padding:20px;">
+                            <td colspan="4" style="text-align:center; color:#999; padding:20px;">
                                 No arrivals scheduled for today (<?php echo $currentDate; ?>).
                             </td>
                         </tr>
