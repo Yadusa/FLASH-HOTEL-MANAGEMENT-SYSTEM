@@ -30,15 +30,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             // 3. Hash and Insert
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             $stmt = $conn->prepare(
-    "INSERT INTO customer 
-    (username, cust_name, cust_email, contact_number, address, password_hash, created_at) 
+    "INSERT INTO customer
+    (username, cust_name, cust_email, contact_number, address, password_hash, created_at)
     VALUES (?, ?, ?, ?, ?, ?, NOW())"
 );
-            $stmt->bind_param("ssssss", 
-    $username, 
-    $cust_name, 
-    $cust_email, 
-    $contact_number, 
+            if (!$stmt) {
+                die("Prepare failed: " . $conn->error);
+            }
+            $stmt->bind_param("ssssss",
+    $username,
+    $cust_name,
+    $cust_email,
+    $contact_number,
     $address,
     $hashedPassword
 );
