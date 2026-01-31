@@ -59,7 +59,26 @@ if ($adults < 1 || $adults > 5) {
         $occupied = $avail_stmt->get_result()->fetch_assoc()['occupied_slots'];
 
         if ($occupied >= $room_info['total_slots']) {
-            $error_message = "Sorry, this room is fully booked or blocked for your selected dates.";
+            // --- NEW: FETCH BLOCKED DATES TO SHOW CUSTOMER ---
+            $block_info_sql = "SELECT DISTINCT checkin, checkout FROM bookings 
+                   WHERE room_name = ? 
+                   AND payment_status = 'Blocked' 
+                   AND checkout >= CURDATE() 
+                   ORDER BY checkin ASC";
+            $block_stmt = $conn->prepare($block_info_sql);
+            $block_stmt->bind_param("s", $room_name);
+            $block_stmt->execute();
+            $blocks = $block_stmt->get_result();
+
+            if ($blocks->num_rows > 0) {
+                $block_list = [];
+                while ($b = $blocks->fetch_assoc()) {
+                    $block_list[] = date('M d', strtotime($b['checkin'])) . " to " . date('M d, Y', strtotime($b['checkout']));
+                }
+                $error_message = "This room is unavailable for your selected dates. <br><strong>Upcoming blocked dates:</strong><br> " . implode("<br>", $block_list);
+            } else {
+                $error_message = "Sorry, this room is fully booked for your selected dates. Please try different dates.";
+            }
         } else {
             // 3. PROCEED WITH BOOKING
             $diff = strtotime($checkout) - strtotime($checkin);

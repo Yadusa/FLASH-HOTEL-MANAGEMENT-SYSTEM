@@ -60,7 +60,7 @@ if (isset($_POST['create_manual_booking'])) {
 }
 
 // 2. Fetch all bookings
-$sql = "SELECT * FROM bookings ORDER BY created_at DESC";
+$sql = "SELECT * FROM bookings WHERE customer_username != 'SYSTEM_BLOCK' ORDER BY checkin DESC";
 $result = $conn->query($sql);
 ?>
 <!DOCTYPE html>
