@@ -11,7 +11,7 @@ if (!isset($_SESSION["admin_id"]) || $_SESSION["admin_role"] !== "superadmin") {
 $adminName = $_SESSION["admin_name"];
 $adminRole = $_SESSION["admin_role"];
 
-/* Alert messages (kept your logic) */
+/* Alert messages */
 if (isset($_GET['updated'])) {
     echo "<script>alert('Customer updated successfully');</script>";
 }
@@ -19,10 +19,9 @@ if (isset($_GET['deleted'])) {
     echo "<script>alert('Customer deleted successfully');</script>";
 }
 
-// 2. Fetch Customers
+// 2. Fetch Customers - Removed 'status' column filter to fix SQL error
 $sql = "SELECT id, username, cust_name, cust_email, contact_number, created_at 
         FROM customer
-        WHERE status = 'active'
         ORDER BY created_at DESC";
 
 $result = $conn->query($sql);
@@ -38,9 +37,9 @@ $result = $conn->query($sql);
     
     <style>
         :root {
-            --primary: #2c3e50;    /* Dark Blue Sidebar */
-            --accent: #b89241;     /* Gold Brand Color */
-            --bg-light: #f4f6f9;   /* Light Gray Background */
+            --primary: #2c3e50; 
+            --accent: #b89241; 
+            --bg-light: #f4f6f9; 
             --text-dark: #333;
             --white: #ffffff;
             --success: #28a745;
@@ -99,7 +98,6 @@ $result = $conn->query($sql);
             padding: 25px;
         }
 
-        /* Top Bar */
         .topbar { 
             display: flex; 
             justify-content: space-between; 
@@ -140,14 +138,24 @@ $result = $conn->query($sql);
             vertical-align: middle;
             color: #444;
         }
-        .custom-table tr:last-child td { border-bottom: none; }
         .custom-table tr:hover { background-color: #fafafa; }
 
-        /* Status Badge */
-        .status-active {
-            color: #28a745;
+        /* --- ACTION LINKS (MATCHING MANAGE_BOOKING.PHP) --- */
+        .action-link {
+            text-decoration: none;
+            margin-right: 15px;
+            font-size: 14px;
             font-weight: 600;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
+        .edit-link { color: #f0ad4e; } /* Gold/Warning color */
+        .edit-link:hover { color: #d58512; }
+        
+        .delete-link { color: #d9534f; } /* Red/Danger color */
+        .delete-link:hover { color: #c9302c; }
 
     </style>
 </head>
@@ -194,13 +202,13 @@ $result = $conn->query($sql);
                     <th>Email Address</th>
                     <th>Contact</th>
                     <th>Registered On</th>
-                    <th>Status</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
             <?php
             $i = 1;
-            if ($result->num_rows > 0) {
+            if ($result && $result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
                 ?>
                 <tr>
@@ -209,17 +217,26 @@ $result = $conn->query($sql);
                     <td><?php echo htmlspecialchars($row['cust_name']); ?></td>
                     <td><?php echo htmlspecialchars($row['cust_email']); ?></td>
                     <td><?php echo htmlspecialchars($row['contact_number']); ?></td>
-                    <td style="color: #777; font-size: 0.9em;"><?php echo date('M d, Y', strtotime($row['created_at'])); ?></td>
+                    <td style="color: #777; font-size: 0.9em;">
+                        <i class="far fa-calendar-alt"></i> <?php echo date('M d, Y', strtotime($row['created_at'])); ?>
+                    </td>
                     <td>
-                        <span class="status-active">
-                            <i class="fas fa-check-circle"></i> Active
-                        </span>
+                        <a href="edit_customer.php?id=<?php echo $row['id']; ?>" class="action-link edit-link" title="Edit Customer">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+
+                        <a href="delete_customer.php?id=<?php echo $row['id']; ?>" 
+                           class="action-link delete-link" 
+                           title="Delete Customer" 
+                           onclick="return confirm('WARNING: Are you sure you want to delete customer: <?php echo htmlspecialchars($row['username']); ?>?');">
+                            <i class="fas fa-trash-alt"></i> Delete
+                        </a>
                     </td>
                 </tr>
                 <?php 
                 }
             } else {
-                echo "<tr><td colspan='7' style='text-align:center; padding:40px; color:#999;'><i class='fas fa-folder-open' style='font-size:30px; margin-bottom:10px; display:block;'></i>No registered customers found.</td></tr>";
+                echo "<tr><td colspan='7' style='text-align:center; padding:40px; color:#999;'><i class='fas fa-users-slash' style='font-size:40px; margin-bottom:10px; display:block;'></i>No registered customers found.</td></tr>";
             }
             ?>
             </tbody>

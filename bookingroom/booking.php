@@ -31,63 +31,58 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $children = intval($_POST['children']);
     $totalGuests = $adults + $children;
 
-    // Validation
-    if ($adults < 1 || $adults > 5) {
-        $error_message = "Number of adults must be between 1 and 5.";
-    } elseif ($totalGuests > 5) {
-        $error_message = "Total guests (adults + children) cannot exceed 5 per room.";
-    } else {
-        // Check for blocked dates
-        $blocked_check = $conn->prepare("SELECT COUNT(*) as blocked_count FROM room_blocked_dates WHERE room_name = ? AND blocked_date BETWEEN ? AND ?");
-        $blocked_check->bind_param("sss", $room_name, $checkin, $checkout);
-        $blocked_check->execute();
-        $blocked_result = $blocked_check->get_result()->fetch_assoc();
+    // --- UPDATED VALIDATION & AVAILABILITY LOGIC ---
 
-        if ($blocked_result['blocked_count'] > 0) {
-            $error_message = "Sorry, this room is currently unavailable.";
-        }
+if ($adults < 1 || $adults > 5) {
+    $error_message = "Number of adults must be between 1 and 5.";
+} elseif ($totalGuests > 5) {
+    $error_message = "Total guests (adults + children) cannot exceed 5 per room.";
+} else {
+    // 1. First, check if the room is globally blocked for Maintenance
+    $status_stmt = $conn->prepare("SELECT room_status, total_slots FROM rooms WHERE room_name = ?");
+    $status_stmt->bind_param("s", $room_name);
+    $status_stmt->execute();
+    $room_info = $status_stmt->get_result()->fetch_assoc();
+
+    if ($room_info['room_status'] === 'Maintenance') {
+        $error_message = "Sorry, this room is currently closed for maintenance.";
+    } else {
+        // 2. Check how many slots are occupied for the SELECTED DATES
+        // This query counts any confirmed booking that overlaps with the user's dates
+        $check_avail_sql = "SELECT COUNT(*) as occupied_slots FROM bookings 
+                            WHERE room_name = ? 
+                            AND payment_status != 'Cancelled'
+                            AND (checkin < ? AND checkout > ?)";
+        $avail_stmt = $conn->prepare($check_avail_sql);
+        $avail_stmt->bind_param("sss", $room_name, $checkout, $checkin);
+        $avail_stmt->execute();
+        $occupied = $avail_stmt->get_result()->fetch_assoc()['occupied_slots'];
+
+        if ($occupied >= $room_info['total_slots']) {
+            $error_message = "Sorry, this room is fully booked or blocked for your selected dates.";
+        } else {
+            // 3. PROCEED WITH BOOKING
             $diff = strtotime($checkout) - strtotime($checkin);
             $nights = max(1, ceil($diff / (60*60*24)));
             $total_price = $nights * $room_price;
 
-           $stmt = $conn->prepare("INSERT INTO bookings (customer_username, room_name, room_price, checkin, checkout, adults, children, total_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-
-if (!$stmt) {
-    echo "SQL Error: " . $conn->error . "<br>";
-    echo "Error Number: " . $conn->errno . "<br>";
-    die();
-}
-
-$stmt->bind_param("ssdssiii", $customer_username, $room_name, $room_price, $checkin, $checkout, $adults, $children, $total_price);
-        if ($stmt->execute()) {
+            $stmt = $conn->prepare("INSERT INTO bookings (customer_username, room_name, room_price, checkin, checkout, adults, children, total_price, payment_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Confirmed')");
             
-            // --- INSERTED CODE START ---
-            
-            // 1. Reduce the available slots by 1 for the booked room
-            $update_slots_sql = "UPDATE rooms SET available_slots = available_slots - 1 WHERE room_name = ?";
-            $update_stmt = $conn->prepare($update_slots_sql);
-            $update_stmt->bind_param("s", $room_name);
-            $update_stmt->execute();
-            $update_stmt->close();
+            // Note: I added 'Confirmed' to payment_status so the room logic detects it immediately
+            $stmt->bind_param("ssdssiid", $customer_username, $room_name, $room_price, $checkin, $checkout, $adults, $children, $total_price);
 
-            // 2. Automatically set status to 'Occupied' if slots reach 0
-            $check_zero_sql = "UPDATE rooms SET room_status = 'Occupied' WHERE available_slots <= 0 AND room_status = 'Available'";
-            $conn->query($check_zero_sql);
-            
-            // --- INSERTED CODE END ---
-
-            header("Location: booking_confirm.php?room_name=" . urlencode($room_name) . "&room_price=$room_price&check_in=$checkin&check_out=$checkout&adults=$adults&children=$children");
-            exit();
-
-        } else {
-            $error_message = "Error while booking: " . $conn->error;
+            if ($stmt->execute()) {
+                // SUCCESS: Redirect to confirmation
+                header("Location: booking_confirm.php?room_name=" . urlencode($room_name) . "&room_price=$room_price&check_in=$checkin&check_out=$checkout&adults=$adults&children=$children");
+                exit();
+            } else {
+                $error_message = "Error while booking: " . $conn->error;
+            }
         }
-
-        $stmt->close();}
     }
-
+}
+}
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
