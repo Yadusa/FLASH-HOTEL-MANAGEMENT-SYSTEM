@@ -27,6 +27,9 @@ $roomSql = "SELECT
             FROM rooms";
 
 $roomResult = $conn->query($roomSql);
+if (!$roomResult) {
+    die("Query failed: " . $conn->error);
+}
 $roomData = $roomResult->fetch_assoc();
 
 // Assign variables (default to 0 if null)
