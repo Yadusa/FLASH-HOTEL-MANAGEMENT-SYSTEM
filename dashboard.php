@@ -56,7 +56,14 @@ $today_departures = $depResult->fetch_assoc()['count'];
 // D. GET PENDING BOOKINGS
 $pendingSql = "SELECT COUNT(*) as count FROM bookings WHERE payment_status = 'Pending'";
 $pendingResult = $conn->query($pendingSql);
-$pending_bookings = $pendingResult->fetch_assoc()['count'];
+
+if ($pendingResult) {
+    $pending_bookings = $pendingResult->fetch_assoc()['count'];
+} else {
+    // If the query fails, default to 0 and log the error
+    error_log("Database Error: " . $conn->error);
+    $pending_bookings = 0;
+}
 
 // E. FETCH TABLE DATA: TODAY'S ARRIVALS LIST
 // Joins 'bookings' with 'customer' to get the real name instead of just username
