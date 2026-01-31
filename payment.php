@@ -203,38 +203,74 @@ form input, form select { width: 100%; padding: 10px 12px; margin-bottom: 15px; 
 <!-- CREDIT CARD FORM -->
 <div class="tab-content active" id="credit">
     <h3>Credit Card Details</h3>
+
     <form id="creditForm" onsubmit="return confirmPayment()">
+
+        <!-- CARD TYPE -->
+        <label>Card Type</label>
+        <div class="row" style="margin-bottom:15px;">
+            <label style="flex:1; cursor:pointer;">
+                <input type="radio" name="cardType" value="visa" onchange="setCardType('visa')" required>
+                <img src="images/visa.png" style="height:35px; vertical-align:middle;">
+                Visa
+            </label>
+
+            <label style="flex:1; cursor:pointer;">
+                <input type="radio" name="cardType" value="master" onchange="setCardType('master')" required>
+                <img src="images/mastercard.png" style="height:35px; vertical-align:middle;">
+                MasterCard
+            </label>
+        </div>
+
+        <!-- CARDHOLDER -->
         <label>Cardholder Name</label>
         <input type="text" id="cardName" placeholder="Enter cardholder name" required>
+
+        <!-- CARD NUMBER -->
         <label>Credit Card Number</label>
         <input type="text"
-       id="cardNumber"
-       maxlength="16"
-       placeholder="XXXX XXXX XXXX XXXX"
-       inputmode="numeric"
-       pattern="\d{16}"
-       oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-       required>
+               id="cardNumber"
+               maxlength="16"
+               placeholder="XXXX XXXX XXXX XXXX"
+               inputmode="numeric"
+               oninput="validateCardNumber(this)"
+               required>
+
+        <!-- CVV -->
         <label>CVC / CVV</label>
         <input type="text"
-       id="cvv"
-       maxlength="4"
-       placeholder="3–4 digit"
-       inputmode="numeric"
-       pattern="\d{3,4}"
-       oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-       required>
+               id="cvv"
+               maxlength="4"
+               placeholder="3–4 digit"
+               inputmode="numeric"
+               oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+               required>
+
+        <!-- EXPIRY -->
         <label>Expiry Date</label>
         <div class="row">
             <select id="month" required>
                 <option value="">Month</option>
-                <?php for ($m=1;$m<=12;$m++){ $month=str_pad($m,2,'0',STR_PAD_LEFT); echo "<option value='$month'>$month</option>"; } ?>
+                <?php
+                for ($m = 1; $m <= 12; $m++) {
+                    $month = str_pad($m, 2, '0', STR_PAD_LEFT);
+                    echo "<option value='$month'>$month</option>";
+                }
+                ?>
             </select>
+
             <select id="year" required>
                 <option value="">Year</option>
-                <?php $currentYear=date("Y"); for($y=$currentYear;$y<=$currentYear+5;$y++){ echo "<option value='$y'>$y</option>"; } ?>
+                <?php
+                $currentYear = date("Y");
+                for ($y = $currentYear; $y <= $currentYear + 5; $y++) {
+                    echo "<option value='$y'>$y</option>";
+                }
+                ?>
             </select>
         </div>
+
+        <!-- COUNTRY -->
         <label>Card Issuing Country</label>
         <select id="country" required>
             <option value="">Select Country</option>
@@ -247,6 +283,7 @@ form input, form select { width: 100%; padding: 10px 12px; margin-bottom: 15px; 
         <button type="button" class="cancel-btn" onclick="confirmCancel()">Cancel Payment</button>
     </form>
 </div>
+
 
 <!-- ONLINE BANKING Section -->
 <div class="tab-content" id="bank">
@@ -333,6 +370,10 @@ tabButtons.forEach(btn => btn.addEventListener('click', () => {
 
 // CONFIRM PAYMENT
 function confirmPayment() {
+if (!selectedCardType) {
+        alert("Please select Visa or MasterCard");
+        return false;
+    }
     const form = document.getElementById('creditForm');
     if (!form.checkValidity()) { form.reportValidity(); return false; }
 
@@ -393,6 +434,46 @@ function showBookingSummary() {
 
     // Show booking summary modal
     document.getElementById('bookingModal').style.display = "flex";
+}
+
+let selectedCardType = null;
+
+/* When user selects Visa or MasterCard */
+function setCardType(type) {
+    selectedCardType = type;
+    document.getElementById('cardNumber').value = '';
+}
+
+/* Validate card number while typing */
+function validateCardNumber(input) {
+    input.value = input.value.replace(/[^0-9]/g, '');
+
+    if (!selectedCardType) return;
+
+    // VISA → must start with 4
+    if (selectedCardType === 'visa') {
+        if (input.value.length === 1 && input.value[0] !== '4') {
+            alert('Visa card number must start with 4');
+            input.value = '';
+        }
+    }
+
+    // MASTERCARD → 51–55 OR 2221–2720
+    if (selectedCardType === 'master') {
+        if (input.value.length >= 2) {
+            const firstTwo = parseInt(input.value.substring(0, 2));
+            const firstFour = parseInt(input.value.substring(0, 4));
+
+            const valid =
+                (firstTwo >= 51 && firstTwo <= 55) ||
+                (firstFour >= 2221 && firstFour <= 2720);
+
+            if (!valid) {
+                alert('MasterCard must start with 51–55 or 2221–2720');
+                input.value = '';
+            }
+        }
+    }
 }
 
 
