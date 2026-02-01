@@ -10,14 +10,14 @@ if (!isset($_SESSION["admin_id"]) || $_SESSION["admin_role"] !== "superadmin") {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Add Subadmin | FLASH Hotel</title>
+    <title>Add Subadmin | The Obsidian</title>
     <link rel="stylesheet" href="subadmin.css">
 </head>
 <body>
 
 <div class="sidebar">
     <div class="brand">
-        <h2>The Obsidian Admin</h2>
+        <h2>The Obsidian</h2>
         <p class="role">SuperAdmin</p>
     </div>
     <a href="dashboard.php">Dashboard</a>
