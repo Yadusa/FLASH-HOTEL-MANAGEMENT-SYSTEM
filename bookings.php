@@ -68,7 +68,7 @@ $result = $conn->query($sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Bookings | FLASH Hotel Admin</title>
+    <title>Manage Bookings | The Obsidian Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -236,20 +236,13 @@ $result = $conn->query($sql);
 
 <div class="sidebar">
     <div class="brand">
-        <h2>FLASH HOTEL</h2>
+        <h2>The Obsidian</h2>
         <p class="role"><?php echo ucfirst($adminRole); ?></p>
     </div>
 
     <a href="dashboard.php"><i class="fas fa-home"></i> Dashboard</a>
     <a href="manage_rooms.php"><i class="fas fa-bed"></i> Manage Rooms</a>
     <a href="bookings.php" class="active"><i class="fas fa-calendar-check"></i> Bookings</a>
-
-    <?php if ($adminRole === "superadmin") { ?>
-        <a href="manage_subadmins.php"><i class="fas fa-user-shield"></i> Subadmins</a>
-        <a href="customers.php"><i class="fas fa-users"></i> Customers</a>
-        <a href="manage_staff.php"><i class="fas fa-id-badge"></i> All Staff</a>
-        <a href="reports.php"><i class="fas fa-chart-line"></i> Reports</a>
-    <?php } ?>
 
     <a href="logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
 </div>

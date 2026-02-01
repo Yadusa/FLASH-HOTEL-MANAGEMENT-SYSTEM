@@ -27,13 +27,13 @@ if (!$data) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Staff Account | FLASH Hotel</title>
+    <title>Edit Staff Account | The Obsidian</title>
     <link rel="stylesheet" href="subadmin.css">
 </head>
 <body>
 
 <div class="sidebar">
-    <h2>FLASH Hotel Admin</h2>
+    <h2>The Obsidian Admin</h2>
     <a href="dashboard.php">Dashboard</a>
     <a href="manage_subadmins.php" class="active">Manage Subadmins</a>
     <a href="logout.php">Logout</a>

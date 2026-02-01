@@ -33,7 +33,7 @@ if (isset($_POST['download_txt'])) {
     header('Content-Type: text/plain');
     header('Content-Disposition: attachment; filename="Hotel_Report_'.$startDate.'.txt"');
 
-    echo "FLASH HOTEL - BOOKING REPORT\r\n";
+    echo "The Obsidian HOTEL - BOOKING REPORT\r\n";
     echo "Period: $startDate to $endDate\r\n";
     echo "------------------------------------------------------------\r\n";
     
@@ -81,7 +81,7 @@ if (isset($_POST['generate_report'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking Reports | FLASH Hotel Admin</title>
+    <title>Booking Reports | The Obsidian Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -239,7 +239,7 @@ if (isset($_POST['generate_report'])) {
 
 <div class="sidebar">
     <div class="brand">
-        <h2>FLASH HOTEL</h2>
+        <h2>The Obsidian</h2>
         <p class="role"><?php echo ucfirst($adminRole); ?></p>
     </div>
 

@@ -80,7 +80,7 @@ $arrivalsResult = $conn->query($listSql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | FLASH Hotel Admin</title>
+    <title>Dashboard | The Obsidian Hotel Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -157,7 +157,7 @@ $arrivalsResult = $conn->query($listSql);
 
 <div class="sidebar">
     <div class="brand">
-        <h2>FLASH HOTEL</h2>
+        <h2>The Obsidian</h2>
         <p class="role"><?php echo ucfirst($adminRole); ?></p>
     </div>
 

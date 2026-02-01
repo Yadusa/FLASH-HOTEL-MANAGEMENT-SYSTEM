@@ -19,8 +19,8 @@ if (isset($_GET['deleted'])) {
     echo "<script>alert('Customer deleted successfully');</script>";
 }
 
-// 2. Fetch Customers - Removed 'status' column filter to fix SQL error
-$sql = "SELECT id, username, cust_name, cust_email, contact_number, created_at 
+// 2. Fetch Customers - Added 'address' to the SELECT statement
+$sql = "SELECT id, username, cust_name, cust_email, contact_number, address, created_at 
         FROM customer
         ORDER BY created_at DESC";
 
@@ -32,7 +32,7 @@ $result = $conn->query($sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registered Customers | FLASH Hotel Admin</title>
+    <title>Registered Customers | The Obsidian Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -117,6 +117,7 @@ $result = $conn->query($sql);
             padding: 25px;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            overflow-x: auto; /* Added for responsiveness with the new column */
         }
 
         .custom-table {
@@ -140,7 +141,13 @@ $result = $conn->query($sql);
         }
         .custom-table tr:hover { background-color: #fafafa; }
 
-        /* --- ACTION LINKS (MATCHING MANAGE_BOOKING.PHP) --- */
+        .address-cell {
+            max-width: 200px;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        /* --- ACTION LINKS --- */
         .action-link {
             text-decoration: none;
             margin-right: 15px;
@@ -151,10 +158,10 @@ $result = $conn->query($sql);
             align-items: center;
             gap: 5px;
         }
-        .edit-link { color: #f0ad4e; } /* Gold/Warning color */
+        .edit-link { color: #f0ad4e; } 
         .edit-link:hover { color: #d58512; }
         
-        .delete-link { color: #d9534f; } /* Red/Danger color */
+        .delete-link { color: #d9534f; } 
         .delete-link:hover { color: #c9302c; }
 
     </style>
@@ -163,7 +170,7 @@ $result = $conn->query($sql);
 
 <div class="sidebar">
     <div class="brand">
-        <h2>FLASH HOTEL</h2>
+        <h2>The Obsidian</h2>
         <p class="role"><?php echo ucfirst($adminRole); ?></p>
     </div>
 
@@ -201,7 +208,7 @@ $result = $conn->query($sql);
                     <th>Full Name</th>
                     <th>Email Address</th>
                     <th>Contact</th>
-                    <th>Registered On</th>
+                    <th>Address</th> <th>Registered On</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -217,7 +224,7 @@ $result = $conn->query($sql);
                     <td><?php echo htmlspecialchars($row['cust_name']); ?></td>
                     <td><?php echo htmlspecialchars($row['cust_email']); ?></td>
                     <td><?php echo htmlspecialchars($row['contact_number']); ?></td>
-                    <td style="color: #777; font-size: 0.9em;">
+                    <td class="address-cell"><?php echo htmlspecialchars($row['address'] ?? 'N/A'); ?></td> <td style="color: #777; font-size: 0.9em;">
                         <i class="far fa-calendar-alt"></i> <?php echo date('M d, Y', strtotime($row['created_at'])); ?>
                     </td>
                     <td>
@@ -236,7 +243,7 @@ $result = $conn->query($sql);
                 <?php 
                 }
             } else {
-                echo "<tr><td colspan='7' style='text-align:center; padding:40px; color:#999;'><i class='fas fa-users-slash' style='font-size:40px; margin-bottom:10px; display:block;'></i>No registered customers found.</td></tr>";
+                echo "<tr><td colspan='8' style='text-align:center; padding:40px; color:#999;'><i class='fas fa-users-slash' style='font-size:40px; margin-bottom:10px; display:block;'></i>No registered customers found.</td></tr>";
             }
             ?>
             </tbody>

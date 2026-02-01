@@ -17,7 +17,7 @@ if (!isset($_SESSION["admin_id"]) || $_SESSION["admin_role"] !== "superadmin") {
 
 <div class="sidebar">
     <div class="brand">
-        <h2>Flash Hotel Admin</h2>
+        <h2>The Obsidian Admin</h2>
         <p class="role">SuperAdmin</p>
     </div>
     <a href="dashboard.php">Dashboard</a>

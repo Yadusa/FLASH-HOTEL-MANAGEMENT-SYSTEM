@@ -62,7 +62,7 @@ if (isset($_POST["submit"])) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Edit Staff | FLASH Hotel</title>
+    <title>Edit Staff | The Obsidian</title>
     <link rel="stylesheet" href="subadmin.css">
     <style>
         /* Custom tweak for the select dropdown to match input styling */
@@ -90,7 +90,7 @@ if (isset($_POST["submit"])) {
 
 <div class="sidebar">
     <div class="brand">
-        <h2>FLASH Hotel Admin</h2>
+        <h2>The Obsidian Admin</h2>
         <p class="role">Super Admin</p>
     </div>
     <a href="dashboard.php">Dashboard</a>

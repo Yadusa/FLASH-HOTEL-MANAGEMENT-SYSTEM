@@ -46,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin Login | FLASH Hotel</title>
+    <title>Admin Login | The Obsidian</title>
     <link rel="stylesheet" href="login.css">
 </head>
 <body>

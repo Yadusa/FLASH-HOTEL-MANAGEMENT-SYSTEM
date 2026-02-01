@@ -38,7 +38,7 @@ if (isset($_POST['submit'])) {
 </head>
 <body>
 <div class="sidebar">
-    <h2>FLASH Hotel Admin</h2>
+    <h2>The Obisidian Admin</h2>
     <a href="dashboard.php">Dashboard</a>
     <a href="manage_staff.php">Manage Staff</a>
     <a href="add_staff.php" class="active">Add new Staff</a>
