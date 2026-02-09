@@ -156,7 +156,7 @@ td {
         <div class="empty">You have no bookings yet.</div>
     <?php endif; ?>
 
-    <a class="back-link" href="edit_profile.php">← Back to Profile</a>
+    <a class="back-link" href="customer_profile.php">← Back to Profile</a>
 </div>
 
 </body>

@@ -97,6 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </form>
 
     <p>Already have an account? <a href="customer_login.php">Login here</a></p>
+    <a href="hotel.php" class="back-btn">← Back to Hotel</a>
 </div>
 
 <script>

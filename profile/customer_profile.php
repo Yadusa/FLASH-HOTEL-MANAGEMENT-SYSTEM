@@ -118,6 +118,7 @@ body {
 
 <div class="profile-box">
     <!-- Title inside card -->
+    <a class="back-link" href="../hotel.php">← Back to Hotel</a>
     <h2>Profile Details</h2>
 
     <p><i class="fas fa-user"></i> <strong>Username:</strong> <?= htmlspecialchars($user['username']); ?></p>

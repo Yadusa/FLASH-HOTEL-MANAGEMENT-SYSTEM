@@ -96,6 +96,7 @@ body { margin: 0; height: 100vh; background: linear-gradient(135deg, #111827, #1
     </form>
 
     <p>No account yet? <a href="customer_register.php">Create one</a></p>
+    <a href="hotel.php" class="back-btn">← Back to Hotel</a>
 </div>
 
 </body>

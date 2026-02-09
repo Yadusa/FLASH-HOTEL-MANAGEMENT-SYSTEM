@@ -208,7 +208,7 @@ body {
         <a href="edit_profile.php">Edit Profile</a>
         <a href="booking_history.php">My Bookings</a>
         <a href="change_password.php">Change Password</a>
-        <a href="../customer_logout.php">Logout</a>
+        <a href="../customer_logout.php" onclick="return confirm('Are you sure you want to log out?');">Logout</a>
     </div>
 
     <!-- Main profile form -->
@@ -228,7 +228,7 @@ body {
             value="<?= htmlspecialchars($user['username']); ?>"
             readonly
             class="readonly-field">
-            <small class="hint-text">Username cannot be changed</small>
+            <small class="hint-text"><br>Username cannot be changed</small>
 
             <label>Full Name</label>
             <input type="text" name="cust_name" value="<?= htmlspecialchars($user['cust_name']); ?>" required>

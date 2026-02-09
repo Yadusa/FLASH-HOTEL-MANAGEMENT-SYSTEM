@@ -5,7 +5,7 @@
 $host     = "localhost";
 $db_user  = "root";      // Default for XAMPP
 $db_pass  = "";          // Default for XAMPP
-$db_name  = "obsidian_spa";
+$db_name  = "flashhotel";
 
 // Create Connection
 $conn = new mysqli($host, $db_user, $db_pass, $db_name);

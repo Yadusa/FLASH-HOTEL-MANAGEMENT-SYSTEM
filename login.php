@@ -62,6 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
          autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
 
         <button type="submit">Login</button>
+        <br><a href="hotel.php" class="back-btn">← Back to Hotel</a>
     </form>
 
     <?php if ($error): ?>

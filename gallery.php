@@ -23,7 +23,7 @@ session_start();
        <div class="header-content">
            <div class="header-left-links">
             <a href="ourStory.html" class="nav-link">Our Story</a>
-            <a href="specialoffers.html" class="nav-link special-offer-link"> Special Offers</a>
+            <a href="specialoffers.php" class="nav-link special-offer-link"> Special Offers</a>
             <a href="gallery.php" class="nav-link Gallery">Gallery</a>
             </div>
 
@@ -32,13 +32,7 @@ session_start();
             <h1> The Obsidian </h1>
             <p> KUALA LUMPUR </p>
             </div>
-         <div class="header-right-actions">
-            <div class="auth-links">
-                <a href="#" onclick="showAdminLogin()" class="nav-link">Sign In</a> 
-                <span>|</span>
-                <a href="#" class="nav-link">Join Now</a> 
-            </div>
-            
+         <div class="header-right-actions">            
            
           </div>
        </div>
@@ -86,8 +80,8 @@ session_start();
 
             <div class="footer-links">
                 <h5>Hotel</h5>
-                <a href="ourStory.html">About Us</a>
-                <a href="Links/contactpage.php">Contact</a>
+                <a href="ourStory.html">Our Story</a>
+                <a href="Links/contactpage.php">Contact Us</a>
                 <a href="Links/JobApplication.php">Careers</a>
             </div>
 

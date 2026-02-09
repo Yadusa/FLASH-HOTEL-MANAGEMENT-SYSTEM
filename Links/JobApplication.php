@@ -5,7 +5,7 @@
 $host     = "localhost";
 $db_user  = "root";
 $db_pass  = "";
-$db_name  = "obsidian_spa"; // Assuming same DB as before
+$db_name  = "flashhotel"; // Assuming same DB as before
 
 $conn = new mysqli($host, $db_user, $db_pass, $db_name);
 

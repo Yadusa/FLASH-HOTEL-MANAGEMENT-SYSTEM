@@ -5,7 +5,7 @@
 $host     = "localhost";
 $db_user  = "root";
 $db_pass  = "";
-$db_name  = "obsidian_spa"; // Ensure this matches your DB name
+$db_name  = "flashhotel"; // Ensure this matches your DB name
 
 $conn = new mysqli($host, $db_user, $db_pass, $db_name);
 
@@ -88,7 +88,7 @@ $conn->close();
 
 <h2>Event Reservations</h2>
 <div class="top-nav">
-    <a href="../specialoffers.php" class="back-link">← Back to Offers</a>
+    <a href="../hotel.php" class="back-link">← Back to Main</a>
 </div>
 
 <?php if ($error_message) echo "<div class='error-banner'>$error_message</div>"; ?>
